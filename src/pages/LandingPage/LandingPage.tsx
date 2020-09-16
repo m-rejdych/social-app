@@ -1,7 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { ReactComponent as LandingSvg } from '../../assets/LandingSvg.svg';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Card, CardHeader } from '@material-ui/core';
 import gsap from 'gsap';
+import { Formik } from 'formik';
+
+import AuthForm from '../../components/AuthForm';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -12,6 +15,17 @@ const useStyles = makeStyles((theme) => ({
   },
   svg: {
     height: 400,
+    width: 600,
+    marginRight: theme.spacing(3),
+  },
+  card: {
+    width: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(3),
+  },
+  header: {
+    fontWeight: 600,
   },
 }));
 
@@ -41,8 +55,8 @@ const LandingPage: React.FC = () => {
       .to(hand, {
         rotateZ: 10,
         yoyoEase: true,
-        repeat: 3,
-        duration: 0.7,
+        repeat: 50,
+        duration: 1,
         transformOrigin: '-30% 100%',
       });
   }, []);
@@ -52,6 +66,22 @@ const LandingPage: React.FC = () => {
       <div ref={svgRef}>
         <LandingSvg className={classes.svg} />
       </div>
+      <Card elevation={3} className={classes.card}>
+        <CardHeader
+          title="Social App"
+          subheader="Join the club and have fun with friends!"
+          titleTypographyProps={{
+            variant: 'h2',
+            align: 'center',
+            className: classes.header,
+          }}
+          subheaderTypographyProps={{
+            variant: 'h5',
+            align: 'center',
+          }}
+        />
+        <AuthForm />
+      </Card>
     </div>
   );
 };
