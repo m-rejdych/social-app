@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   TextField,
   CardActions,
@@ -7,6 +8,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Formik, Field, FieldProps, FieldMetaProps } from 'formik';
+
+import { signUp, signIn } from '../../store/actions';
+import { KEYS } from '../../shared/constants';
 
 interface Values {
   firstName?: string;
@@ -41,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const AuthForm: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const initialValues = isSignedUp
     ? {
@@ -102,9 +107,9 @@ const AuthForm: React.FC = () => {
       validate: (value: string): string | null => {
         let errorMessage: string | null = null;
         if (!value) errorMessage = 'This field is required!';
-        else if (!/^(?=.*\d).{4,8}$/.test(value))
+        else if (!/^(?=.*\d).{8,}$/.test(value))
           errorMessage =
-            'Password should be 4-8 characters long and contain at least one number!';
+            'Password should include minimum of 8 characters and contain at least one number!';
         return errorMessage;
       },
     },
@@ -115,9 +120,13 @@ const AuthForm: React.FC = () => {
     handleReset();
   };
 
+  const handleSubmit = (userData: Values): void => {
+    isSignedUp ? dispatch(signIn(userData)) : dispatch(signUp(userData));
+  };
+
   return (
     <Formik onSubmit={() => {}} initialValues={initialValues}>
-      {({ isValid, dirty, handleReset }) => (
+      {({ isValid, dirty, handleReset, values }) => (
         <>
           <CardContent className={classes.cardContent}>
             {fieldsConfig
@@ -133,6 +142,9 @@ const AuthForm: React.FC = () => {
                       variant="outlined"
                       helperText={touched && error ? error : ''}
                       error={!!(touched && error)}
+                      onKeyPress={(e) =>
+                        e.key === KEYS.ENTER && handleSubmit(values)
+                      }
                     />
                   )}
                 </Field>
@@ -144,6 +156,7 @@ const AuthForm: React.FC = () => {
               color="primary"
               fullWidth
               variant="contained"
+              onClick={() => handleSubmit(values)}
             >
               {isSignedUp ? 'LOG IN' : 'SIGN UP'}
             </Button>
