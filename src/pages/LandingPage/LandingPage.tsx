@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { ReactComponent as LandingSvg } from '../../assets/LandingSvg.svg';
 import { makeStyles, Card, CardHeader } from '@material-ui/core';
 import gsap from 'gsap';
-import { Formik } from 'formik';
 
 import AuthForm from '../../components/AuthForm';
 

@@ -1,28 +1,27 @@
 import { AUTH } from '../constants';
-import { Action } from '../types';
-import { Auth, RequiredUserData, OptionalUserData } from '../types/authTypes';
+import { AuthActions, UserData, Auth, Error } from '../types/authTypes';
 
-const signUp = (userData: OptionalUserData): Action<OptionalUserData> => ({
+const signUp = (userData: UserData): AuthActions => ({
   type: AUTH.SIGN_UP,
   payload: userData,
 });
 
-const signIn = (userData: RequiredUserData): Action<RequiredUserData> => ({
-  type: AUTH.SIGN_UP,
+const signUpSuccess = (userData: Auth): AuthActions => ({
+  type: AUTH.SIGN_UP_SUCCESS,
   payload: userData,
 });
 
-const signUpSuccess = (userData: Auth): Action<Auth> => ({
-  type: AUTH.SIGN_UP,
+const signIn = (userData: UserData): AuthActions => ({
+  type: AUTH.SIGN_IN,
   payload: userData,
 });
 
-const signInSuccess = (userData: Auth): Action<Auth> => ({
-  type: AUTH.SIGN_UP,
+const signInSuccess = (userData: Auth): AuthActions => ({
+  type: AUTH.SIGN_IN_SUCCESS,
   payload: userData,
 });
 
-const setError = (error: string): Action<string> => ({
+const setError = (error: Error): AuthActions => ({
   type: AUTH.AUTH_FAIL,
   payload: error,
 });

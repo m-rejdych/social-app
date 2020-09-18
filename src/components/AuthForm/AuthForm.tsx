@@ -9,19 +9,13 @@ import {
 } from '@material-ui/core';
 import { Formik, Field, FieldProps, FieldMetaProps } from 'formik';
 
+import { UserData } from '../../store/types/authTypes';
 import { signUp, signIn } from '../../store/actions';
 import { KEYS } from '../../shared/constants';
 
-interface Values {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
-}
-
 interface Field {
-  field: FieldProps<Values>;
-  meta: FieldMetaProps<Values>;
+  field: FieldProps<UserData>;
+  meta: FieldMetaProps<UserData>;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -120,7 +114,8 @@ const AuthForm: React.FC = () => {
     handleReset();
   };
 
-  const handleSubmit = (userData: Values): void => {
+  const handleSubmit = (userData: UserData): void => {
+    console.log(userData);
     isSignedUp ? dispatch(signIn(userData)) : dispatch(signUp(userData));
   };
 

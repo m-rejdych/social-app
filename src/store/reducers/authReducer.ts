@@ -1,5 +1,4 @@
-import { AuthState } from '../types/authTypes';
-import { Action } from '../types';
+import { AuthState, AuthActions, Auth } from '../types/authTypes';
 import { AUTH } from '../constants';
 
 const initialState: AuthState = {
@@ -11,17 +10,16 @@ const initialState: AuthState = {
   error: null,
 };
 
-const AuthReducer = (state = initialState, { type, payload }: Action<any>) => {
+const AuthReducer = (state = initialState, { type, payload }: AuthActions) => {
   switch (type) {
-    case AUTH.AUTH:
+    case AUTH.SIGN_UP:
       return { ...state, loading: true };
-    case AUTH.AUTH_SUCCESS:
-      return {
-        ...state,
-        ...payload,
-        loading: false,
-        error: null,
-      };
+    case AUTH.SIGN_UP_SUCCESS:
+      return { ...state, loading: false, error: null, ...(payload as Auth) };
+    case AUTH.SIGN_IN:
+      return { ...state, loading: true };
+    case AUTH.SIGN_IN_SUCCESS:
+      return { ...state, loading: false, error: null, ...(payload as Auth) };
     case AUTH.AUTH_FAIL:
       return { ...state, loading: false, error: payload };
     default:
