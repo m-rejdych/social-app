@@ -2,22 +2,25 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  TextField,
   CardActions,
   CardContent,
   Button,
   makeStyles,
+  CircularProgress,
 } from '@material-ui/core';
-import { Formik, Field, FieldProps, FieldMetaProps } from 'formik';
+import { Formik } from 'formik';
 
 import { UserData } from '../../store/types/authTypes';
 import { signUp, signIn } from '../../store/actions';
 import { KEYS } from '../../shared/constants';
 import { RootState } from '../../store/reducers';
+import InputElement from './InputElement';
 
 interface Field {
-  field: FieldProps<UserData>;
-  meta: FieldMetaProps<UserData>;
+  name: string;
+  label: string;
+  type: string;
+  validate: (value: string) => string | void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -32,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  textField: {
-    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -61,8 +61,8 @@ const AuthForm: React.FC = () => {
       name: 'firstName',
       label: 'First name',
       type: 'text',
-      validate: (value: string): string | null => {
-        let errorMessage: string | null = null;
+      validate: (value: string): string | void => {
+        let errorMessage;
         if (!value) errorMessage = 'This field is required!';
         else if (value.length < 2)
           errorMessage = 'First name should be at least 2 characters long!';
@@ -73,8 +73,8 @@ const AuthForm: React.FC = () => {
       name: 'lastName',
       label: 'Last name',
       type: 'text',
-      validate: (value: string): string | null => {
-        let errorMessage: string | null = null;
+      validate: (value: string): string | void => {
+        let errorMessage;
         if (!value) errorMessage = 'This field is required!';
         else if (value.length < 2)
           errorMessage = 'Last name should be at least 2 characters long!';
@@ -85,8 +85,8 @@ const AuthForm: React.FC = () => {
       name: 'email',
       label: 'Email address',
       type: 'email',
-      validate: (value: string): string | null => {
-        let errorMessage: string | null = null;
+      validate: (value: string): string | void => {
+        let errorMessage;
         if (!value) errorMessage = 'This field is required!';
         else if (
           !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
@@ -101,8 +101,8 @@ const AuthForm: React.FC = () => {
       name: 'password',
       label: 'Password',
       type: 'password',
-      validate: (value: string): string | null => {
-        let errorMessage: string | null = null;
+      validate: (value: string): string | void => {
+        let errorMessage;
         if (!value) errorMessage = 'This field is required!';
         else if (!/^(?=.*\d).{8,}$/.test(value))
           errorMessage =
@@ -127,25 +127,16 @@ const AuthForm: React.FC = () => {
         <>
           <CardContent className={classes.cardContent}>
             {fieldsConfig
-              .filter((item) => typeof item === 'object')
-              .map(({ name, validate, ...rest }: any) => (
-                <Field name={name} validate={validate} key={name}>
-                  {({ field, meta: { error, touched } }: Field) => (
-                    <TextField
-                      {...rest}
-                      {...field}
-                      fullWidth
-                      className={classes.textField}
-                      variant="outlined"
-                      helperText={touched && error ? error : ''}
-                      error={!!(touched && error)}
-                      onKeyPress={(e) =>
-                        e.key === KEYS.ENTER && handleSubmit(values)
-                      }
-                    />
-                  )}
-                </Field>
-              ))}
+              .filter((item: Field | boolean): item is Field => item !== true)
+              .map(
+                (item: Field): JSX.Element => (
+                  <InputElement
+                    handleSubmit={handleSubmit}
+                    values={values}
+                    {...item}
+                  />
+                ),
+              )}
           </CardContent>
           <CardActions className={classes.cardActions}>
             <Button
