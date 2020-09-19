@@ -4,4 +4,5 @@ export {
   signInSuccess,
   signUpSuccess,
   setError,
+  loadUser,
 } from './authActions';

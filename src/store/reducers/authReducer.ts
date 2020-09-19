@@ -20,7 +20,9 @@ const AuthReducer = (state = initialState, { type, payload }: AuthActions) => {
       return { ...state, loading: true };
     case AUTH.SIGN_IN_SUCCESS:
       return { ...state, loading: false, error: null, ...(payload as Auth) };
-    case AUTH.AUTH_FAIL:
+    case AUTH.LOAD_USER:
+      return { ...state, ...(payload as Auth) };
+    case AUTH.FAIL:
       return { ...state, loading: false, error: payload };
     default:
       return state;

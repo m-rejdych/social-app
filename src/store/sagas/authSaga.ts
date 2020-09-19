@@ -2,18 +2,18 @@ import { put, takeEvery } from 'redux-saga/effects';
 import { signInSuccess, signUpSuccess, setError } from '../actions';
 import { AUTH } from '../constants';
 import { RequiredUserData, AdditionalUserData } from '../types/authTypes';
-import { auth } from '../../firebase';
+import { auth, Persistence } from '../../firebase';
 
 interface Action<T> {
   type: string;
   payload: T;
 }
 
-function* signUpHandler({
+function* handleSignUp({
   payload: { email, password, firstName, lastName },
 }: Action<AdditionalUserData>) {
   try {
-    console.log(typeof password);
+    yield auth.setPersistence(Persistence.SESSION);
     yield auth.createUserWithEmailAndPassword(email, password);
     const user = auth.currentUser!;
     user.updateProfile({ displayName: `${firstName} ${lastName}` });
@@ -23,10 +23,11 @@ function* signUpHandler({
   }
 }
 
-function* signInHandler({
+function* handleSignIn({
   payload: { email, password },
 }: Action<RequiredUserData>) {
   try {
+    yield auth.setPersistence(Persistence.SESSION);
     yield auth.signInWithEmailAndPassword(email, password);
     const { displayName, uid } = auth.currentUser!;
     const firstName = displayName!.slice(0, displayName!.indexOf(' '));
@@ -38,11 +39,11 @@ function* signInHandler({
 }
 
 function* setSignUp() {
-  yield takeEvery(AUTH.SIGN_UP, signUpHandler);
+  yield takeEvery(AUTH.SIGN_UP, handleSignUp);
 }
 
 function* setSignIn() {
-  yield takeEvery(AUTH.SIGN_IN, signInHandler);
+  yield takeEvery(AUTH.SIGN_IN, handleSignIn);
 }
 
 export { setSignUp, setSignIn };

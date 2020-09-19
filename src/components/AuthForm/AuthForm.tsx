@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   TextField,
@@ -12,6 +13,7 @@ import { Formik, Field, FieldProps, FieldMetaProps } from 'formik';
 import { UserData } from '../../store/types/authTypes';
 import { signUp, signIn } from '../../store/actions';
 import { KEYS } from '../../shared/constants';
+import { RootState } from '../../store/reducers';
 
 interface Field {
   field: FieldProps<UserData>;
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AuthForm: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
+  const { userId } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -115,7 +118,6 @@ const AuthForm: React.FC = () => {
   };
 
   const handleSubmit = (userData: UserData): void => {
-    console.log(userData);
     isSignedUp ? dispatch(signIn(userData)) : dispatch(signUp(userData));
   };
 
@@ -165,6 +167,7 @@ const AuthForm: React.FC = () => {
                 : 'Log in, if you already have an account'}
             </Button>
           </CardActions>
+          {userId && <Redirect to="/home" />}
         </>
       )}
     </Formik>

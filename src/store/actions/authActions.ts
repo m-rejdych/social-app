@@ -21,9 +21,14 @@ const signInSuccess = (userData: Auth): AuthActions => ({
   payload: userData,
 });
 
+const loadUser = (userData: Auth): AuthActions => ({
+  type: AUTH.LOAD_USER,
+  payload: userData,
+});
+
 const setError = (error: Error): AuthActions => ({
-  type: AUTH.AUTH_FAIL,
+  type: AUTH.FAIL,
   payload: error,
 });
 
-export { signUp, signIn, signInSuccess, signUpSuccess, setError };
+export { signUp, signIn, signInSuccess, signUpSuccess, loadUser, setError };
