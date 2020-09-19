@@ -40,7 +40,7 @@ interface Field {
 const AuthForm: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const userId = useSelector((state: RootState) => state.auth.userId);
-  const loading = useSelector((state: RootState) => state.auth.userId);
+  const loading = useSelector((state: RootState) => state.auth.loading);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -146,7 +146,13 @@ const AuthForm: React.FC = () => {
               variant="contained"
               onClick={() => handleSubmit(values)}
             >
-              {isSignedUp ? 'LOG IN' : 'SIGN UP'}
+              {loading ? (
+                <CircularProgress size={24} color="secondary" />
+              ) : isSignedUp ? (
+                'LOG IN'
+              ) : (
+                'SIGN UP'
+              )}
             </Button>
             <Button
               onClick={() => handleSwitch(handleReset)}
