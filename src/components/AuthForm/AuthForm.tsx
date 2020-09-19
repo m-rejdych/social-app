@@ -12,16 +12,8 @@ import { Formik } from 'formik';
 
 import { UserData } from '../../store/types/authTypes';
 import { signUp, signIn } from '../../store/actions';
-import { KEYS } from '../../shared/constants';
 import { RootState } from '../../store/reducers';
 import InputElement from './InputElement';
-
-interface Field {
-  name: string;
-  label: string;
-  type: string;
-  validate: (value: string) => string | void;
-}
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -38,9 +30,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface Field {
+  name: string;
+  label: string;
+  type: string;
+  validate: (value: string) => string | void;
+}
+
 const AuthForm: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const { userId } = useSelector((state: RootState) => state.auth);
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const loading = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
   const dispatch = useDispatch();
 

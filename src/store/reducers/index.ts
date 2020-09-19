@@ -7,9 +7,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
-// export interface RootState {
-//   auth: AuthState;
-// }
+export interface RootState {
+  auth: AuthState;
+}
 
 export default rootReducer;
