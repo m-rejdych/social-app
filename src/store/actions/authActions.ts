@@ -31,4 +31,17 @@ const setError = (error: Error): AuthActions => ({
   payload: error,
 });
 
-export { signUp, signIn, signInSuccess, signUpSuccess, loadUser, setError };
+const resetError = (): AuthActions => ({
+  type: AUTH.RESET_ERROR,
+  payload: null,
+});
+
+export {
+  signUp,
+  signIn,
+  signInSuccess,
+  signUpSuccess,
+  loadUser,
+  setError,
+  resetError,
+};

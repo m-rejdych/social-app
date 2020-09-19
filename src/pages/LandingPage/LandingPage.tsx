@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { ReactComponent as LandingSvg } from '../../assets/LandingSvg.svg';
 import { makeStyles, Card, CardHeader } from '@material-ui/core';
 import gsap from 'gsap';
 
 import AuthForm from '../../components/AuthForm';
+import { RootState } from '../../store/reducers';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const LandingPage: React.FC = () => {
   const classes = useStyles();
   const svgRef = useRef<HTMLDivElement>(null);
+  const errorMessage = useSelector((state: RootState) => state.auth.error);
 
   useEffect(() => {
     const [element] = svgRef.current!.children;
@@ -68,15 +71,16 @@ const LandingPage: React.FC = () => {
       <Card elevation={3} className={classes.card}>
         <CardHeader
           title="Social App"
-          subheader="Join the club and have fun with friends!"
+          subheader={errorMessage}
           titleTypographyProps={{
             variant: 'h2',
             align: 'center',
             className: classes.header,
           }}
           subheaderTypographyProps={{
-            variant: 'h5',
+            variant: 'body1',
             align: 'center',
+            color: 'error',
           }}
         />
         <AuthForm />

@@ -5,4 +5,5 @@ export {
   signUpSuccess,
   setError,
   loadUser,
+  resetError,
 } from './authActions';

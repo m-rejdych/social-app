@@ -11,7 +11,7 @@ import {
 import { Formik } from 'formik';
 
 import { UserData } from '../../store/types/authTypes';
-import { signUp, signIn } from '../../store/actions';
+import { signUp, signIn, resetError } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import InputElement from './InputElement';
 
@@ -115,6 +115,7 @@ const AuthForm: React.FC = () => {
   const handleSwitch = (handleReset: () => void) => {
     setIsSignedUp((prevState) => !prevState);
     handleReset();
+    dispatch(resetError());
   };
 
   const handleSubmit = (userData: UserData): void => {

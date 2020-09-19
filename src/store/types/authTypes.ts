@@ -70,6 +70,11 @@ interface LoadUserAction {
   payload: Auth;
 }
 
+interface ResetErrorAction {
+  type: typeof AUTH.RESET_ERROR;
+  payload: null;
+}
+
 export interface AuthState {
   email: string;
   firstName: string;
@@ -85,4 +90,5 @@ export type AuthActions =
   | SignUpSuccessAction
   | SignInSuccessAction
   | SetErrorAction
-  | LoadUserAction;
+  | LoadUserAction
+  | ResetErrorAction;
