@@ -2,7 +2,7 @@ import { put, takeEvery } from 'redux-saga/effects';
 import { signInSuccess, signUpSuccess, setError } from '../actions';
 import { AUTH } from '../constants';
 import { RequiredUserData, AdditionalUserData } from '../types/authTypes';
-import { auth, Persistence } from '../../firebase';
+import { auth, db, Persistence } from '../../firebase';
 
 interface Action<T> {
   type: string;
@@ -18,6 +18,10 @@ function* handleSignUp({
     const user = auth.currentUser!;
     user.updateProfile({ displayName: `${firstName} ${lastName}` });
     yield put(signUpSuccess({ email, firstName, lastName, userId: user.uid }));
+    yield db
+      .collection('users')
+      .doc(user.uid)
+      .set({ email, firstName, lastName });
   } catch (error) {
     yield put(setError(error.message));
   }
