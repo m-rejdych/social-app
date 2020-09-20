@@ -56,11 +56,17 @@ const Header: React.FC = () => {
     history.push(`/profile/${userId}`);
   };
 
+  const goToHome = (): void => {
+    history.push('/home');
+  };
+
   return (
     <AppBar>
       <Box clone width="100%">
         <Toolbar>
-          <Button className={classes.text}>Social App</Button>
+          <Button onClick={goToHome} className={classes.text}>
+            Social App
+          </Button>
           <TextField
             value={searchValue}
             type="search"

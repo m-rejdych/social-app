@@ -30,7 +30,7 @@ const Component: React.FC = () => {
           className={classes.gridMarginReset}
         >
           <Grid item xs={12}>
-            <Box display="flex">
+            <Box display="flex" alignItems="center">
               <AccountBoxIcon className={classes.profileIcon} />
               <Intro />
             </Box>
