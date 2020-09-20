@@ -5,13 +5,15 @@ import { Box, CircularProgress } from '@material-ui/core';
 
 import LandingPage from './pages/LandingPage';
 import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Header from './components/Header';
 import { RootState } from './store/reducers';
 import { loadUser } from './store/actions';
 import { auth } from './firebase';
 
 const App: React.FC = () => {
   const [checkAuth, setCheckAuth] = useState(true);
-  const { userId } = useSelector((state: RootState) => state.auth);
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,6 +28,22 @@ const App: React.FC = () => {
     });
   }, []);
 
+  const routes = userId ? (
+    <Switch>
+      <Route path="/home" component={Home} />
+      <Route path="/profile/:id" component={Profile} />
+      <Redirect to="/home" />
+    </Switch>
+  ) : (
+    <>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={LandingPage} />
+        <Redirect to="/" />
+      </Switch>
+    </>
+  );
+
   return (
     <Box minHeight="100vh">
       {checkAuth ? (
@@ -38,11 +56,7 @@ const App: React.FC = () => {
           <CircularProgress size={300} />
         </Box>
       ) : (
-        <Switch>
-          {userId && <Route path="/home" component={Home} />}
-          <Route path="/" exact component={LandingPage} />
-          <Redirect to="/" />
-        </Switch>
+        routes
       )}
     </Box>
   );

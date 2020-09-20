@@ -48,6 +48,7 @@ const CommentsList: React.FC<Props> = ({ comments }) => {
           <TextField
             value={commentValue}
             onChange={(e) => setCommentValue(e.target.value)}
+            type="text"
             variant="filled"
             placeholder="Comment..."
             multiline
