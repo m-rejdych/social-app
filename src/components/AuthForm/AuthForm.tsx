@@ -41,6 +41,7 @@ const AuthForm: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const userId = useSelector((state: RootState) => state.auth.userId);
   const loading = useSelector((state: RootState) => state.auth.loading);
+  const error = useSelector((state: RootState) => state.auth.error);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -115,7 +116,7 @@ const AuthForm: React.FC = () => {
   const handleSwitch = (handleReset: () => void) => {
     setIsSignedUp((prevState) => !prevState);
     handleReset();
-    dispatch(resetError());
+    error && dispatch(resetError());
   };
 
   const handleSubmit = (userData: UserData): void => {
@@ -129,15 +130,13 @@ const AuthForm: React.FC = () => {
           <CardContent className={classes.cardContent}>
             {fieldsConfig
               .filter((item: Field | boolean): item is Field => item !== true)
-              .map(
-                (item: Field): JSX.Element => (
-                  <InputElement
-                    handleSubmit={handleSubmit}
-                    values={values}
-                    {...item}
-                  />
-                ),
-              )}
+              .map((field) => (
+                <InputElement
+                  handleSubmit={handleSubmit}
+                  values={values}
+                  {...field}
+                />
+              ))}
           </CardContent>
           <CardActions className={classes.cardActions}>
             <Button

@@ -3,6 +3,7 @@ import { Grid, makeStyles } from '@material-ui/core';
 
 import Header from '../../components/Header';
 import FriendsList from '../../components/FriendsList';
+import PostsList from '../../components/PostsList';
 
 const useStyles = makeStyles((theme) => ({
   homeContainer: {
@@ -24,7 +25,9 @@ const Home: React.FC = () => {
       <Header />
       <Grid container spacing={3} className={classes.gridContainer}>
         <Grid item xs={3} />
-        <Grid item xs={6} />
+        <Grid item xs={6}>
+          <PostsList />
+        </Grid>
         <Grid item xs={3}>
           <FriendsList />
         </Grid>
