@@ -14,7 +14,10 @@ const Component: React.FC<Props> = ({ firstName, lastName, userId }) => {
       <ListItemAvatar>
         <FaceIcon />
       </ListItemAvatar>
-      <ListItemText primary={`${firstName} ${lastName}`} />
+      <ListItemText
+        primaryTypographyProps={{ color: 'textSecondary' }}
+        primary={`${firstName} ${lastName}`}
+      />
     </ListItem>
   );
 };

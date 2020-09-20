@@ -17,21 +17,26 @@ const PostsList: React.FC = () => {
   const posts = [
     {
       userId: uuid(),
-      textContent: 'Lorem ipsum dolor amet',
+      id: uuid(),
+      textContent:
+        'Lorem ipsum dolor ametLorem ipsum dolor ameLorem ipsum dolor ameLorem ipsum dolor ameLorem ipsum dolor ameLorem ipsum dolor ameLorem ipsum dolor ameLorem ipsum dolor amettttttt',
       firstName: 'Bob',
       lastName: 'Sterling',
       likeCount: 3,
       comments: [
         {
           userId: uuid(),
+          id: uuid(),
           firstName: 'Helga',
           lastName: 'Foofson',
           textContent: 'Comment ipsum dolor amet',
+          likeCount: 5,
         },
       ],
     },
     {
       userId: uuid(),
+      id: uuid(),
       textContent: 'Lorem ipsum dolor amet',
       firstName: 'Bob',
       lastName: 'Sterling',
@@ -39,14 +44,17 @@ const PostsList: React.FC = () => {
       comments: [
         {
           userId: uuid(),
+          id: uuid(),
           firstName: 'Helga',
           lastName: 'Foofson',
           textContent: 'Comment ipsum dolor amet',
+          likeCount: 5,
         },
       ],
     },
     {
       userId: uuid(),
+      id: uuid(),
       textContent: 'Lorem ipsum dolor amet',
       firstName: 'Bob',
       lastName: 'Sterling',
@@ -54,9 +62,11 @@ const PostsList: React.FC = () => {
       comments: [
         {
           userId: uuid(),
+          id: uuid(),
           firstName: 'Helga',
           lastName: 'Foofson',
           textContent: 'Comment ipsum dolor amet',
+          likeCount: 5,
         },
       ],
     },

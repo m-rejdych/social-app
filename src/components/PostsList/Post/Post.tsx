@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import {
   Card,
@@ -14,6 +14,9 @@ import FaceIcon from '@material-ui/icons/Face';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+
+import PostData from '../../../types/PostData';
+import CommentsList from '../../CommentsList';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -33,35 +36,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  userId: string;
-  textContent: string;
-  firstName: string;
-  lastName: string;
-  likeCount: number;
-  comments: {
-    userId: string;
-    firstName: string;
-    lastName: string;
-    textContent: string;
-  }[];
-}
+interface Props extends PostData {}
 
 const Component: React.FC<Props> = ({
-  userId,
+  id,
   textContent,
   firstName,
   lastName,
   likeCount,
+  comments,
 }) => {
+  const [showComments, setShowComments] = useState(false);
   const classes = useStyles();
 
   return (
-    <Card key={userId} elevation={3} className={classes.card}>
+    <Card key={id} elevation={3} className={classes.card}>
       <CardHeader
         title={`${firstName} ${lastName}`}
         avatar={<FaceIcon />}
-        titleTypographyProps={{ variant: 'h6' }}
+        titleTypographyProps={{ variant: 'h6', color: 'textSecondary' }}
         className={classes.borderBottom}
       />
       <CardContent>
@@ -88,12 +81,21 @@ const Component: React.FC<Props> = ({
             <FavoriteBorderIcon className={classes.marginRightIcon} />
             <Typography>Like</Typography>
           </Button>
-          <Button fullWidth>
+          <Button
+            fullWidth
+            color={showComments ? 'secondary' : 'default'}
+            onClick={() => setShowComments((prev) => !prev)}
+          >
             <ChatBubbleOutlineIcon className={classes.marginRightIcon} />
             <Typography>Comment</Typography>
           </Button>
         </Box>
       </CardActions>
+      {showComments && (
+        <CardContent>
+          <CommentsList comments={comments} />
+        </CardContent>
+      )}
     </Card>
   );
 };
