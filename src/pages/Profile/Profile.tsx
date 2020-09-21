@@ -3,7 +3,7 @@ import { Grid, makeStyles, Box } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import PageWrapper from '../../components/PageWrapper';
-import Intro from './Intro';
+import Intro from '../../components/Intro';
 
 const useStyles = makeStyles((theme) => ({
   gridMarginReset: {

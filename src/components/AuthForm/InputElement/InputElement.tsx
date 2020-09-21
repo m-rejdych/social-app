@@ -5,16 +5,16 @@ import { useField } from 'formik';
 
 import { UserData } from '../../../store/types/authTypes';
 
-interface Props {
+interface Props<T> {
   label: string;
   type: string;
   name: string;
-  validate: (value: string) => string | void;
-  handleSubmit: (userData: UserData) => void;
-  values: UserData;
+  validate?: (value: string) => string | void;
+  handleSubmit: (userData: T) => void;
+  values: T;
 }
 
-const InputElement: React.FC<Props> = ({
+const InputElement: React.FC<Props<UserData>> = ({
   name,
   type,
   validate,
