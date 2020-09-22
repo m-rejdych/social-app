@@ -72,7 +72,7 @@ const Intro: React.FC = () => {
             color="secondary"
             size="large"
           >
-            Edit profile
+            Edit intro
           </Button>
         }
       />
