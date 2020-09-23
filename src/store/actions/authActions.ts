@@ -26,7 +26,7 @@ const loadUser = (userData: Auth): AuthActions => ({
   payload: userData,
 });
 
-const setError = (error: Error): AuthActions => ({
+const setAuthError = (error: Error): AuthActions => ({
   type: AUTH.FAIL,
   payload: error,
 });
@@ -42,6 +42,6 @@ export {
   signInSuccess,
   signUpSuccess,
   loadUser,
-  setError,
+  setAuthError,
   resetError,
 };

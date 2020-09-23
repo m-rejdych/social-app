@@ -3,7 +3,13 @@ export {
   signUp,
   signInSuccess,
   signUpSuccess,
-  setError,
+  setAuthError,
   loadUser,
   resetError,
 } from './authActions';
+
+export {
+  setProfileIntro,
+  setProfileIntroSuccess,
+  setProfileError,
+} from './profileActions';

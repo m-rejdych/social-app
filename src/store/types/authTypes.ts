@@ -60,7 +60,7 @@ interface SignInSuccessAction {
   payload: Auth;
 }
 
-interface SetErrorAction {
+interface SetAuthErrorAction {
   type: typeof AUTH.FAIL;
   payload: Error;
 }
@@ -89,6 +89,6 @@ export type AuthActions =
   | SignInAction
   | SignUpSuccessAction
   | SignInSuccessAction
-  | SetErrorAction
+  | SetAuthErrorAction
   | LoadUserAction
   | ResetErrorAction;

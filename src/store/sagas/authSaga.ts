@@ -1,5 +1,5 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { signInSuccess, signUpSuccess, setError } from '../actions';
+import { signInSuccess, signUpSuccess, setProfileError } from '../actions';
 import { AUTH } from '../constants';
 import { RequiredUserData, AdditionalUserData } from '../types/authTypes';
 import { auth, db, Persistence } from '../../firebase';
@@ -23,7 +23,7 @@ function* handleSignUp({
       .doc(user.uid)
       .set({ email, firstName, lastName });
   } catch (error) {
-    yield put(setError(error.message));
+    yield put(setProfileError(error.message));
   }
 }
 
@@ -38,7 +38,7 @@ function* handleSignIn({
     const lastName = displayName!.slice(displayName!.indexOf(' ') + 1);
     yield put(signInSuccess({ email, firstName, lastName, userId: uid }));
   } catch (error) {
-    yield put(setError(error.message));
+    yield put(setProfileError(error.message));
   }
 }
 
