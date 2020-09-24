@@ -75,7 +75,7 @@ const PostsList: React.FC = () => {
   return (
     <div>
       {posts.map((post) => (
-        <Post {...post} />
+        <Post key={post.id} {...post} />
       ))}
     </div>
   );

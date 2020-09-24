@@ -12,4 +12,6 @@ export {
   setProfileIntro,
   setProfileIntroSuccess,
   setProfileError,
+  getProfileData,
+  getProfileDataSuccess,
 } from './profileActions';

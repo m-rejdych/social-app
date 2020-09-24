@@ -1,14 +1,30 @@
 import { PROFILE } from '../constants';
-import { ProfileActions, ProfileIntro } from '../types/profileTypes';
+import {
+  ProfileActions,
+  ProfileIntro,
+  ProfileData,
+} from '../types/profileTypes';
 
 const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO,
   payload: introData,
 });
 
-const setProfileIntroSuccess = (introData: ProfileIntro) => ({
+const setProfileIntroSuccess = (
+  introData: Omit<ProfileIntro, 'userId'>,
+): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO_SUCCESS,
   payload: introData,
+});
+
+const getProfileData = (userId: string): ProfileActions => ({
+  type: PROFILE.GET_PROFILE_DATA,
+  payload: userId,
+});
+
+const getProfileDataSuccess = (profileData: ProfileData): ProfileActions => ({
+  type: PROFILE.GET_PROFILE_DATA_SUCCESS,
+  payload: profileData,
 });
 
 const setProfileError = (error: string): ProfileActions => ({
@@ -16,4 +32,10 @@ const setProfileError = (error: string): ProfileActions => ({
   payload: error,
 });
 
-export { setProfileIntro, setProfileIntroSuccess, setProfileError };
+export {
+  setProfileIntro,
+  setProfileIntroSuccess,
+  setProfileError,
+  getProfileData,
+  getProfileDataSuccess,
+};

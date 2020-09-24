@@ -1,11 +1,15 @@
 import { PROFILE } from '../constants';
+import { AdditionalUserData } from './authTypes';
 
 export interface ProfileIntro {
+  userId: string;
   location: string;
   country: string;
   education: string;
   hobbies: string;
 }
+
+export type ProfileData = ProfileIntro & Omit<AdditionalUserData, 'password'>;
 
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
@@ -14,7 +18,17 @@ interface SetProfileIntroAction {
 
 interface SetProfileIntroSuccessAction {
   type: typeof PROFILE.SET_PROFILE_INTRO_SUCCESS;
-  payload: ProfileIntro;
+  payload: Omit<ProfileIntro, 'userId'>;
+}
+
+interface GetProfileDataAction {
+  type: typeof PROFILE.GET_PROFILE_DATA;
+  payload: string;
+}
+
+interface GetProfileDataSuccessAction {
+  type: typeof PROFILE.SET_PROFILE_INTRO_SUCCESS;
+  payload: ProfileData;
 }
 
 interface SetProfileErrorAction {
@@ -22,7 +36,7 @@ interface SetProfileErrorAction {
   payload: string;
 }
 
-export interface ProfileState extends ProfileIntro {
+export interface ProfileState extends Omit<ProfileIntro, 'userId'> {
   loading: boolean;
   error: null | string;
 }
@@ -30,4 +44,6 @@ export interface ProfileState extends ProfileIntro {
 export type ProfileActions =
   | SetProfileIntroAction
   | SetProfileIntroSuccessAction
-  | SetProfileErrorAction;
+  | SetProfileErrorAction
+  | GetProfileDataAction
+  | GetProfileDataSuccessAction;

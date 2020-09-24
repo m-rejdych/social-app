@@ -132,6 +132,7 @@ const AuthForm: React.FC = () => {
               .filter((item: Field | boolean): item is Field => item !== true)
               .map((field) => (
                 <InputElement
+                  key={field.name}
                   handleSubmit={handleSubmit}
                   values={values}
                   {...field}

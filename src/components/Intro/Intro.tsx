@@ -9,7 +9,9 @@ import {
   Button,
   Typography,
   Box,
+  CircularProgress,
 } from '@material-ui/core';
+import countryList from 'react-select-country-list';
 import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -30,25 +32,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Country = Record<'value' | 'label', string>;
+
 const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
   const firstName = useSelector((state: RootState) => state.auth.firstName);
   const lastName = useSelector((state: RootState) => state.auth.lastName);
+  const location = useSelector((state: RootState) => state.profile.location);
+  const country = useSelector((state: RootState) => state.profile.country);
+  const education = useSelector((state: RootState) => state.profile.education);
+  const hobbies = useSelector((state: RootState) => state.profile.hobbies);
+  const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
 
+  const countries = countryList().getData();
+
+  const selectedCountry: Country | undefined = countries.find(
+    ({ value }: Country): boolean => value === country,
+  );
+
   const sections = [
-    { Icon: HomeIcon, defaultValue: 'No location information', id: uuid() },
+    {
+      Icon: HomeIcon,
+      defaultValue: location || 'No location information',
+      id: uuid(),
+    },
     {
       Icon: LocationOnIcon,
-      defaultValue: 'No country information',
+      defaultValue: selectedCountry?.label || 'No country information',
       id: uuid(),
     },
     {
       Icon: MenuBookIcon,
-      defaultValue: 'No education information',
+      defaultValue: education || 'No education information',
       id: uuid(),
     },
-    { Icon: FlashOnIcon, defaultValue: 'No hobby information', id: uuid() },
+    {
+      Icon: FlashOnIcon,
+      defaultValue: hobbies || 'No hobby information',
+      id: uuid(),
+    },
   ];
 
   const openEditIntroDialog = (): void => {
@@ -77,16 +100,27 @@ const Intro: React.FC = () => {
         }
       />
       <CardContent>
-        {sections.map(({ Icon, defaultValue, id }, index) => (
+        {loading ? (
           <Box
-            key={id}
+            height="100%"
             display="flex"
-            mb={index === sections.length - 1 ? 0 : 2}
+            justifyContent="center"
+            alignItems="center"
           >
-            <Icon className={classes.iconMarginRight} color="action" />
-            <Typography color="textSecondary">{defaultValue}</Typography>
+            <CircularProgress size={145} />
           </Box>
-        ))}
+        ) : (
+          sections.map(({ Icon, defaultValue, id }, index) => (
+            <Box
+              key={id}
+              display="flex"
+              mb={index === sections.length - 1 ? 0 : 2}
+            >
+              <Icon className={classes.iconMarginRight} color="action" />
+              <Typography color="textSecondary">{defaultValue}</Typography>
+            </Box>
+          ))
+        )}
       </CardContent>
       <EditIntroDialog
         open={showEditIntroDialog}

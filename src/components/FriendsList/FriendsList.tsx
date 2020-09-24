@@ -21,7 +21,7 @@ const FriendsList: React.FC = () => {
         </Typography>
       </ListSubheader>
       {friends.map((friend) => (
-        <Friend {...friend} />
+        <Friend key={friend.userId} {...friend} />
       ))}
     </List>
   );

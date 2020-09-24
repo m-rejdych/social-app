@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Dialog,
   DialogTitle,
@@ -11,6 +12,7 @@ import {
   Button,
   IconButton,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 import countryList from 'react-select-country-list';
 import { Formik, Field, FieldProps } from 'formik';
@@ -19,6 +21,11 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import CloseIcon from '@material-ui/icons/Close';
+
+import { setProfileIntro, getProfileData } from '../../../store/actions';
+import { ProfileIntro } from '../../../store/types/profileTypes';
+import { RootState } from '../../../store/reducers';
+import { KEYS } from '../../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   dialogTitle: {
@@ -49,7 +56,16 @@ interface Props {
 }
 
 const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const location = useSelector((state: RootState) => state.profile.location);
+  const country = useSelector((state: RootState) => state.profile.country);
+  const education = useSelector((state: RootState) => state.profile.education);
+  const hobbies = useSelector((state: RootState) => state.profile.hobbies);
+  const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const countries = countryList().getData();
 
   const fields = [
     {
@@ -78,13 +94,16 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
     },
   ];
 
-  const countries = countryList().getData();
-
   const initialValues = {
-    location: '',
-    country: '',
-    education: '',
-    hobbies: '',
+    location: location || '',
+    country: country || '',
+    education: education || '',
+    hobbies: hobbies || '',
+  };
+
+  const handleSubmit = (values: Omit<ProfileIntro, 'userId'>): void => {
+    dispatch(setProfileIntro({ userId, ...values }));
+    handleClose();
   };
 
   return (
@@ -111,6 +130,9 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
                         type={type}
                         InputProps={{ startAdornment: icon }}
                         className={classes.marginBottom}
+                        onKeyPress={(e) =>
+                          e.key === KEYS.ENTER && handleSubmit(values)
+                        }
                       />
                     ) : (
                       <Select
@@ -135,8 +157,17 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
               ))}
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
-              <Button size="large" color="primary" variant="contained">
-                Edit intro
+              <Button
+                size="large"
+                color="primary"
+                variant="contained"
+                onClick={() => handleSubmit(values)}
+              >
+                {loading ? (
+                  <CircularProgress size={24} color="secondary" />
+                ) : (
+                  'Edit intro'
+                )}
               </Button>
             </DialogActions>
           </>
