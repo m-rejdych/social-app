@@ -8,6 +8,8 @@ import Intro from '../../components/Intro';
 import { getProfileData } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 
+import ProfileContent from '../../components/ProfileContent';
+
 const useStyles = makeStyles((theme) => ({
   gridMarginReset: {
     margin: 0,
@@ -43,6 +45,9 @@ const Component: React.FC = () => {
               <AccountBoxIcon className={classes.profileIcon} />
               <Intro />
             </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <ProfileContent />
           </Grid>
         </Grid>
         <Grid item xs={2} />
