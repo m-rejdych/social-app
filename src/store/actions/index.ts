@@ -14,4 +14,6 @@ export {
   setProfileError,
   getProfileData,
   getProfileDataSuccess,
+  updateProfileField,
+  updateProfileFieldSuccess,
 } from './profileActions';

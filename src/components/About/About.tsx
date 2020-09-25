@@ -1,16 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  Typography,
-} from '@material-ui/core';
 import countryList from 'react-select-country-list';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { RootState } from '../../store/reducers';
+import InfoPanel from './InfoPanel';
 
 type Country = Record<'label' | 'value', string>;
 
@@ -29,64 +22,57 @@ const About: React.FC = () => {
   );
 
   const contentData = [
-    { key: 'about_email', label: 'Email', value: email },
-    { key: 'about_first_name', label: 'First name', value: firstName },
-    { key: 'about_last_name', label: 'Last name', value: lastName },
+    { type: 'email', label: 'Email', value: email },
+    { type: 'firstName', label: 'First name', value: firstName },
+    { type: 'lastName', label: 'Last name', value: lastName },
     {
-      key: 'about_location',
+      type: 'location',
       label: 'Location',
       value: location || 'No location information',
     },
     {
-      key: 'about_country',
+      type: 'country',
       label: 'Country',
       value: selectedCountry?.label || 'No country information',
     },
     {
-      key: 'about_education',
+      type: 'education',
       label: 'Education',
       value: education || 'No education information',
     },
     {
-      key: 'about_hobbies',
+      type: 'hobbies',
       label: 'Hobbies',
       value: hobbies || 'No hobbies information',
     },
     {
-      key: 'about_date_of_birth',
+      type: 'dateOfBirth',
       label: 'Date of birth',
       value: 'No age information',
     },
     {
-      key: 'about_proffesion',
+      type: 'proffesion',
       label: 'Proffesion',
       value: 'No proffesion information',
     },
     {
-      key: 'about_relationship',
+      type: 'relationship',
       label: 'Relationship',
       value: 'No relationship information',
     },
     {
-      key: 'about_phone_number',
+      type: 'phoneNumber',
       label: 'Phone number',
       value: 'No phone number information',
     },
   ];
 
   return (
-    <Box>
-      {contentData.map(({ key, label, value }) => (
-        <Accordion key={key}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">{label}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>{value}</Typography>
-          </AccordionDetails>
-        </Accordion>
+    <div>
+      {contentData.map(({ type, label, value }) => (
+        <InfoPanel type={type} label={label} value={value} />
       ))}
-    </Box>
+    </div>
   );
 };
 

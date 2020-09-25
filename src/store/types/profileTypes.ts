@@ -9,7 +9,16 @@ export interface ProfileIntro {
   hobbies: string;
 }
 
-export type ProfileData = ProfileIntro & Omit<AdditionalUserData, 'password'>;
+export interface ProfileDetails {
+  dateOfBirth: string;
+  proffesion: string;
+  relationship: string;
+  phoneNumber: string;
+}
+
+export type ProfileData = ProfileIntro &
+  ProfileDetails &
+  Omit<AdditionalUserData, 'password'>;
 
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
@@ -36,7 +45,19 @@ interface SetProfileErrorAction {
   payload: string;
 }
 
-export interface ProfileState extends Omit<ProfileIntro, 'userId'> {
+interface UpdateProfileFieldAction {
+  type: typeof PROFILE.UPDATE_PROFILE_FIELD;
+  payload: Partial<ProfileDetails>;
+}
+
+interface UpdateProfileFieldActionSuccess {
+  type: typeof PROFILE.UPDATE_PROFILE_FIELD_SUCCESS;
+  payload: Partial<ProfileDetails>;
+}
+
+export interface ProfileState
+  extends Omit<ProfileIntro, 'userId'>,
+    ProfileDetails {
   loading: boolean;
   error: null | string;
 }
@@ -46,4 +67,6 @@ export type ProfileActions =
   | SetProfileIntroSuccessAction
   | SetProfileErrorAction
   | GetProfileDataAction
-  | GetProfileDataSuccessAction;
+  | GetProfileDataSuccessAction
+  | UpdateProfileFieldAction
+  | UpdateProfileFieldActionSuccess;

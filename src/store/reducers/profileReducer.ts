@@ -4,6 +4,7 @@ import {
   ProfileIntro,
   ProfileActions,
   ProfileData,
+  ProfileDetails,
 } from '../types/profileTypes';
 
 const initialState: ProfileState = {
@@ -11,6 +12,10 @@ const initialState: ProfileState = {
   country: '',
   education: '',
   hobbies: '',
+  dateOfBirth: '',
+  proffesion: '',
+  relationship: '',
+  phoneNumber: '',
   loading: false,
   error: null,
 };
@@ -29,12 +34,16 @@ const profileReducer = (
         error: null,
         ...(payload as ProfileIntro),
       };
-    case PROFILE.PROFILE_FAIL:
-      return { ...state, loading: false, error: payload as string };
     case PROFILE.GET_PROFILE_DATA:
       return { ...state, loading: true };
     case PROFILE.GET_PROFILE_DATA_SUCCESS:
       return { ...state, loading: false, ...(payload as ProfileData) };
+    case PROFILE.UPDATE_PROFILE_FIELD:
+      return { ...state, loading: true };
+    case PROFILE.UPDATE_PROFILE_FIELD_SUCCESS:
+      return { ...state, loading: false, ...(payload as ProfileDetails) };
+    case PROFILE.PROFILE_FAIL:
+      return { ...state, loading: false, error: payload as string };
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import {
   ProfileActions,
   ProfileIntro,
   ProfileData,
+  ProfileDetails,
 } from '../types/profileTypes';
 
 const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
@@ -27,6 +28,20 @@ const getProfileDataSuccess = (profileData: ProfileData): ProfileActions => ({
   payload: profileData,
 });
 
+const updateProfileField = (
+  fieldData: Partial<ProfileDetails>,
+): ProfileActions => ({
+  type: PROFILE.UPDATE_PROFILE_FIELD,
+  payload: fieldData,
+});
+
+const updateProfileFieldSuccess = (
+  fieldData: Partial<ProfileDetails>,
+): ProfileActions => ({
+  type: PROFILE.UPDATE_PROFILE_FIELD_SUCCESS,
+  payload: fieldData,
+});
+
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -38,4 +53,6 @@ export {
   setProfileError,
   getProfileData,
   getProfileDataSuccess,
+  updateProfileField,
+  updateProfileFieldSuccess,
 };
