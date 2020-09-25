@@ -8,6 +8,8 @@ import {
   Box,
 } from '@material-ui/core';
 
+import About from '../About';
+
 interface TabPanelProps {
   value: number;
   index: number;
@@ -56,7 +58,7 @@ const ProfileContent: React.FC = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        About
+        <About />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Porsts

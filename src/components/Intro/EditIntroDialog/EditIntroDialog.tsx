@@ -119,7 +119,7 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
           <>
             <DialogContent className={classes.dialogContent}>
               {fields.map(({ icon, name, label, type }) => (
-                <Field key={name} name={name}>
+                <Field key={`edit_${name}`} name={name}>
                   {({ field }: FieldProps) =>
                     type === 'text' ? (
                       <TextField
