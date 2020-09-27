@@ -28,11 +28,12 @@ const getProfileDataSuccess = (profileData: ProfileData): ProfileActions => ({
   payload: profileData,
 });
 
-const updateProfileField = (
-  fieldData: Partial<ProfileDetails>,
-): ProfileActions => ({
+const updateProfileField = (data: {
+  userId: string;
+  fieldData: Partial<ProfileDetails>;
+}): ProfileActions => ({
   type: PROFILE.UPDATE_PROFILE_FIELD,
-  payload: fieldData,
+  payload: data,
 });
 
 const updateProfileFieldSuccess = (

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { FieldInputProps, useField } from 'formik';
 import {
   Accordion,
   AccordionSummary,
@@ -14,6 +16,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
 import countryList from 'react-select-country-list';
 
+import { RootState } from '../../../store/reducers';
+import { updateProfileField } from '../../../store/actions';
+
 const useStyles = makeStyles((theme) => ({
   accordionDetails: {
     display: 'flex',
@@ -22,16 +27,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Values =
+  | 'email'
+  | 'location'
+  | 'country'
+  | 'education'
+  | 'hobbies'
+  | 'dateOfBirth'
+  | 'proffesion'
+  | 'relationship'
+  | 'phoneNumber';
+type InitialValues = Record<Values, string>;
+
 interface InfoPanelProps {
   value: string;
-  type: string;
+  name: string;
   label: string;
 }
 
-const InfoPanel: React.FC<InfoPanelProps> = ({ type, label, value }) => {
+const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
+  const [field] = useField({ type: 'text', name });
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const editable = [
     'location',
@@ -44,34 +63,29 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ type, label, value }) => {
     'phoneNumber',
   ];
 
-  const toggleIsEditing = (): void => {
-    setIsEditing((prev) => !prev);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ): void => {
-    setInputValue(e.target.value);
+  const handleChange = ({
+    name,
+    value,
+  }: FieldInputProps<InitialValues>): void => {
+    if (isEditing) {
+      dispatch(updateProfileField({ userId, fieldData: { [name]: value } }));
+      setIsEditing(false);
+    } else setIsEditing(true);
   };
 
   return (
-    <Accordion key={`about_${type}`}>
+    <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="h6">{label}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.accordionDetails}>
         {isEditing ? (
-          <TextField
-            autoFocus
-            type="text"
-            value={inputValue}
-            onChange={(e) => handleChange(e)}
-          />
+          <TextField {...field} autoFocus type="text" />
         ) : (
           <Typography>{value}</Typography>
         )}
-        {editable.includes(type) && (
-          <IconButton onClick={toggleIsEditing}>
+        {editable.includes(name) && (
+          <IconButton onClick={() => handleChange(field)}>
             <EditIcon />
           </IconButton>
         )}

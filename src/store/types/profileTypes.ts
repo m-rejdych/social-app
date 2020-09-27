@@ -47,7 +47,7 @@ interface SetProfileErrorAction {
 
 interface UpdateProfileFieldAction {
   type: typeof PROFILE.UPDATE_PROFILE_FIELD;
-  payload: Partial<ProfileDetails>;
+  payload: { userId: string; fieldData: Partial<ProfileDetails> };
 }
 
 interface UpdateProfileFieldActionSuccess {

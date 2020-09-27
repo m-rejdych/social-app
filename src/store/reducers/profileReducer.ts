@@ -41,7 +41,11 @@ const profileReducer = (
     case PROFILE.UPDATE_PROFILE_FIELD:
       return { ...state, loading: true };
     case PROFILE.UPDATE_PROFILE_FIELD_SUCCESS:
-      return { ...state, loading: false, ...(payload as ProfileDetails) };
+      return {
+        ...state,
+        loading: false,
+        ...(payload as Partial<ProfileDetails>),
+      };
     case PROFILE.PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:

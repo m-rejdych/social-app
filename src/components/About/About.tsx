@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Formik } from 'formik';
 import countryList from 'react-select-country-list';
 
 import { RootState } from '../../store/reducers';
@@ -22,57 +23,71 @@ const About: React.FC = () => {
   );
 
   const contentData = [
-    { type: 'email', label: 'Email', value: email },
-    { type: 'firstName', label: 'First name', value: firstName },
-    { type: 'lastName', label: 'Last name', value: lastName },
+    { name: 'email', label: 'Email', value: email },
+    { name: 'firstName', label: 'First name', value: firstName },
+    { name: 'lastName', label: 'Last name', value: lastName },
     {
-      type: 'location',
+      name: 'location',
       label: 'Location',
       value: location || 'No location information',
     },
     {
-      type: 'country',
+      name: 'country',
       label: 'Country',
       value: selectedCountry?.label || 'No country information',
     },
     {
-      type: 'education',
+      name: 'education',
       label: 'Education',
       value: education || 'No education information',
     },
     {
-      type: 'hobbies',
+      name: 'hobbies',
       label: 'Hobbies',
       value: hobbies || 'No hobbies information',
     },
     {
-      type: 'dateOfBirth',
+      name: 'dateOfBirth',
       label: 'Date of birth',
       value: 'No age information',
     },
     {
-      type: 'proffesion',
+      name: 'proffesion',
       label: 'Proffesion',
       value: 'No proffesion information',
     },
     {
-      type: 'relationship',
+      name: 'relationship',
       label: 'Relationship',
       value: 'No relationship information',
     },
     {
-      type: 'phoneNumber',
+      name: 'phoneNumber',
       label: 'Phone number',
       value: 'No phone number information',
     },
   ];
 
+  const initialValues = contentData.reduce((acc, { name, value }): {
+    [key: string]: string;
+  } => {
+    acc[name] = value;
+    return acc;
+  }, {} as { [key: string]: string });
+
   return (
-    <div>
-      {contentData.map(({ type, label, value }) => (
-        <InfoPanel type={type} label={label} value={value} />
-      ))}
-    </div>
+    <Formik initialValues={initialValues} onSubmit={() => {}}>
+      {() =>
+        contentData.map(({ name, label, value }) => (
+          <InfoPanel
+            key={`about_${name}`}
+            name={name}
+            label={label}
+            value={value}
+          />
+        ))
+      }
+    </Formik>
   );
 };
 
