@@ -11,7 +11,6 @@ import {
   Box,
   CircularProgress,
 } from '@material-ui/core';
-import countryList from 'react-select-country-list';
 import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -19,6 +18,8 @@ import FlashOnIcon from '@material-ui/icons/FlashOn';
 
 import { RootState } from '../../store/reducers';
 import EditIntroDialog from './EditIntroDialog';
+import Country from '../../types/Country';
+import countries from '../../shared/countries';
 
 const useStyles = makeStyles((theme) => ({
   introCard: {
@@ -32,8 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Country = Record<'value' | 'label', string>;
-
 const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
   const firstName = useSelector((state: RootState) => state.auth.firstName);
@@ -44,8 +43,6 @@ const Intro: React.FC = () => {
   const hobbies = useSelector((state: RootState) => state.profile.hobbies);
   const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
-
-  const countries = countryList().getData();
 
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,

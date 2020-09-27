@@ -25,8 +25,8 @@ const TabPanel: React.FC<TabPanelProps> = ({
   return (
     <div hidden={value !== index} {...other}>
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box clone p={3}>
+          {children}
         </Box>
       )}
     </div>

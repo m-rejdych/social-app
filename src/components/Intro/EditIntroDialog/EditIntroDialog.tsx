@@ -14,7 +14,6 @@ import {
   Typography,
   CircularProgress,
 } from '@material-ui/core';
-import countryList from 'react-select-country-list';
 import { Formik, Field, FieldProps } from 'formik';
 import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -22,10 +21,11 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { setProfileIntro, getProfileData } from '../../../store/actions';
+import { setProfileIntro } from '../../../store/actions';
 import { ProfileIntro } from '../../../store/types/profileTypes';
 import { RootState } from '../../../store/reducers';
 import { KEYS } from '../../../shared/constants';
+import countries from '../../../shared/countries';
 
 const useStyles = makeStyles((theme) => ({
   dialogTitle: {
@@ -64,8 +64,6 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
   const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  const countries = countryList().getData();
 
   const fields = [
     {
@@ -141,11 +139,10 @@ const EditIntroDialog: React.FC<Props> = ({ open, handleClose }) => {
                         fullWidth
                         startAdornment={icon}
                         variant="outlined"
-                        name={name}
                         label={label}
                         className={classes.marginBottom}
                       >
-                        {countries.map(({ value, label }: any) => (
+                        {countries.map(({ value, label }) => (
                           <MenuItem key={value} value={value}>
                             {label}
                           </MenuItem>

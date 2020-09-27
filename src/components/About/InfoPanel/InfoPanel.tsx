@@ -11,21 +11,16 @@ import {
   TextField,
   Select,
   MenuItem,
+  CircularProgress,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
-import countryList from 'react-select-country-list';
 
 import { RootState } from '../../../store/reducers';
 import { updateProfileField } from '../../../store/actions';
-
-const useStyles = makeStyles((theme) => ({
-  accordionDetails: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-}));
+import { KEYS } from '../../../shared/constants';
+import relationshipOptions from '../../../shared/relationshipOptions';
+import countries from '../../../shared/countries';
 
 type Values =
   | 'email'
@@ -39,6 +34,55 @@ type Values =
   | 'phoneNumber';
 type InitialValues = Record<Values, string>;
 
+interface EditElementProps {
+  field: FieldInputProps<InitialValues>;
+  handleSubmit: (field: FieldInputProps<InitialValues>) => void;
+}
+
+const EditElement: React.FC<EditElementProps> = ({ field, handleSubmit }) => {
+  const { name } = field;
+
+  switch (name) {
+    case 'country':
+      return (
+        <Select {...field} fullWidth autoWidth autoFocus>
+          {countries.map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    case 'relationship':
+      return (
+        <Select {...field} fullWidth autoWidth autoFocus>
+          {relationshipOptions.map(({ value, label }) => (
+            <MenuItem key={`relationship_${value}`} value={value}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    default:
+      return (
+        <TextField
+          {...field}
+          fullWidth
+          autoFocus
+          onKeyPress={(e) => e.key === KEYS.ENTER && handleSubmit(field)}
+        />
+      );
+  }
+};
+
+const useStyles = makeStyles((theme) => ({
+  accordionDetails: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+}));
+
 interface InfoPanelProps {
   value: string;
   name: string;
@@ -47,8 +91,12 @@ interface InfoPanelProps {
 
 const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [field] = useField({ type: 'text', name });
+  const [field] = useField({
+    type: name === 'country' ? 'select' : 'text',
+    name,
+  });
   const userId = useSelector((state: RootState) => state.auth.userId);
+  const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -63,7 +111,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
     'phoneNumber',
   ];
 
-  const handleChange = ({
+  const handleSubmit = ({
     name,
     value,
   }: FieldInputProps<InitialValues>): void => {
@@ -73,19 +121,22 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
     } else setIsEditing(true);
   };
 
+  const renderDetails = (): JSX.Element => {
+    if (loading) return <CircularProgress />;
+    if (isEditing)
+      return <EditElement field={field} handleSubmit={handleSubmit} />;
+    return <Typography>{value}</Typography>;
+  };
+
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="h6">{label}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.accordionDetails}>
-        {isEditing ? (
-          <TextField {...field} autoFocus type="text" />
-        ) : (
-          <Typography>{value}</Typography>
-        )}
+        {renderDetails()}
         {editable.includes(name) && (
-          <IconButton onClick={() => handleChange(field)}>
+          <IconButton onClick={() => handleSubmit(field)}>
             <EditIcon />
           </IconButton>
         )}

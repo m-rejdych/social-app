@@ -1,12 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import countryList from 'react-select-country-list';
 
 import { RootState } from '../../store/reducers';
 import InfoPanel from './InfoPanel';
+import Country from '../../types/Country';
+import relationshipOptions from '../../shared/relationshipOptions';
+import countries from '../../shared/countries';
 
-type Country = Record<'label' | 'value', string>;
+interface Relationship {
+  value: string;
+  label: string;
+}
 
 const About: React.FC = () => {
   const email = useSelector((state: RootState) => state.auth.email);
@@ -16,10 +21,27 @@ const About: React.FC = () => {
   const country = useSelector((state: RootState) => state.profile.country);
   const education = useSelector((state: RootState) => state.profile.education);
   const hobbies = useSelector((state: RootState) => state.profile.hobbies);
+  const dateOfBirth = useSelector(
+    (state: RootState) => state.profile.dateOfBirth,
+  );
+  const proffesion = useSelector(
+    (state: RootState) => state.profile.proffesion,
+  );
+  const relationship = useSelector(
+    (state: RootState) => state.profile.relationship,
+  );
+  const phoneNumber = useSelector(
+    (state: RootState) => state.profile.phoneNumber,
+  );
 
-  const countries = countryList().getData();
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,
+  );
+
+  const selectedRelationship:
+    | Relationship
+    | undefined = relationshipOptions.find(
+    ({ value }) => value === relationship,
   );
 
   const contentData = [
@@ -49,34 +71,42 @@ const About: React.FC = () => {
     {
       name: 'dateOfBirth',
       label: 'Date of birth',
-      value: 'No age information',
+      value: dateOfBirth || 'No age information',
     },
     {
       name: 'proffesion',
       label: 'Proffesion',
-      value: 'No proffesion information',
+      value: proffesion || 'No proffesion information',
     },
     {
       name: 'relationship',
       label: 'Relationship',
-      value: 'No relationship information',
+      value: selectedRelationship?.label || 'No relationship information',
     },
     {
       name: 'phoneNumber',
       label: 'Phone number',
-      value: 'No phone number information',
+      value: phoneNumber || 'No phone number information',
     },
   ];
 
   const initialValues = contentData.reduce((acc, { name, value }): {
     [key: string]: string;
   } => {
-    acc[name] = value;
+    if (name === 'country')
+      acc[name] = selectedCountry?.value || 'No country information';
+    else if (name === 'relationship')
+      acc[name] = selectedRelationship?.value || 'No relationship information';
+    else acc[name] = value;
     return acc;
   }, {} as { [key: string]: string });
 
   return (
-    <Formik initialValues={initialValues} onSubmit={() => {}}>
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={() => {}}
+    >
       {() =>
         contentData.map(({ name, label, value }) => (
           <InfoPanel
