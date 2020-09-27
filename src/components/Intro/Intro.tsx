@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import {
@@ -35,14 +36,18 @@ const useStyles = makeStyles((theme) => ({
 
 const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
-  const firstName = useSelector((state: RootState) => state.auth.firstName);
-  const lastName = useSelector((state: RootState) => state.auth.lastName);
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const params = useParams<{ id: string }>();
+  const firstName = useSelector((state: RootState) => state.profile.firstName);
+  const lastName = useSelector((state: RootState) => state.profile.lastName);
   const location = useSelector((state: RootState) => state.profile.location);
   const country = useSelector((state: RootState) => state.profile.country);
   const education = useSelector((state: RootState) => state.profile.education);
   const hobbies = useSelector((state: RootState) => state.profile.hobbies);
   const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
+
+  const isMe = params.id === userId;
 
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,
@@ -51,7 +56,7 @@ const Intro: React.FC = () => {
   const sections = [
     {
       Icon: HomeIcon,
-      defaultValue: location || 'No location information',
+      defaultValue: location,
       id: uuid(),
     },
     {
@@ -61,12 +66,12 @@ const Intro: React.FC = () => {
     },
     {
       Icon: MenuBookIcon,
-      defaultValue: education || 'No education information',
+      defaultValue: education,
       id: uuid(),
     },
     {
       Icon: FlashOnIcon,
-      defaultValue: hobbies || 'No hobby information',
+      defaultValue: hobbies,
       id: uuid(),
     },
   ];
@@ -81,48 +86,53 @@ const Intro: React.FC = () => {
 
   return (
     <Card elevation={3} className={classes.introCard}>
-      <CardHeader
-        title={`${firstName} ${lastName}`}
-        titleTypographyProps={{ variant: 'h4' }}
-        classes={{ action: classes.alignSelfEnd }}
-        action={
-          <Button
-            onClick={openEditIntroDialog}
-            variant="contained"
-            color="secondary"
-            size="large"
-          >
-            Edit intro
-          </Button>
-        }
-      />
-      <CardContent>
-        {loading ? (
-          <Box
-            height="100%"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <CircularProgress size={145} />
-          </Box>
-        ) : (
-          sections.map(({ Icon, defaultValue, id }, index) => (
-            <Box
-              key={id}
-              display="flex"
-              mb={index === sections.length - 1 ? 0 : 2}
-            >
-              <Icon className={classes.iconMarginRight} color="action" />
-              <Typography color="textSecondary">{defaultValue}</Typography>
-            </Box>
-          ))
-        )}
-      </CardContent>
-      <EditIntroDialog
-        open={showEditIntroDialog}
-        handleClose={closeEditIntroDialog}
-      />
+      {loading ? (
+        <Box
+          height="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          p={5}
+        >
+          <CircularProgress size={175} />
+        </Box>
+      ) : (
+        <>
+          <CardHeader
+            title={`${firstName} ${lastName}`}
+            titleTypographyProps={{ variant: 'h4' }}
+            classes={{ action: classes.alignSelfEnd }}
+            action={
+              isMe && (
+                <Button
+                  onClick={openEditIntroDialog}
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                >
+                  Edit intro
+                </Button>
+              )
+            }
+          />
+          <CardContent>
+            {sections.map(({ Icon, defaultValue, id }, index) => (
+              <Box
+                key={id}
+                display="flex"
+                mb={index === sections.length - 1 ? 0 : 2}
+              >
+                <Icon className={classes.iconMarginRight} color="action" />
+                <Typography color="textSecondary">{defaultValue}</Typography>
+              </Box>
+            ))}
+          </CardContent>
+          <EditIntroDialog
+            open={showEditIntroDialog}
+            handleClose={closeEditIntroDialog}
+          />
+        </>
+      )}
     </Card>
   );
 };

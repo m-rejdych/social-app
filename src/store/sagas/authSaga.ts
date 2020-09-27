@@ -21,7 +21,19 @@ function* handleSignUp({
     yield db
       .collection('users')
       .doc(user.uid)
-      .set({ email, firstName, lastName });
+      .set({
+        email,
+        firstName,
+        lastName,
+        location: 'No location information',
+        country: 'No country information',
+        education: 'No education information',
+        hobbies: 'No hobbies information',
+        dateOfBirth: 'No age information',
+        proffesion: 'No proffesion information',
+        relationship: 'No relationship information',
+        phoneNumber: 'No phone number information',
+      });
   } catch (error) {
     yield put(setProfileError(error.message));
   }

@@ -14,6 +14,8 @@ export interface ProfileDetails {
   proffesion: string;
   relationship: string;
   phoneNumber: string;
+  firstName: string;
+  lastName: string;
 }
 
 export type ProfileData = ProfileIntro &

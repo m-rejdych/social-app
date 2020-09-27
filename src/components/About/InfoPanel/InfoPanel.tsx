@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FieldInputProps, useField } from 'formik';
 import {
@@ -21,6 +22,7 @@ import { updateProfileField } from '../../../store/actions';
 import { KEYS } from '../../../shared/constants';
 import relationshipOptions from '../../../shared/relationshipOptions';
 import countries from '../../../shared/countries';
+import { stringify } from 'querystring';
 
 type Values =
   | 'email'
@@ -98,7 +100,10 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const loading = useSelector((state: RootState) => state.profile.loading);
   const classes = useStyles();
+  const params = useParams<{ id: string }>();
   const dispatch = useDispatch();
+
+  const isMe = params.id === userId;
 
   const editable = [
     'location',
@@ -135,7 +140,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
       </AccordionSummary>
       <AccordionDetails className={classes.accordionDetails}>
         {renderDetails()}
-        {editable.includes(name) && (
+        {editable.includes(name) && isMe && (
           <IconButton onClick={() => handleSubmit(field)}>
             <EditIcon />
           </IconButton>

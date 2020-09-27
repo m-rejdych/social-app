@@ -15,8 +15,8 @@ interface Relationship {
 
 const About: React.FC = () => {
   const email = useSelector((state: RootState) => state.auth.email);
-  const firstName = useSelector((state: RootState) => state.auth.firstName);
-  const lastName = useSelector((state: RootState) => state.auth.lastName);
+  const firstName = useSelector((state: RootState) => state.profile.firstName);
+  const lastName = useSelector((state: RootState) => state.profile.lastName);
   const location = useSelector((state: RootState) => state.profile.location);
   const country = useSelector((state: RootState) => state.profile.country);
   const education = useSelector((state: RootState) => state.profile.education);
@@ -51,7 +51,7 @@ const About: React.FC = () => {
     {
       name: 'location',
       label: 'Location',
-      value: location || 'No location information',
+      value: location,
     },
     {
       name: 'country',
@@ -61,22 +61,22 @@ const About: React.FC = () => {
     {
       name: 'education',
       label: 'Education',
-      value: education || 'No education information',
+      value: education,
     },
     {
       name: 'hobbies',
       label: 'Hobbies',
-      value: hobbies || 'No hobbies information',
+      value: hobbies,
     },
     {
       name: 'dateOfBirth',
       label: 'Date of birth',
-      value: dateOfBirth || 'No age information',
+      value: dateOfBirth,
     },
     {
       name: 'proffesion',
       label: 'Proffesion',
-      value: proffesion || 'No proffesion information',
+      value: proffesion,
     },
     {
       name: 'relationship',
@@ -86,7 +86,7 @@ const About: React.FC = () => {
     {
       name: 'phoneNumber',
       label: 'Phone number',
-      value: phoneNumber || 'No phone number information',
+      value: phoneNumber,
     },
   ];
 

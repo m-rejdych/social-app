@@ -6,7 +6,6 @@ import { Box, CircularProgress } from '@material-ui/core';
 import LandingPage from './pages/LandingPage';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
-import Header from './components/Header';
 import { RootState } from './store/reducers';
 import { loadUser } from './store/actions';
 import { auth } from './firebase';
@@ -36,7 +35,6 @@ const App: React.FC = () => {
     </Switch>
   ) : (
     <>
-      <Header />
       <Switch>
         <Route path="/" exact component={LandingPage} />
         <Redirect to="/" />

@@ -8,6 +8,8 @@ import {
 } from '../types/profileTypes';
 
 const initialState: ProfileState = {
+  firstName: '',
+  lastName: '',
   location: '',
   country: '',
   education: '',
@@ -16,7 +18,7 @@ const initialState: ProfileState = {
   proffesion: '',
   relationship: '',
   phoneNumber: '',
-  loading: false,
+  loading: true,
   error: null,
 };
 

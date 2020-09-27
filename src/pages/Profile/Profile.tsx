@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, makeStyles, Box } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -24,12 +25,14 @@ const useStyles = makeStyles((theme) => ({
 const Component: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
+  const params = useParams<{ id: string }>();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getProfileData(userId));
-    dispatch(getPosts(userId));
-  }, [userId, dispatch]);
+    dispatch(getProfileData(params.id));
+    console.log('fired');
+    dispatch(getPosts(params.id));
+  }, [userId, params, dispatch]);
 
   return (
     <PageWrapper>

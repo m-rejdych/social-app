@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, makeStyles, Button } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
@@ -17,12 +18,15 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfilePosts: React.FC = () => {
   const [value, setValue] = useState('');
+  const params = useParams<{ id: string }>();
   const userId = useSelector((state: RootState) => state.auth.userId);
-  const firstName = useSelector((state: RootState) => state.auth.firstName);
-  const lastName = useSelector((state: RootState) => state.auth.lastName);
+  const firstName = useSelector((state: RootState) => state.profile.firstName);
+  const lastName = useSelector((state: RootState) => state.profile.lastName);
   const posts = useSelector((state: RootState) => state.posts.posts);
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const isMe = params.id === userId;
 
   const handleSubmit = (): void => {
     const postData: PostData = {
@@ -41,22 +45,24 @@ const ProfilePosts: React.FC = () => {
 
   return (
     <div>
-      <TextField
-        fullWidth
-        multiline
-        variant="outlined"
-        placeholder="Write a post..."
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        InputProps={{
-          className: classes.input,
-          endAdornment: (
-            <Button onClick={handleSubmit} color="secondary">
-              Send
-            </Button>
-          ),
-        }}
-      />
+      {isMe && (
+        <TextField
+          fullWidth
+          multiline
+          variant="outlined"
+          placeholder="Write a post..."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          InputProps={{
+            className: classes.input,
+            endAdornment: (
+              <Button onClick={handleSubmit} color="secondary">
+                Send
+              </Button>
+            ),
+          }}
+        />
+      )}
       <PostsList posts={posts} />
     </div>
   );
