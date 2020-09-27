@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Grid, makeStyles, Box } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
+import { getProfileData } from '../../store/actions';
+import { getPosts } from '../../store/actions';
+import { RootState } from '../../store/reducers';
 import PageWrapper from '../../components/PageWrapper';
 import Intro from '../../components/Intro';
 
@@ -18,7 +22,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Component: React.FC = () => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProfileData(userId));
+    dispatch(getPosts(userId));
+  }, [userId, dispatch]);
 
   return (
     <PageWrapper>

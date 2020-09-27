@@ -19,7 +19,7 @@ const Home: React.FC = () => {
       <Grid container spacing={3} className={classes.gridContainer}>
         <Grid item xs={3} />
         <Grid item xs={6}>
-          <PostsList />
+          {/* <PostsList /> */}
         </Grid>
         <Grid item xs={3}>
           <FriendsList />

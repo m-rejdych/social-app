@@ -5,7 +5,8 @@ import {
   setProfileIntro,
   setProfileData,
   setProfileFieldUpdate,
-} from './profileSagas';
+} from './profileSaga';
+import { setSendPost, setGetPosts } from './postsSaga';
 
 function* rootSaga() {
   yield all([
@@ -14,6 +15,8 @@ function* rootSaga() {
     setProfileIntro(),
     setProfileData(),
     setProfileFieldUpdate(),
+    setSendPost(),
+    setGetPosts(),
   ]);
 }
 

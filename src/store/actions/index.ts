@@ -17,3 +17,11 @@ export {
   updateProfileField,
   updateProfileFieldSuccess,
 } from './profileActions';
+
+export {
+  sendPost,
+  sendPostSuccess,
+  setPostsError,
+  getPosts,
+  getPostsSuccess,
+} from './postsActions';

@@ -1,20 +1,15 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
 import Post from './Post';
+import PostData from '../../types/PostData';
 
-const useStyles = makeStyles((theme) => ({
-  postsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
+interface Props {
+  posts: PostData[];
+}
 
-const PostsList: React.FC = () => {
-  const classes = useStyles();
-
-  const posts = [
+const PostsList: React.FC<Props> = ({ posts }) => {
+  const dummyPosts = [
     {
       userId: uuid(),
       id: uuid(),

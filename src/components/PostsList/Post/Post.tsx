@@ -36,9 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props extends PostData {}
-
-const Component: React.FC<Props> = ({
+const Component: React.FC<PostData> = ({
   id,
   textContent,
   firstName,
@@ -50,7 +48,7 @@ const Component: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <Card key={id} elevation={3} className={classes.card}>
+    <Card elevation={3} className={classes.card}>
       <CardHeader
         title={`${firstName} ${lastName}`}
         avatar={<FaceIcon />}
@@ -61,7 +59,7 @@ const Component: React.FC<Props> = ({
         <Typography gutterBottom variant="body1">
           {textContent}
         </Typography>
-        {likeCount && (
+        {likeCount ? (
           <Box display="flex" alignItems="center">
             <FavoriteIcon
               fontSize="small"
@@ -73,7 +71,7 @@ const Component: React.FC<Props> = ({
             />
             <Typography variant="body2">{likeCount}</Typography>
           </Box>
-        )}
+        ) : null}
       </CardContent>
       <CardActions className={classes.borderTop}>
         <Box display="flex" width="100%">

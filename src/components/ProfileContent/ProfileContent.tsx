@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import {
-  makeStyles,
-  AppBar,
-  Tabs,
-  Tab,
-  Typography,
-  Box,
-} from '@material-ui/core';
+import { makeStyles, AppBar, Tabs, Tab, Box } from '@material-ui/core';
 
 import About from '../About';
+import ProfilePosts from '../ProfilePosts';
 
 interface TabPanelProps {
   value: number;
@@ -24,11 +18,7 @@ const TabPanel: React.FC<TabPanelProps> = ({
 }) => {
   return (
     <div hidden={value !== index} {...other}>
-      {value === index && (
-        <Box clone p={3}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 };
@@ -61,7 +51,7 @@ const ProfileContent: React.FC = () => {
         <About />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Porsts
+        <ProfilePosts />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Friends

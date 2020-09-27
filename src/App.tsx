@@ -8,17 +8,13 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import { RootState } from './store/reducers';
-import { loadUser, getProfileData } from './store/actions';
+import { loadUser } from './store/actions';
 import { auth } from './firebase';
 
 const App: React.FC = () => {
   const [checkAuth, setCheckAuth] = useState(true);
   const userId = useSelector((state: RootState) => state.auth.userId);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getProfileData(userId));
-  }, [userId, dispatch]);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
