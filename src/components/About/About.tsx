@@ -14,13 +14,25 @@ interface Relationship {
 }
 
 const About: React.FC = () => {
-  const email = useSelector((state: RootState) => state.auth.email);
-  const firstName = useSelector((state: RootState) => state.profile.firstName);
-  const lastName = useSelector((state: RootState) => state.profile.lastName);
-  const location = useSelector((state: RootState) => state.profile.location);
-  const country = useSelector((state: RootState) => state.profile.country);
-  const education = useSelector((state: RootState) => state.profile.education);
-  const hobbies = useSelector((state: RootState) => state.profile.hobbies);
+  const email = useSelector((state: RootState) => state.visitedProfile.email);
+  const firstName = useSelector(
+    (state: RootState) => state.visitedProfile.firstName,
+  );
+  const lastName = useSelector(
+    (state: RootState) => state.visitedProfile.lastName,
+  );
+  const location = useSelector(
+    (state: RootState) => state.visitedProfile.location,
+  );
+  const country = useSelector(
+    (state: RootState) => state.visitedProfile.country,
+  );
+  const education = useSelector(
+    (state: RootState) => state.visitedProfile.education,
+  );
+  const hobbies = useSelector(
+    (state: RootState) => state.visitedProfile.hobbies,
+  );
   const dateOfBirth = useSelector(
     (state: RootState) => state.profile.dateOfBirth,
   );

@@ -57,7 +57,7 @@ interface AddFriendAction {
   payload: string;
 }
 
-interface AddFiendSuccessAction {
+interface AddFriendSuccessAction {
   type: typeof PROFILE.ADD_FRIEND_SUCCESS;
   payload: string;
 }
@@ -81,4 +81,6 @@ export type ProfileActions =
   | GetProfileDataAction
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
-  | UpdateProfileFieldActionSuccess;
+  | UpdateProfileFieldActionSuccess
+  | AddFriendAction
+  | AddFriendSuccessAction;

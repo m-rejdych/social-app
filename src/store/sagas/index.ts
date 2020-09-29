@@ -6,6 +6,7 @@ import {
   setProfileData,
   setProfileFieldUpdate,
 } from './profileSaga';
+import { setGetVisitedProfileData } from './visitedProfileSaga';
 import { setSendPost, setGetPosts } from './postsSaga';
 import { setGetUsers } from './usersSaga';
 
@@ -16,6 +17,7 @@ function* rootSaga() {
     setProfileIntro(),
     setProfileData(),
     setProfileFieldUpdate(),
+    setGetVisitedProfileData(),
     setSendPost(),
     setGetPosts(),
     setGetUsers(),

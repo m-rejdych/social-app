@@ -8,7 +8,6 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import { RootState } from './store/reducers';
 import { loadUser } from './store/actions';
-import { getUsers } from './store/actions';
 import { auth } from './firebase';
 
 const App: React.FC = () => {
@@ -17,7 +16,6 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsers());
     auth.onAuthStateChanged((user) => {
       if (user && user.email) {
         const { email, uid, displayName } = user;

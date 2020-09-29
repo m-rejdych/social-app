@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Grid, makeStyles, Box } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
-import { getProfileData } from '../../store/actions';
+import { getVisitedProfileData } from '../../store/actions';
 import { getPosts } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import PageWrapper from '../../components/PageWrapper';
@@ -29,7 +29,7 @@ const Component: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getProfileData(params.id));
+    dispatch(getVisitedProfileData(params.id));
     dispatch(getPosts(params.id));
   }, [userId, params, dispatch]);
 

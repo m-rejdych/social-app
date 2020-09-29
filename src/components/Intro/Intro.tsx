@@ -38,13 +38,27 @@ const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
   const userId = useSelector((state: RootState) => state.auth.userId);
   const params = useParams<{ id: string }>();
-  const firstName = useSelector((state: RootState) => state.profile.firstName);
-  const lastName = useSelector((state: RootState) => state.profile.lastName);
-  const location = useSelector((state: RootState) => state.profile.location);
-  const country = useSelector((state: RootState) => state.profile.country);
-  const education = useSelector((state: RootState) => state.profile.education);
-  const hobbies = useSelector((state: RootState) => state.profile.hobbies);
-  const loading = useSelector((state: RootState) => state.profile.loading);
+  const firstName = useSelector(
+    (state: RootState) => state.visitedProfile.firstName,
+  );
+  const lastName = useSelector(
+    (state: RootState) => state.visitedProfile.lastName,
+  );
+  const location = useSelector(
+    (state: RootState) => state.visitedProfile.location,
+  );
+  const country = useSelector(
+    (state: RootState) => state.visitedProfile.country,
+  );
+  const education = useSelector(
+    (state: RootState) => state.visitedProfile.education,
+  );
+  const hobbies = useSelector(
+    (state: RootState) => state.visitedProfile.hobbies,
+  );
+  const loading = useSelector(
+    (state: RootState) => state.visitedProfile.loading,
+  );
   const classes = useStyles();
 
   const isMe = params.id === userId;

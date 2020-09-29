@@ -21,6 +21,12 @@ export {
 } from './profileActions';
 
 export {
+  getVisitedProfileData,
+  getVisitedProfileDataSuccess,
+  setVisitedProfileError,
+} from './visitedProfileActions';
+
+export {
   sendPost,
   sendPostSuccess,
   setPostsError,
