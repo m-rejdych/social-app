@@ -8,6 +8,7 @@ import {
 } from '../types/profileTypes';
 
 const initialState: ProfileState = {
+  email: '',
   firstName: '',
   lastName: '',
   location: '',
@@ -18,6 +19,7 @@ const initialState: ProfileState = {
   proffesion: '',
   relationship: '',
   phoneNumber: '',
+  friends: [],
   loading: true,
   error: null,
 };
@@ -47,6 +49,14 @@ const profileReducer = (
         ...state,
         loading: false,
         ...(payload as Partial<ProfileDetails>),
+      };
+    case PROFILE.ADD_FRIEND:
+      return { ...state, loading: true };
+    case PROFILE.ADD_FRIEND_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        friends: [...state.friends, payload as string],
       };
     case PROFILE.PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };

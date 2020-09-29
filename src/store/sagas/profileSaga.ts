@@ -1,9 +1,8 @@
-import { put, takeEvery } from 'redux-saga/effects';
+import { put, takeEvery, select } from 'redux-saga/effects';
 
 import {
   ProfileActions,
   ProfileIntro,
-  ProfileData,
   ProfileDetails,
 } from '../types/profileTypes';
 import {
@@ -11,7 +10,9 @@ import {
   setProfileIntroSuccess,
   updateProfileFieldSuccess,
   getProfileDataSuccess,
+  addFriendSuccess,
 } from '../actions';
+import { RootState } from '../reducers';
 import { PROFILE } from '../constants';
 import { db } from '../../firebase';
 
@@ -49,6 +50,13 @@ function* handleUpdateProfileField({ payload }: ProfileActions) {
     yield put(setProfileError(error.message));
   }
 }
+
+// function* handleAddFriend({ payload }: ProfileActions) {
+//   try {
+//     const userId = yield select((state: RootState) => state.auth.userId);
+//     yield db.collection('users').doc(userId)
+//   }
+// }
 
 function* setProfileIntro() {
   yield takeEvery(PROFILE.SET_PROFILE_INTRO, handleSetProfileIntro);

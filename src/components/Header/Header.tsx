@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header: React.FC = () => {
+  const [isFocused, setIsFocused] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const firstName = useSelector((state: RootState) => state.auth.firstName);
@@ -64,6 +65,7 @@ const Header: React.FC = () => {
 
   const goToProfile = (userId: string): void => {
     history.push(`/profile/${userId}`);
+    setSearchValue('');
   };
 
   const goToHome = (): void => {
@@ -104,7 +106,10 @@ const Header: React.FC = () => {
           </Button>
           <Tooltip
             interactive
-            arrow
+            placement="bottom-start"
+            open={
+              isFocused && searchValue.length > 0 && filteredUsers.length > 0
+            }
             title={filteredUsers.map(({ firstName, lastName, userId }) => (
               <Box
                 display="flex"
@@ -121,7 +126,6 @@ const Header: React.FC = () => {
                 >{`${firstName} ${lastName}`}</Typography>
               </Box>
             ))}
-            open={searchValue.length > 0 && filteredUsers.length > 0}
           >
             <Box display="flex" flexGrow={1} maxWidth={500}>
               <TextField
@@ -130,6 +134,8 @@ const Header: React.FC = () => {
                 type="search"
                 placeholder="Search..."
                 onChange={(e) => handleChange(e)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
                 variant="outlined"
                 className={classes.textField}
                 inputRef={searchRef}

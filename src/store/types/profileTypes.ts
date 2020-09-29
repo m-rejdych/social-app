@@ -16,11 +16,11 @@ export interface ProfileDetails {
   phoneNumber: string;
   firstName: string;
   lastName: string;
+  email: string;
+  friends: string[];
 }
 
-export type ProfileData = ProfileIntro &
-  ProfileDetails &
-  Omit<AdditionalUserData, 'password'>;
+export type ProfileData = ProfileIntro & ProfileDetails;
 
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
@@ -42,11 +42,6 @@ interface GetProfileDataSuccessAction {
   payload: ProfileData;
 }
 
-interface SetProfileErrorAction {
-  type: typeof PROFILE.PROFILE_FAIL;
-  payload: string;
-}
-
 interface UpdateProfileFieldAction {
   type: typeof PROFILE.UPDATE_PROFILE_FIELD;
   payload: { userId: string; fieldData: Partial<ProfileDetails> };
@@ -55,6 +50,21 @@ interface UpdateProfileFieldAction {
 interface UpdateProfileFieldActionSuccess {
   type: typeof PROFILE.UPDATE_PROFILE_FIELD_SUCCESS;
   payload: Partial<ProfileDetails>;
+}
+
+interface AddFriendAction {
+  type: typeof PROFILE.ADD_FRIEND;
+  payload: string;
+}
+
+interface AddFiendSuccessAction {
+  type: typeof PROFILE.ADD_FRIEND_SUCCESS;
+  payload: string;
+}
+
+interface SetProfileErrorAction {
+  type: typeof PROFILE.PROFILE_FAIL;
+  payload: string;
 }
 
 export interface ProfileState

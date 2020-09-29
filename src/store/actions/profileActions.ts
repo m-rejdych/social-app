@@ -43,6 +43,16 @@ const updateProfileFieldSuccess = (
   payload: fieldData,
 });
 
+const addFriend = (friendId: string): ProfileActions => ({
+  type: PROFILE.ADD_FRIEND,
+  payload: friendId,
+});
+
+const addFriendSuccess = (friendId: string): ProfileActions => ({
+  type: PROFILE.ADD_FRIEND_SUCCESS,
+  payload: friendId,
+});
+
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -56,4 +66,6 @@ export {
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
+  addFriend,
+  addFriendSuccess,
 };

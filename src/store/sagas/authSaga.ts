@@ -18,22 +18,20 @@ function* handleSignUp({
     const user = auth.currentUser!;
     user.updateProfile({ displayName: `${firstName} ${lastName}` });
     yield put(signUpSuccess({ email, firstName, lastName, userId: user.uid }));
-    yield db
-      .collection('users')
-      .doc(user.uid)
-      .set({
-        email,
-        firstName,
-        lastName,
-        location: 'No location information',
-        country: 'No country information',
-        education: 'No education information',
-        hobbies: 'No hobbies information',
-        dateOfBirth: 'No age information',
-        proffesion: 'No proffesion information',
-        relationship: 'No relationship information',
-        phoneNumber: 'No phone number information',
-      });
+    yield db.collection('users').doc(user.uid).set({
+      email,
+      firstName,
+      lastName,
+      location: 'No location information',
+      country: 'No country information',
+      education: 'No education information',
+      hobbies: 'No hobbies information',
+      dateOfBirth: 'No age information',
+      proffesion: 'No proffesion information',
+      relationship: 'No relationship information',
+      phoneNumber: 'No phone number information',
+      friends: [],
+    });
   } catch (error) {
     yield put(setProfileError(error.message));
   }

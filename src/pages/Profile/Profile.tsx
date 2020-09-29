@@ -30,7 +30,6 @@ const Component: React.FC = () => {
 
   useEffect(() => {
     dispatch(getProfileData(params.id));
-    console.log('fired');
     dispatch(getPosts(params.id));
   }, [userId, params, dispatch]);
 
