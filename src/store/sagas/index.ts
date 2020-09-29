@@ -7,6 +7,7 @@ import {
   setProfileFieldUpdate,
 } from './profileSaga';
 import { setSendPost, setGetPosts } from './postsSaga';
+import { setGetUsers } from './usersSaga';
 
 function* rootSaga() {
   yield all([
@@ -17,6 +18,7 @@ function* rootSaga() {
     setProfileFieldUpdate(),
     setSendPost(),
     setGetPosts(),
+    setGetUsers(),
   ]);
 }
 

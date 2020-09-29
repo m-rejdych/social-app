@@ -25,3 +25,5 @@ export {
   getPosts,
   getPostsSuccess,
 } from './postsActions';
+
+export { getUsers, getUsersSuccess, setUsersError } from './usersActions';
