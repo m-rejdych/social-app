@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
@@ -10,13 +10,16 @@ import {
   makeStyles,
   Button,
   Typography,
+  Tooltip,
 } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import SearchIcon from '@material-ui/icons/Search';
+import FaceIcon from '@material-ui/icons/Face';
 
 import { RootState } from '../../store/reducers';
+import { User } from '../../store/types/usersTypes';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -26,9 +29,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
   },
   textField: {
-    flexGrow: 1,
     margin: theme.spacing(0, 6),
-    maxWidth: 500,
   },
   input: {
     borderRadius: 40,
@@ -42,22 +43,56 @@ const useStyles = makeStyles((theme) => ({
   profileButtonRadius: {
     borderRadius: 20,
   },
+  user: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
 }));
 
 const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const firstName = useSelector((state: RootState) => state.auth.firstName);
   const lastName = useSelector((state: RootState) => state.auth.lastName);
-  const userId = useSelector((state: RootState) => state.auth.userId);
+  const loggedUserId = useSelector((state: RootState) => state.auth.userId);
+  const users = useSelector((state: RootState) => state.users.users);
+  const searchRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
   const history = useHistory();
   const classes = useStyles();
 
-  const goToProfile = (): void => {
+  const goToProfile = (userId: string): void => {
     history.push(`/profile/${userId}`);
   };
 
   const goToHome = (): void => {
     history.push('/home');
+  };
+
+  const filterUsers = (value: string): void => {
+    if (value) {
+      const filteredUsers = users.filter(({ firstName, lastName, userId }) => {
+        if (loggedUserId !== userId) {
+          return (
+            firstName.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+            lastName.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+            `${firstName} ${lastName}`
+              .toLowerCase()
+              .indexOf(value.toLowerCase()) !== -1
+          );
+        }
+        return false;
+      });
+      setFilteredUsers(filteredUsers);
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ): void => {
+    setSearchValue(e.target.value);
+    filterUsers(e.target.value);
   };
 
   return (
@@ -67,23 +102,49 @@ const Header: React.FC = () => {
           <Button onClick={goToHome} className={classes.text}>
             Social App
           </Button>
-          <TextField
-            value={searchValue}
-            type="search"
-            placeholder="Search..."
-            onChange={(e) => setSearchValue(e.target.value)}
-            variant="outlined"
-            className={classes.textField}
-            InputProps={{
-              startAdornment: <SearchIcon />,
-              className: classes.input,
-              color: 'secondary',
-            }}
-            inputProps={{ className: classes.inputElement }}
-          />
+          <Tooltip
+            interactive
+            arrow
+            title={filteredUsers.map(({ firstName, lastName, userId }) => (
+              <Box
+                display="flex"
+                alignItems="center"
+                px={2}
+                py={1}
+                className={classes.user}
+                onClick={() => goToProfile(userId)}
+              >
+                <FaceIcon className={classes.marginRight} />
+                <Typography
+                  key={userId}
+                  variant="h6"
+                >{`${firstName} ${lastName}`}</Typography>
+              </Box>
+            ))}
+            open={searchValue.length > 0 && filteredUsers.length > 0}
+          >
+            <Box display="flex" flexGrow={1} maxWidth={500}>
+              <TextField
+                fullWidth
+                value={searchValue}
+                type="search"
+                placeholder="Search..."
+                onChange={(e) => handleChange(e)}
+                variant="outlined"
+                className={classes.textField}
+                inputRef={searchRef}
+                InputProps={{
+                  startAdornment: <SearchIcon />,
+                  className: classes.input,
+                  color: 'secondary',
+                }}
+                inputProps={{ className: classes.inputElement }}
+              />
+            </Box>
+          </Tooltip>
           <Box ml="auto">
             <IconButton
-              onClick={goToProfile}
+              onClick={() => goToProfile(loggedUserId)}
               className={classes.profileButtonRadius}
             >
               <Typography

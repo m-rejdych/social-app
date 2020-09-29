@@ -20,7 +20,7 @@ export interface RootState {
   auth: AuthState;
   profile: ProfileState;
   posts: PostsState;
-  usrs: UsersState;
+  users: UsersState;
 }
 
 export default rootReducer;
