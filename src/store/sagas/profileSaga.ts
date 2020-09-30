@@ -4,12 +4,14 @@ import {
   ProfileActions,
   ProfileIntro,
   ProfileDetails,
+  Notification,
 } from '../types/profileTypes';
 import {
   setProfileError,
   setProfileIntroSuccess,
   updateProfileFieldSuccess,
   getProfileDataSuccess,
+  sendNotification,
   addFriendSuccess,
 } from '../actions';
 import { RootState } from '../reducers';
@@ -51,6 +53,20 @@ function* handleUpdateProfileField({ payload }: ProfileActions) {
   }
 }
 
+function* handleSendNotificaiton({ payload }: ProfileActions) {
+  try {
+    const { fromUserId, toUserId, from, type } = payload as Notification;
+    const response = yield db.collection('users').doc(toUserId).get();
+    const notifications: Notification[] = [
+      ...response.data().notifications,
+      { fromUserId, from, type },
+    ];
+    yield db.collection('users').doc(toUserId).update({ notifications });
+  } catch (error) {
+    yield put(setProfileError(error));
+  }
+}
+
 // function* handleAddFriend({ payload }: ProfileActions) {
 //   try {
 //     const userId = yield select((state: RootState) => state.auth.userId);
@@ -70,4 +86,13 @@ function* setProfileFieldUpdate() {
   yield takeEvery(PROFILE.UPDATE_PROFILE_FIELD, handleUpdateProfileField);
 }
 
-export { setProfileIntro, setProfileData, setProfileFieldUpdate };
+function* setSendNotification() {
+  yield takeEvery(PROFILE.SEND_NOTIFICATION, handleSendNotificaiton);
+}
+
+export {
+  setProfileIntro,
+  setProfileData,
+  setProfileFieldUpdate,
+  setSendNotification,
+};

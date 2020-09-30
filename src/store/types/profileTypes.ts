@@ -22,6 +22,13 @@ export interface ProfileDetails {
 
 export type ProfileData = ProfileIntro & ProfileDetails;
 
+export interface Notification {
+  from: string;
+  fromUserId: string;
+  toUserId: string;
+  type: 'friendRequest';
+}
+
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
   payload: ProfileIntro;
@@ -50,6 +57,11 @@ interface UpdateProfileFieldAction {
 interface UpdateProfileFieldActionSuccess {
   type: typeof PROFILE.UPDATE_PROFILE_FIELD_SUCCESS;
   payload: Partial<ProfileDetails>;
+}
+
+interface SendNotificationAction {
+  type: typeof PROFILE.SEND_NOTIFICATION;
+  payload: Notification;
 }
 
 interface AddFriendAction {
@@ -82,5 +94,6 @@ export type ProfileActions =
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
   | UpdateProfileFieldActionSuccess
+  | SendNotificationAction
   | AddFriendAction
   | AddFriendSuccessAction;
