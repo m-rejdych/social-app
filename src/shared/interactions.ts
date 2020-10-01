@@ -6,12 +6,14 @@ const sendNotification = async ({
   fromUserId,
   toUserId,
   type,
+  isSeen,
+  id,
 }: Notification): Promise<void> => {
   try {
     const response = await db.collection('users').doc(toUserId).get();
     const notifications: Notification[] = [
       ...response.data()!.notifications,
-      { fromUserId, toUserId, fromName, type },
+      { fromUserId, toUserId, fromName, type, isSeen, id },
     ];
     await db.collection('users').doc(toUserId).update({ notifications });
   } catch (error) {

@@ -20,7 +20,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import FriendsList from '../FriendsList';
 import { RootState } from '../../store/reducers';
 import { User } from '../../store/types/usersTypes';
-import { setNotifications } from '../../store/actions';
+import { updateProfileField } from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -130,7 +130,12 @@ const Header: React.FC = () => {
       ...notification,
       isSeen: true,
     }));
-    dispatch(setNotifications(updatedNotifications));
+    dispatch(
+      updateProfileField({
+        userId: loggedUserId,
+        fieldData: { notifications: updatedNotifications },
+      }),
+    );
   };
 
   return (
