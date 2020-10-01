@@ -11,6 +11,7 @@ const initialState: ProfileState = {
   email: '',
   firstName: '',
   lastName: '',
+  userId: '',
   location: '',
   country: '',
   education: '',
@@ -20,6 +21,7 @@ const initialState: ProfileState = {
   relationship: '',
   phoneNumber: '',
   friends: [],
+  notifications: [],
   loading: true,
   error: null,
 };

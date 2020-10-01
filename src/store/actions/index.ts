@@ -16,7 +16,6 @@ export {
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
-  sendNotification,
   addFriend,
   addFriendSuccess,
 } from './profileActions';

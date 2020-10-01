@@ -1,5 +1,5 @@
 import { PROFILE } from '../constants';
-import { AdditionalUserData } from './authTypes';
+import Notification from '../../types/Notificaiton';
 
 export interface ProfileIntro {
   userId: string;
@@ -18,16 +18,10 @@ export interface ProfileDetails {
   lastName: string;
   email: string;
   friends: string[];
+  notifications: Notification[];
 }
 
 export type ProfileData = ProfileIntro & ProfileDetails;
-
-export interface Notification {
-  from: string;
-  fromUserId: string;
-  toUserId: string;
-  type: 'friendRequest';
-}
 
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
@@ -36,7 +30,7 @@ interface SetProfileIntroAction {
 
 interface SetProfileIntroSuccessAction {
   type: typeof PROFILE.SET_PROFILE_INTRO_SUCCESS;
-  payload: Omit<ProfileIntro, 'userId'>;
+  payload: ProfileIntro;
 }
 
 interface GetProfileDataAction {
@@ -59,11 +53,6 @@ interface UpdateProfileFieldActionSuccess {
   payload: Partial<ProfileDetails>;
 }
 
-interface SendNotificationAction {
-  type: typeof PROFILE.SEND_NOTIFICATION;
-  payload: Notification;
-}
-
 interface AddFriendAction {
   type: typeof PROFILE.ADD_FRIEND;
   payload: string;
@@ -79,9 +68,7 @@ interface SetProfileErrorAction {
   payload: string;
 }
 
-export interface ProfileState
-  extends Omit<ProfileIntro, 'userId'>,
-    ProfileDetails {
+export interface ProfileState extends ProfileIntro, ProfileDetails {
   loading: boolean;
   error: null | string;
 }
@@ -94,6 +81,5 @@ export type ProfileActions =
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
   | UpdateProfileFieldActionSuccess
-  | SendNotificationAction
   | AddFriendAction
   | AddFriendSuccessAction;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
@@ -21,6 +21,7 @@ import { RootState } from '../../store/reducers';
 import EditIntroDialog from './EditIntroDialog';
 import Country from '../../types/Country';
 import countries from '../../shared/countries';
+import { sendNotification } from '../../shared/interactions';
 
 const useStyles = makeStyles((theme) => ({
   introCard: {
@@ -32,11 +33,21 @@ const useStyles = makeStyles((theme) => ({
   iconMarginRight: {
     marginRight: theme.spacing(1),
   },
+  invited: {
+    backgroundColor: theme.palette.success.main,
+    '&:hover': {
+      backgroundColor: theme.palette.success.dark,
+    },
+  },
 }));
 
 const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
-  const userId = useSelector((state: RootState) => state.auth.userId);
+  const [isInvited, setIsInvited] = useState(false);
+  const loggedUserId = useSelector((state: RootState) => state.auth.userId);
+  const visitedUserId = useSelector(
+    (state: RootState) => state.visitedProfile.userId,
+  );
   const params = useParams<{ id: string }>();
   const firstName = useSelector(
     (state: RootState) => state.visitedProfile.firstName,
@@ -59,9 +70,23 @@ const Intro: React.FC = () => {
   const loading = useSelector(
     (state: RootState) => state.visitedProfile.loading,
   );
+  const notifications = useSelector(
+    (state: RootState) => state.visitedProfile.notifications,
+  );
   const classes = useStyles();
 
-  const isMe = params.id === userId;
+  useEffect(() => {
+    if (
+      !loading &&
+      notifications.some(
+        ({ fromUserId, type }) =>
+          type === 'friendRequest' && fromUserId === loggedUserId,
+      )
+    )
+      setIsInvited(true);
+  }, [loading]);
+
+  const isMe = params.id === loggedUserId;
 
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,
@@ -98,6 +123,16 @@ const Intro: React.FC = () => {
     setShowEditIntroDialog(false);
   };
 
+  const addFriend = async (): Promise<void> => {
+    await sendNotification({
+      fromName: `${firstName} ${lastName}`,
+      fromUserId: loggedUserId,
+      toUserId: visitedUserId,
+      type: 'friendRequest',
+    });
+    setIsInvited(true);
+  };
+
   return (
     <Card elevation={3} className={classes.introCard}>
       {loading ? (
@@ -117,16 +152,15 @@ const Intro: React.FC = () => {
             titleTypographyProps={{ variant: 'h4' }}
             classes={{ action: classes.alignSelfEnd }}
             action={
-              isMe && (
-                <Button
-                  onClick={openEditIntroDialog}
-                  variant="contained"
-                  color="secondary"
-                  size="large"
-                >
-                  Edit intro
-                </Button>
-              )
+              <Button
+                onClick={isMe ? openEditIntroDialog : addFriend}
+                variant="contained"
+                color="secondary"
+                size="large"
+                className={isInvited ? classes.invited : undefined}
+              >
+                {isMe ? 'Edit intro' : isInvited ? 'Invited' : 'Add friend'}
+              </Button>
             }
           />
           <CardContent>

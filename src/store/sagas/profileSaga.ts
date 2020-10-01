@@ -4,14 +4,12 @@ import {
   ProfileActions,
   ProfileIntro,
   ProfileDetails,
-  Notification,
 } from '../types/profileTypes';
 import {
   setProfileError,
   setProfileIntroSuccess,
   updateProfileFieldSuccess,
   getProfileDataSuccess,
-  sendNotification,
   addFriendSuccess,
 } from '../actions';
 import { RootState } from '../reducers';
@@ -20,9 +18,12 @@ import { db } from '../../firebase';
 
 function* handleSetProfileIntro({ payload }: ProfileActions) {
   try {
-    const { userId, ...rest } = payload as ProfileIntro;
-    yield db.collection('users').doc(userId).update(rest);
-    yield put(setProfileIntroSuccess(rest));
+    const { userId } = payload as ProfileIntro;
+    yield db
+      .collection('users')
+      .doc(userId)
+      .update(payload as ProfileIntro);
+    yield put(setProfileIntroSuccess(payload as ProfileIntro));
   } catch (error) {
     yield put(setProfileError(error.message));
   }
@@ -53,20 +54,6 @@ function* handleUpdateProfileField({ payload }: ProfileActions) {
   }
 }
 
-function* handleSendNotificaiton({ payload }: ProfileActions) {
-  try {
-    const { fromUserId, toUserId, from, type } = payload as Notification;
-    const response = yield db.collection('users').doc(toUserId).get();
-    const notifications: Notification[] = [
-      ...response.data().notifications,
-      { fromUserId, from, type },
-    ];
-    yield db.collection('users').doc(toUserId).update({ notifications });
-  } catch (error) {
-    yield put(setProfileError(error));
-  }
-}
-
 // function* handleAddFriend({ payload }: ProfileActions) {
 //   try {
 //     const userId = yield select((state: RootState) => state.auth.userId);
@@ -86,13 +73,4 @@ function* setProfileFieldUpdate() {
   yield takeEvery(PROFILE.UPDATE_PROFILE_FIELD, handleUpdateProfileField);
 }
 
-function* setSendNotification() {
-  yield takeEvery(PROFILE.SEND_NOTIFICATION, handleSendNotificaiton);
-}
-
-export {
-  setProfileIntro,
-  setProfileData,
-  setProfileFieldUpdate,
-  setSendNotification,
-};
+export { setProfileIntro, setProfileData, setProfileFieldUpdate };

@@ -22,6 +22,7 @@ function* handleSignUp({
       email,
       firstName,
       lastName,
+      userId: user.uid,
       location: 'No location information',
       country: 'No country information',
       education: 'No education information',
@@ -31,6 +32,7 @@ function* handleSignUp({
       relationship: 'No relationship information',
       phoneNumber: 'No phone number information',
       friends: [],
+      notifications: [],
     });
   } catch (error) {
     yield put(setProfileError(error.message));

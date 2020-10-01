@@ -4,7 +4,6 @@ import {
   ProfileIntro,
   ProfileData,
   ProfileDetails,
-  Notification,
 } from '../types/profileTypes';
 
 const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
@@ -12,9 +11,7 @@ const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
   payload: introData,
 });
 
-const setProfileIntroSuccess = (
-  introData: Omit<ProfileIntro, 'userId'>,
-): ProfileActions => ({
+const setProfileIntroSuccess = (introData: ProfileIntro): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO_SUCCESS,
   payload: introData,
 });
@@ -54,11 +51,6 @@ const addFriendSuccess = (friendId: string): ProfileActions => ({
   payload: friendId,
 });
 
-const sendNotification = (notification: Notification): ProfileActions => ({
-  type: PROFILE.SEND_NOTIFICATION,
-  payload: notification,
-});
-
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -72,7 +64,6 @@ export {
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
-  sendNotification,
   addFriend,
   addFriendSuccess,
 };

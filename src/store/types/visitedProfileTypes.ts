@@ -16,9 +16,7 @@ interface setVisitedProfileErrorAction {
   payload: string;
 }
 
-export interface VisitedProfileState
-  extends Omit<ProfileIntro, 'userId'>,
-    ProfileDetails {
+export interface VisitedProfileState extends ProfileIntro, ProfileDetails {
   loading: boolean;
   error: null | string;
 }

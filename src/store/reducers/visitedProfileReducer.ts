@@ -9,6 +9,7 @@ const initialState: VisitedProfileState = {
   email: '',
   firstName: '',
   lastName: '',
+  userId: '',
   location: '',
   country: '',
   education: '',
@@ -18,6 +19,7 @@ const initialState: VisitedProfileState = {
   relationship: '',
   phoneNumber: '',
   friends: [],
+  notifications: [],
   loading: true,
   error: null,
 };
