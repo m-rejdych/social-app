@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           {/* <PostsList /> */}
         </Grid>
         <Grid item xs={3}>
-          <FriendsList />
+          {/* <FriendsList /> */}
         </Grid>
       </Grid>
     </PageWrapper>

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   AppBar,
@@ -10,16 +10,17 @@ import {
   makeStyles,
   Button,
   Typography,
-  Tooltip,
+  Badge,
 } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import SearchIcon from '@material-ui/icons/Search';
-import FaceIcon from '@material-ui/icons/Face';
 
+import FriendsList from '../FriendsList';
 import { RootState } from '../../store/reducers';
 import { User } from '../../store/types/usersTypes';
+import { setNotifications } from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -49,19 +50,46 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.action.hover,
     },
   },
+  list: {
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[3],
+    borderRadius: '0 0 10px 10px',
+  },
 }));
 
 const Header: React.FC = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [searchFieldPosition, setSearchFieldPosition] = useState({
+    left: 0,
+    width: 0,
+  });
   const firstName = useSelector((state: RootState) => state.auth.firstName);
   const lastName = useSelector((state: RootState) => state.auth.lastName);
   const loggedUserId = useSelector((state: RootState) => state.auth.userId);
   const users = useSelector((state: RootState) => state.users.users);
+  const notifications = useSelector(
+    (state: RootState) => state.profile.notifications,
+  );
   const searchRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
+  const searchFieldRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
+  const dispatch = useDispatch();
   const classes = useStyles();
+
+  useEffect(() => {
+    if (searchFieldRef && searchFieldRef.current) {
+      const { left, width } = searchFieldRef.current.getBoundingClientRect();
+      setSearchFieldPosition({ left, width });
+    }
+  }, []);
+
+  const showSearchList =
+    isFocused && searchValue.length > 0 && filteredUsers.length > 0;
+
+  const notificationsCount = notifications.filter(({ isSeen }) => !isSeen)
+    .length;
 
   const goToProfile = (userId: string): void => {
     history.push(`/profile/${userId}`);
@@ -97,58 +125,56 @@ const Header: React.FC = () => {
     filterUsers(e.target.value);
   };
 
+  const toggleNotifications = (): void => {
+    const updatedNotifications = notifications.map((notification) => ({
+      ...notification,
+      isSeen: true,
+    }));
+    dispatch(setNotifications(updatedNotifications));
+  };
+
   return (
     <AppBar>
-      <Box clone width="100%">
+      <Box clone width="100%" position="relative">
         <Toolbar>
           <Button onClick={goToHome} className={classes.text}>
             Social App
           </Button>
-          <Tooltip
-            interactive
-            placement="bottom-start"
-            open={
-              isFocused && searchValue.length > 0 && filteredUsers.length > 0
-            }
-            title={filteredUsers.map(({ firstName, lastName, userId }) => (
-              <Box
-                key={`search_${userId}`}
-                display="flex"
-                alignItems="center"
-                px={2}
-                py={1}
-                className={classes.user}
-                onClick={() => goToProfile(userId)}
-              >
-                <FaceIcon className={classes.marginRight} />
-                <Typography
-                  key={userId}
-                  variant="h6"
-                >{`${firstName} ${lastName}`}</Typography>
-              </Box>
-            ))}
-          >
-            <Box display="flex" flexGrow={1} maxWidth={500}>
-              <TextField
-                fullWidth
-                value={searchValue}
-                type="search"
-                placeholder="Search..."
-                onChange={(e) => handleChange(e)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                variant="outlined"
-                className={classes.textField}
-                inputRef={searchRef}
-                InputProps={{
-                  startAdornment: <SearchIcon />,
-                  className: classes.input,
-                  color: 'secondary',
-                }}
-                inputProps={{ className: classes.inputElement }}
+          <Box display="flex" flexGrow={1} maxWidth={500}>
+            <TextField
+              fullWidth
+              ref={searchFieldRef}
+              value={searchValue}
+              type="search"
+              placeholder="Search..."
+              onChange={(e) => handleChange(e)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              variant="outlined"
+              className={classes.textField}
+              inputRef={searchRef}
+              InputProps={{
+                startAdornment: <SearchIcon />,
+                className: classes.input,
+                color: 'secondary',
+              }}
+              inputProps={{ className: classes.inputElement }}
+            />
+          </Box>
+          {showSearchList && (
+            <Box
+              position="absolute"
+              top="100%"
+              left={searchFieldPosition.left}
+              width={searchFieldPosition.width}
+            >
+              <FriendsList
+                friends={filteredUsers}
+                className={classes.list}
+                profileNavigation
               />
             </Box>
-          </Tooltip>
+          )}
           <Box ml="auto">
             <IconButton
               onClick={() => goToProfile(loggedUserId)}
@@ -164,8 +190,10 @@ const Header: React.FC = () => {
             <IconButton>
               <MailOutlineIcon fontSize="large" />
             </IconButton>
-            <IconButton>
-              <NotificationsNoneIcon fontSize="large" />
+            <IconButton onClick={toggleNotifications}>
+              <Badge color="secondary" badgeContent={notificationsCount}>
+                <NotificationsNoneIcon fontSize="large" />
+              </Badge>
             </IconButton>
           </Box>
         </Toolbar>

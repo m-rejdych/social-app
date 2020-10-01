@@ -1,27 +1,27 @@
 import React from 'react';
-import { List, ListSubheader, Typography } from '@material-ui/core';
-import { v4 as uuid } from 'uuid';
+import { List, ListProps } from '@material-ui/core';
 
 import Friend from './Friend';
+import { User } from '../../store/types/usersTypes';
 
-const friends = [
-  { firstName: 'Lorem', lastName: 'Ipsum', userId: uuid() },
-  { firstName: 'Lorem', lastName: 'Ipsum', userId: uuid() },
-  { firstName: 'Lorem', lastName: 'Ipsum', userId: uuid() },
-  { firstName: 'Lorem', lastName: 'Ipsum', userId: uuid() },
-  { firstName: 'Lorem', lastName: 'Ipsum', userId: uuid() },
-];
+interface Props extends ListProps {
+  friends: User[];
+  profileNavigation?: boolean;
+}
 
-const FriendsList: React.FC = () => {
+const FriendsList: React.FC<Props> = ({
+  friends,
+  profileNavigation = false,
+  ...rest
+}) => {
   return (
-    <List>
-      <ListSubheader>
-        <Typography color="textPrimary" variant="h5">
-          Friends
-        </Typography>
-      </ListSubheader>
+    <List {...rest}>
       {friends.map((friend) => (
-        <Friend key={friend.userId} {...friend} />
+        <Friend
+          key={friend.userId}
+          profileNavigation={profileNavigation}
+          {...friend}
+        />
       ))}
     </List>
   );
