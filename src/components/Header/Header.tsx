@@ -112,6 +112,7 @@ const Header: React.FC = () => {
             }
             title={filteredUsers.map(({ firstName, lastName, userId }) => (
               <Box
+                key={`search_${userId}`}
                 display="flex"
                 alignItems="center"
                 px={2}

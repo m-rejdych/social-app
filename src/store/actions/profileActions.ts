@@ -5,6 +5,7 @@ import {
   ProfileData,
   ProfileDetails,
 } from '../types/profileTypes';
+import Notification from '../../types/Notificaiton';
 
 const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO,
@@ -41,6 +42,11 @@ const updateProfileFieldSuccess = (
   payload: fieldData,
 });
 
+const setNotifications = (notifications: Notification[]): ProfileActions => ({
+  type: PROFILE.SET_NOTIFICATIONS,
+  payload: notifications,
+});
+
 const addFriend = (friendId: string): ProfileActions => ({
   type: PROFILE.ADD_FRIEND,
   payload: friendId,
@@ -64,6 +70,7 @@ export {
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
+  setNotifications,
   addFriend,
   addFriendSuccess,
 };

@@ -129,6 +129,8 @@ const Intro: React.FC = () => {
       fromUserId: loggedUserId,
       toUserId: visitedUserId,
       type: 'friendRequest',
+      isSeen: false,
+      id: uuid(),
     });
     setIsInvited(true);
   };

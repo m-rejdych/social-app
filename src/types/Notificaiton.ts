@@ -3,4 +3,6 @@ export default interface Notification {
   toUserId: string;
   fromName: string;
   type: 'friendRequest';
+  isSeen: boolean;
+  id: string;
 }

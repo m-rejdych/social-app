@@ -6,6 +6,7 @@ import {
   ProfileData,
   ProfileDetails,
 } from '../types/profileTypes';
+import Notification from '../../types/Notificaiton';
 
 const initialState: ProfileState = {
   email: '',
@@ -52,6 +53,8 @@ const profileReducer = (
         loading: false,
         ...(payload as Partial<ProfileDetails>),
       };
+    case PROFILE.SET_NOTIFICATIONS:
+      return { ...state, notifications: payload as Notification[] };
     case PROFILE.ADD_FRIEND:
       return { ...state, loading: true };
     case PROFILE.ADD_FRIEND_SUCCESS:

@@ -53,6 +53,11 @@ interface UpdateProfileFieldActionSuccess {
   payload: Partial<ProfileDetails>;
 }
 
+interface SetNotificaitons {
+  type: typeof PROFILE.SET_NOTIFICATIONS;
+  payload: Notification[];
+}
+
 interface AddFriendAction {
   type: typeof PROFILE.ADD_FRIEND;
   payload: string;
@@ -81,5 +86,6 @@ export type ProfileActions =
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
   | UpdateProfileFieldActionSuccess
+  | SetNotificaitons
   | AddFriendAction
   | AddFriendSuccessAction;
