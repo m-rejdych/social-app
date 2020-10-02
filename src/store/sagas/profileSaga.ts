@@ -1,9 +1,10 @@
-import { put, takeEvery, select } from 'redux-saga/effects';
+import { put, takeEvery, call } from 'redux-saga/effects';
 
 import {
   ProfileActions,
   ProfileIntro,
   ProfileDetails,
+  AddFriendData,
 } from '../types/profileTypes';
 import {
   setProfileError,
@@ -12,6 +13,7 @@ import {
   getProfileDataSuccess,
   addFriendSuccess,
 } from '../actions';
+import { deleteNotification } from '../../shared/interactions';
 import { RootState } from '../reducers';
 import { PROFILE } from '../constants';
 import { db } from '../../firebase';
@@ -54,12 +56,29 @@ function* handleUpdateProfileField({ payload }: ProfileActions) {
   }
 }
 
-// function* handleAddFriend({ payload }: ProfileActions) {
-//   try {
-//     const userId = yield select((state: RootState) => state.auth.userId);
-//     yield db.collection('users').doc(userId)
-//   }
-// }
+function* handleAddFriend({ payload }: ProfileActions) {
+  try {
+    const { notificationId, userId, friendId } = payload as AddFriendData;
+
+    const userResponse = yield db.collection('users').doc(userId).get();
+    const userFriends = userResponse.data().friends;
+    yield db
+      .collection('users')
+      .doc(userId)
+      .update({ friends: [...userFriends, friendId] });
+
+    const friendResponse = yield db.collection('users').doc(friendId).get();
+    const friendFriends = friendResponse.data().friends;
+    yield db
+      .collection('users')
+      .doc(friendId)
+      .update({ friends: [...friendFriends, userId] });
+    yield call(deleteNotification, userId, notificationId);
+    yield put(addFriendSuccess(friendId));
+  } catch (error) {
+    yield put(setProfileError(error.message));
+  }
+}
 
 function* setProfileIntro() {
   yield takeEvery(PROFILE.SET_PROFILE_INTRO, handleSetProfileIntro);
@@ -73,4 +92,8 @@ function* setProfileFieldUpdate() {
   yield takeEvery(PROFILE.UPDATE_PROFILE_FIELD, handleUpdateProfileField);
 }
 
-export { setProfileIntro, setProfileData, setProfileFieldUpdate };
+function* setAddFriend() {
+  yield takeEvery(PROFILE.ADD_FRIEND, handleAddFriend);
+}
+
+export { setProfileIntro, setProfileData, setProfileFieldUpdate, setAddFriend };

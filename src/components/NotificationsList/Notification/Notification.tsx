@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   ListItem,
   ListItemText,
@@ -14,15 +14,29 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import NotificationType from '../../../types/Notificaiton';
 import { deleteNotification } from '../../../shared/interactions';
+import { addFriend } from '../../../store/actions';
 import { NOTIFICATION_TYPES } from '../../../shared/constants';
 import { RootState } from '../../../store/reducers';
 
-const Notification: React.FC<NotificationType> = ({ fromName, type, id }) => {
+const Notification: React.FC<NotificationType> = ({
+  fromName,
+  fromUserId,
+  toUserId,
+  type,
+  id,
+}) => {
   const userId = useSelector((state: RootState) => state.auth.userId);
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   const handleDeleteNotification = (): void => {
     deleteNotification(userId, id);
+  };
+
+  const handleAddFriend = (): void => {
+    dispatch(
+      addFriend({ notificationId: id, userId: toUserId, friendId: fromUserId }),
+    );
   };
 
   const renderMessage = (): string => {
@@ -39,7 +53,7 @@ const Notification: React.FC<NotificationType> = ({ fromName, type, id }) => {
       case NOTIFICATION_TYPES.FRIEND_REQUEST:
         return (
           <>
-            <IconButton size="small">
+            <IconButton onClick={handleAddFriend} size="small">
               <CheckIcon htmlColor={theme.palette.success.main} />
             </IconButton>
             <Box clone mr={2}>

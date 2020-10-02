@@ -23,6 +23,11 @@ export interface ProfileDetails {
 
 export type ProfileData = ProfileIntro & ProfileDetails;
 
+export type AddFriendData = Record<
+  'notificationId' | 'userId' | 'friendId',
+  string
+>;
+
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
   payload: ProfileIntro;
@@ -60,7 +65,7 @@ interface SetNotificaitons {
 
 interface AddFriendAction {
   type: typeof PROFILE.ADD_FRIEND;
-  payload: string;
+  payload: AddFriendData;
 }
 
 interface AddFriendSuccessAction {

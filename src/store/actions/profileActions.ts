@@ -4,6 +4,7 @@ import {
   ProfileIntro,
   ProfileData,
   ProfileDetails,
+  AddFriendData,
 } from '../types/profileTypes';
 import Notification from '../../types/Notificaiton';
 
@@ -47,9 +48,9 @@ const setNotifications = (notifications: Notification[]): ProfileActions => ({
   payload: notifications,
 });
 
-const addFriend = (friendId: string): ProfileActions => ({
+const addFriend = (ids: AddFriendData): ProfileActions => ({
   type: PROFILE.ADD_FRIEND,
-  payload: friendId,
+  payload: ids,
 });
 
 const addFriendSuccess = (friendId: string): ProfileActions => ({
