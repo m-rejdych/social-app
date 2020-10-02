@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
@@ -16,12 +17,19 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import CheckIcon from '@material-ui/icons/Check';
+import UndoIcon from '@material-ui/icons/Undo';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { RootState } from '../../store/reducers';
 import EditIntroDialog from './EditIntroDialog';
 import Country from '../../types/Country';
 import countries from '../../shared/countries';
-import { sendNotification } from '../../shared/interactions';
+import {
+  sendNotification,
+  unsendFriendRequest,
+} from '../../shared/interactions';
 
 const useStyles = makeStyles((theme) => ({
   introCard: {
@@ -36,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   invited: {
     backgroundColor: theme.palette.success.main,
     '&:hover': {
-      backgroundColor: theme.palette.success.dark,
+      backgroundColor: theme.palette.error.dark,
     },
   },
 }));
@@ -44,7 +52,12 @@ const useStyles = makeStyles((theme) => ({
 const Intro: React.FC = () => {
   const [showEditIntroDialog, setShowEditIntroDialog] = useState(false);
   const [isInvited, setIsInvited] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
   const loggedUserId = useSelector((state: RootState) => state.auth.userId);
+  const loggedFirstName = useSelector(
+    (state: RootState) => state.auth.firstName,
+  );
+  const loggedLastName = useSelector((state: RootState) => state.auth.lastName);
   const visitedUserId = useSelector(
     (state: RootState) => state.visitedProfile.userId,
   );
@@ -123,9 +136,13 @@ const Intro: React.FC = () => {
     setShowEditIntroDialog(false);
   };
 
+  const toggleIsButtonHovered = (): void => {
+    setIsButtonHovered((isHovered) => !isHovered);
+  };
+
   const addFriend = async (): Promise<void> => {
     await sendNotification({
-      fromName: `${firstName} ${lastName}`,
+      fromName: `${loggedFirstName} ${loggedLastName}`,
       fromUserId: loggedUserId,
       toUserId: visitedUserId,
       type: 'friendRequest',
@@ -133,6 +150,31 @@ const Intro: React.FC = () => {
       id: uuid(),
     });
     setIsInvited(true);
+  };
+
+  const undoAddFriend = async (): Promise<void> => {
+    await unsendFriendRequest(loggedUserId, visitedUserId);
+    setIsInvited(false);
+  };
+
+  const handleClick = (): void => {
+    if (isMe) openEditIntroDialog();
+    else if (isInvited) undoAddFriend();
+    else addFriend();
+  };
+
+  const renderStartIcon = (): JSX.Element => {
+    if (isMe) return <EditIcon />;
+    if (!isInvited) return <PersonAddIcon />;
+    if (isInvited && !isButtonHovered) return <CheckIcon />;
+    return <UndoIcon />;
+  };
+
+  const renderButtonText = (): string => {
+    if (isMe) return 'Edit intro';
+    if (!isInvited) return 'Add friend';
+    if (isInvited && !isButtonHovered) return 'Invited';
+    return 'Cancel request';
   };
 
   return (
@@ -155,13 +197,16 @@ const Intro: React.FC = () => {
             classes={{ action: classes.alignSelfEnd }}
             action={
               <Button
-                onClick={isMe ? openEditIntroDialog : addFriend}
+                onClick={handleClick}
+                onMouseEnter={toggleIsButtonHovered}
+                onMouseLeave={toggleIsButtonHovered}
                 variant="contained"
                 color="secondary"
                 size="large"
                 className={isInvited ? classes.invited : undefined}
+                startIcon={renderStartIcon()}
               >
-                {isMe ? 'Edit intro' : isInvited ? 'Invited' : 'Add friend'}
+                {renderButtonText()}
               </Button>
             }
           />
