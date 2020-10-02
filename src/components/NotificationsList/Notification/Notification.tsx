@@ -1,11 +1,30 @@
 import React from 'react';
-import { ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import {
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  IconButton,
+  Box,
+  useTheme,
+} from '@material-ui/core';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 
 import NotificationType from '../../../types/Notificaiton';
+import { deleteNotification } from '../../../shared/interactions';
 import { NOTIFICATION_TYPES } from '../../../shared/constants';
+import { RootState } from '../../../store/reducers';
 
-const Notification: React.FC<NotificationType> = ({ fromName, type }) => {
+const Notification: React.FC<NotificationType> = ({ fromName, type, id }) => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const theme = useTheme();
+
+  const handleDeleteNotification = (): void => {
+    deleteNotification(userId, id);
+  };
+
   const renderMessage = (): string => {
     switch (type) {
       case NOTIFICATION_TYPES.FRIEND_REQUEST:
@@ -15,11 +34,29 @@ const Notification: React.FC<NotificationType> = ({ fromName, type }) => {
     }
   };
 
+  const renderIcon = (): JSX.Element => {
+    switch (type) {
+      case NOTIFICATION_TYPES.FRIEND_REQUEST:
+        return (
+          <>
+            <IconButton size="small">
+              <CheckIcon htmlColor={theme.palette.success.main} />
+            </IconButton>
+            <Box clone mr={2}>
+              <IconButton onClick={handleDeleteNotification} size="small">
+                <CloseIcon color="error" />
+              </IconButton>
+            </Box>
+          </>
+        );
+      default:
+        return <NewReleasesIcon color="secondary" />;
+    }
+  };
+
   return (
     <ListItem button>
-      <ListItemIcon>
-        <NewReleasesIcon color="secondary" />
-      </ListItemIcon>
+      <ListItemIcon>{renderIcon()}</ListItemIcon>
       <ListItemText>{renderMessage()}</ListItemText>
     </ListItem>
   );

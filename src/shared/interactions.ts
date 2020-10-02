@@ -22,6 +22,25 @@ const sendNotification = async ({
   }
 };
 
+const deleteNotification = async (
+  userId: string,
+  notificationId: string,
+): Promise<void> => {
+  try {
+    const response = await db.collection('users').doc(userId).get();
+    const notifications: Notification[] = response.data()!.notifications;
+    const updatedNotifications = notifications.filter(
+      ({ id }) => notificationId !== id,
+    );
+    await db
+      .collection('users')
+      .doc(userId)
+      .update({ notifications: updatedNotifications });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const unsendFriendRequest = async (
   requestingUserId: string,
   requestedUserId: string,
@@ -46,4 +65,4 @@ const unsendFriendRequest = async (
   }
 };
 
-export { sendNotification, unsendFriendRequest };
+export { sendNotification, deleteNotification, unsendFriendRequest };

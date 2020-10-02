@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { List } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
 import { RootState } from '../../store/reducers';
 import Notification from './Notification';
@@ -12,9 +13,16 @@ const NotificationsList: React.FC = () => {
 
   return (
     <List>
-      {notifications.map((notification) => (
-        <Notification {...notification} />
-      ))}
+      {notifications.length > 0 ? (
+        notifications.map((notification) => <Notification {...notification} />)
+      ) : (
+        <ListItem>
+          <ListItemIcon>
+            <NotInterestedIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText>You don't have any notificaitons</ListItemText>
+        </ListItem>
+      )}
     </List>
   );
 };
