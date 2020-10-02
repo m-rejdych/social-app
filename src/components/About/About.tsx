@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { RootState } from '../../store/reducers';
 import InfoPanel from './InfoPanel';
 import Country from '../../types/Country';
-import relationshipOptions from '../../shared/relationshipOptions';
+import { RELATIONSHIP_OPTIONS } from '../../shared/constants';
 import countries from '../../shared/countries';
 
 interface Relationship {
@@ -52,7 +52,7 @@ const About: React.FC = () => {
 
   const selectedRelationship:
     | Relationship
-    | undefined = relationshipOptions.find(
+    | undefined = RELATIONSHIP_OPTIONS.find(
     ({ value }) => value === relationship,
   );
 

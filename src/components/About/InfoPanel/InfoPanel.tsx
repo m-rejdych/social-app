@@ -19,10 +19,8 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { RootState } from '../../../store/reducers';
 import { updateProfileField } from '../../../store/actions';
-import { KEYS } from '../../../shared/constants';
-import relationshipOptions from '../../../shared/relationshipOptions';
+import { KEYS, RELATIONSHIP_OPTIONS } from '../../../shared/constants';
 import countries from '../../../shared/countries';
-import { stringify } from 'querystring';
 
 type Values =
   | 'email'
@@ -58,7 +56,7 @@ const EditElement: React.FC<EditElementProps> = ({ field, handleSubmit }) => {
     case 'relationship':
       return (
         <Select {...field} fullWidth autoWidth autoFocus>
-          {relationshipOptions.map(({ value, label }) => (
+          {RELATIONSHIP_OPTIONS.map(({ value, label }) => (
             <MenuItem key={`relationship_${value}`} value={value}>
               {label}
             </MenuItem>

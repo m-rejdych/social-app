@@ -11,6 +11,8 @@ import {
   Button,
   Typography,
   Badge,
+  ExtendButtonBase,
+  IconButtonTypeMap,
 } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
@@ -18,6 +20,7 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import SearchIcon from '@material-ui/icons/Search';
 
 import FriendsList from '../FriendsList';
+import NotificationsPopover from '../NotificationsPopover';
 import { RootState } from '../../store/reducers';
 import { User } from '../../store/types/usersTypes';
 import { updateProfileField } from '../../store/actions';
@@ -57,6 +60,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type AnchorEl = EventTarget & HTMLButtonElement;
+
+interface NotificationsPopover {
+  isOpen: boolean;
+  anchorEl: AnchorEl | null;
+}
+
 const Header: React.FC = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchValue, setSearchValue] = useState('');
@@ -64,6 +74,10 @@ const Header: React.FC = () => {
   const [searchFieldPosition, setSearchFieldPosition] = useState({
     left: 0,
     width: 0,
+  });
+  const [popover, setPopover] = useState<NotificationsPopover>({
+    isOpen: false,
+    anchorEl: null,
   });
   const firstName = useSelector((state: RootState) => state.auth.firstName);
   const lastName = useSelector((state: RootState) => state.auth.lastName);
@@ -125,7 +139,13 @@ const Header: React.FC = () => {
     filterUsers(e.target.value);
   };
 
-  const toggleNotifications = (): void => {
+  const handleClosePopover = (): void => {
+    setPopover({ ...popover, isOpen: false });
+  };
+
+  const toggleNotifications = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ): void => {
     const updatedNotifications = notifications.map((notification) => ({
       ...notification,
       isSeen: true,
@@ -136,10 +156,12 @@ const Header: React.FC = () => {
         fieldData: { notifications: updatedNotifications },
       }),
     );
+    setPopover({ isOpen: true, anchorEl: e.currentTarget });
   };
 
   return (
     <AppBar>
+      <NotificationsPopover {...popover} onClose={handleClosePopover} />
       <Box clone width="100%" position="relative">
         <Toolbar>
           <Button onClick={goToHome} className={classes.text}>
@@ -195,7 +217,7 @@ const Header: React.FC = () => {
             <IconButton>
               <MailOutlineIcon fontSize="large" />
             </IconButton>
-            <IconButton onClick={toggleNotifications}>
+            <IconButton onClick={(e) => toggleNotifications(e)}>
               <Badge color="secondary" badgeContent={notificationsCount}>
                 <NotificationsNoneIcon fontSize="large" />
               </Badge>
