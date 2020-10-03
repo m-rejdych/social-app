@@ -103,6 +103,7 @@ const Intro: React.FC = () => {
       )
     )
       setIsInvited(true);
+    else setIsInvited(false);
   }, [loading]);
 
   const isMe = params.id === loggedUserId;

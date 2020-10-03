@@ -21,18 +21,24 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user && user.email) {
-        const { email, uid, displayName } = user;
-        const firstName = displayName!.slice(0, displayName!.indexOf(' '));
-        const lastName = displayName!.slice(displayName!.indexOf(' ') + 1);
-        dispatch(loadUser({ email, userId: uid, firstName, lastName }));
-      }
-      setCheckAuth(false);
-    });
+    auth.onAuthStateChanged(
+      (user) => {
+        if (user && user.email) {
+          const { email, uid, displayName } = user;
+          const firstName = displayName!.slice(0, displayName!.indexOf(' '));
+          const lastName = displayName!.slice(displayName!.indexOf(' ') + 1);
+          dispatch(loadUser({ email, userId: uid, firstName, lastName }));
+        }
+        setCheckAuth(false);
+      },
+      (error) => console.log(error.message),
+    );
 
     return () => {
-      auth.onAuthStateChanged(() => {});
+      auth.onAuthStateChanged(
+        () => {},
+        () => {},
+      );
     };
   }, []);
 
@@ -47,7 +53,7 @@ const App: React.FC = () => {
           (snapshot) => {
             dispatch(setNotifications(snapshot.data()!.notifications));
           },
-          (error) => console.log(error),
+          (error) => console.log(error.message),
         );
 
       return () => {

@@ -2,11 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, makeStyles } from '@material-ui/core';
 
-import { getUsers } from '../../store/actions';
-import { getProfileData } from '../../store/actions';
-import { RootState } from '../../store/reducers';
-import FriendsList from '../../components/FriendsList';
-import PostsList from '../../components/PostsList';
 import PageWrapper from '../../components/PageWrapper';
 
 const useStyles = makeStyles((theme) => ({
@@ -17,8 +12,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Home: React.FC = () => {
   const classes = useStyles();
-  const userId = useSelector((state: RootState) => state.auth.userId);
-  const dispatch = useDispatch();
 
   return (
     <PageWrapper>
