@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import classNames from 'classnames';
 import {
   Card,
   CardHeader,
@@ -10,11 +9,13 @@ import {
   Box,
   Typography,
   Button,
+  IconButton,
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+import CloseIcon from '@material-ui/icons/Close';
 
 import PostData from '../../../types/PostData';
 import CommentsList from '../../CommentsList';
@@ -28,19 +29,20 @@ const useStyles = makeStyles((theme) => ({
   marginRightIcon: {
     marginRight: theme.spacing(1),
   },
-  marginLeftIcon: {
-    marginLeft: theme.spacing(2),
-  },
   borderTop: {
     borderTop: `1px solid ${theme.palette.divider}`,
   },
   borderBottom: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
+  fontBold: {
+    fontWeight: 600,
+  },
 }));
 
-const Component: React.FC<PostData> = ({
+const Post: React.FC<PostData> = ({
   id,
+  userId,
   textContent,
   firstName,
   lastName,
@@ -48,16 +50,17 @@ const Component: React.FC<PostData> = ({
   comments,
 }) => {
   const [showComments, setShowComments] = useState(false);
-  const userId = useSelector((state: RootState) => state.auth.userId);
+  const loggedUserId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const isLiked = likes.includes(userId);
+  const isMine = loggedUserId === userId;
 
   const handleLikeDislike = (): void => {
     isLiked
-      ? dispatch(dislikePost({ id, userId }))
-      : dispatch(likePost({ id, userId }));
+      ? dispatch(dislikePost({ id, userId: loggedUserId }))
+      : dispatch(likePost({ id, userId: loggedUserId }));
   };
 
   return (
@@ -65,7 +68,18 @@ const Component: React.FC<PostData> = ({
       <CardHeader
         title={`${firstName} ${lastName}`}
         avatar={<FaceIcon />}
-        titleTypographyProps={{ variant: 'h6', color: 'textSecondary' }}
+        action={
+          isMine && (
+            <IconButton>
+              <CloseIcon color="action" />
+            </IconButton>
+          )
+        }
+        titleTypographyProps={{
+          variant: 'h6',
+          color: 'textSecondary',
+          className: classes.fontBold,
+        }}
         className={classes.borderBottom}
       />
       <CardContent>
@@ -77,13 +91,16 @@ const Component: React.FC<PostData> = ({
             <FavoriteIcon
               fontSize="small"
               color={isLiked ? 'error' : 'disabled'}
-              className={classNames(
-                classes.marginRightIcon,
-                classes.marginLeftIcon,
-              )}
+              className={classes.marginRightIcon}
             />
             <Typography variant="body2">{likes.length}</Typography>
           </Box>
+        ) : null}
+        {comments.length > 0 ? (
+          <Typography
+            color="textSecondary"
+            variant="body2"
+          >{`Comments: ${comments.length}`}</Typography>
         ) : null}
       </CardContent>
       <CardActions className={classes.borderTop}>
@@ -102,17 +119,17 @@ const Component: React.FC<PostData> = ({
             onClick={() => setShowComments((prev) => !prev)}
           >
             <ChatBubbleOutlineIcon className={classes.marginRightIcon} />
-            <Typography>Comment</Typography>
+            <Typography>Comments</Typography>
           </Button>
         </Box>
       </CardActions>
       {showComments && (
         <CardContent>
-          <CommentsList comments={comments} />
+          <CommentsList postId={id} comments={comments} />
         </CardContent>
       )}
     </Card>
   );
 };
 
-export default Component;
+export default Post;

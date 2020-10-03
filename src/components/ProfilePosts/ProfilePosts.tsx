@@ -29,18 +29,20 @@ const ProfilePosts: React.FC = () => {
   const isMe = params.id === userId;
 
   const handleSubmit = (): void => {
-    const postData: PostData = {
-      id: uuid(),
-      textContent: value,
-      likes: [],
-      comments: [],
-      userId,
-      firstName,
-      lastName,
-    };
+    if (value.trim()) {
+      const postData: PostData = {
+        id: uuid(),
+        textContent: value,
+        likes: [],
+        comments: [],
+        userId,
+        firstName,
+        lastName,
+      };
 
-    dispatch(sendPost(postData));
-    setValue('');
+      dispatch(sendPost(postData));
+      setValue('');
+    }
   };
 
   return (

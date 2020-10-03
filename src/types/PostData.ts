@@ -1,3 +1,5 @@
+import Comment from './Comment';
+
 export default interface PostData {
   userId: string;
   id: string;
@@ -5,5 +7,5 @@ export default interface PostData {
   lastName: string;
   textContent: string;
   likes: string[];
-  comments: Omit<PostData, 'comments'>[];
+  comments: Comment[];
 }

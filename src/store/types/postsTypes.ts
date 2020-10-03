@@ -1,5 +1,6 @@
 import { POSTS } from '../constants';
 import PostData from '../../types/PostData';
+import Comment from '../../types/Comment';
 
 export interface LikeDislikeData {
   id: string;
@@ -9,6 +10,16 @@ export interface LikeDislikeData {
 export interface LikeDislikeSuccessData {
   id: string;
   likes: string[];
+}
+
+export interface CommentData {
+  postId: string;
+  comment: Comment;
+}
+
+export interface CommentSuccessData {
+  postId: string;
+  comments: Comment[];
 }
 
 interface SendPostAction {
@@ -56,6 +67,16 @@ interface DislikePostSuccessAction {
   payload: LikeDislikeSuccessData;
 }
 
+interface CommentAction {
+  type: typeof POSTS.COMMENT;
+  payload: CommentData;
+}
+
+interface CommentSuccessAction {
+  type: typeof POSTS.COMMENT_SUCCESS;
+  payload: CommentSuccessData;
+}
+
 export interface PostsState {
   posts: PostData[];
   loading: boolean;
@@ -71,4 +92,6 @@ export type PostsActions =
   | LikePostAction
   | LikePostSuccessAction
   | DislikePostAction
-  | DislikePostSuccessAction;
+  | DislikePostSuccessAction
+  | CommentAction
+  | CommentSuccessAction;

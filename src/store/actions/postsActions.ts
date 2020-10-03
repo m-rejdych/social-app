@@ -1,9 +1,12 @@
 import PostData from '../../types/PostData';
+import Comment from '../../types/Comment';
 import { POSTS } from '../constants';
 import {
   PostsActions,
   LikeDislikeData,
   LikeDislikeSuccessData,
+  CommentData,
+  CommentSuccessData,
 } from '../types/postsTypes';
 
 const sendPost = (postData: PostData): PostsActions => ({
@@ -48,6 +51,16 @@ const dislikePostSuccess = (
   payload: likesData,
 });
 
+const comment = (commentData: CommentData): PostsActions => ({
+  type: POSTS.COMMENT,
+  payload: commentData,
+});
+
+const commentSuccess = (commentData: CommentSuccessData): PostsActions => ({
+  type: POSTS.COMMENT_SUCCESS,
+  payload: commentData,
+});
+
 const setPostsError = (error: string): PostsActions => ({
   type: POSTS.POSTS_FAIL,
   payload: error,
@@ -63,4 +76,6 @@ export {
   likePostSuccess,
   dislikePost,
   dislikePostSuccess,
+  comment,
+  commentSuccess,
 };

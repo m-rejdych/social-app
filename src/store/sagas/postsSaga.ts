@@ -6,9 +6,15 @@ import {
   getPostsSuccess,
   likePostSuccess,
   dislikePostSuccess,
+  commentSuccess,
 } from '../actions/postsActions';
-import { PostsActions, LikeDislikeData } from '../types/postsTypes';
+import {
+  PostsActions,
+  LikeDislikeData,
+  CommentData,
+} from '../types/postsTypes';
 import PostData from '../../types/PostData';
+import Comment from '../../types/Comment';
 import { db } from '../../firebase';
 import { POSTS } from '../constants';
 
@@ -70,6 +76,22 @@ function* handleDislikePost({ payload }: PostsActions) {
   }
 }
 
+function* handleComment({ payload }: PostsActions) {
+  try {
+    const { postId, comment } = payload as CommentData;
+    const postResponse = yield db.collection('posts').doc(postId).get();
+    const comments: Comment[] = postResponse.data().comments;
+    const updatedComments = [...comments, comment];
+    yield db
+      .collection('posts')
+      .doc(postId)
+      .update({ comments: updatedComments });
+    yield put(commentSuccess({ postId, comments: updatedComments }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
 function* setSendPost() {
   yield takeEvery(POSTS.SEND_POST, handleSendPost);
 }
@@ -86,4 +108,8 @@ function* setDislikePost() {
   yield takeEvery(POSTS.DISLIKE_POST, handleDislikePost);
 }
 
-export { setSendPost, setGetPosts, setLikePost, setDislikePost };
+function* setComment() {
+  yield takeEvery(POSTS.COMMENT, handleComment);
+}
+
+export { setSendPost, setGetPosts, setLikePost, setDislikePost, setComment };

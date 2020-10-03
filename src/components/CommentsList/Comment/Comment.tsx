@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Paper, Avatar, Box, Typography } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 
-import PostData from '../../../types/PostData';
+import CommentType from '../../../types/Comment';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -13,11 +13,17 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 20,
     backgroundColor: theme.palette.grey[700],
   },
+  fontBold: {
+    fontWeight: 600,
+  },
 }));
 
-interface Props extends Omit<PostData, 'comments'> {}
-
-const Comment: React.FC<Props> = ({ id, firstName, lastName, textContent }) => {
+const Comment: React.FC<CommentType> = ({
+  id,
+  firstName,
+  lastName,
+  textContent,
+}) => {
   const classes = useStyles();
 
   return (
@@ -26,7 +32,10 @@ const Comment: React.FC<Props> = ({ id, firstName, lastName, textContent }) => {
         <FaceIcon />
       </Avatar>
       <Paper elevation={2} className={classes.paper}>
-        <Typography variant="subtitle1">{`${firstName} ${lastName}`}</Typography>
+        <Typography
+          variant="subtitle1"
+          className={classes.fontBold}
+        >{`${firstName} ${lastName}`}</Typography>
         <Typography variant="body2">{textContent}</Typography>
       </Paper>
     </Box>

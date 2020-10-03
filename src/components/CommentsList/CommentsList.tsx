@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import {
   Avatar,
   Paper,
@@ -9,8 +11,10 @@ import {
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 
-import PostData from '../../types/PostData';
 import Comment from './Comment';
+import CommentType from '../../types/Comment';
+import { comment } from '../../store/actions';
+import { RootState } from '../../store/reducers';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -28,12 +32,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  comments: Omit<PostData, 'comments'>[];
+  comments: CommentType[];
+  postId: string;
 }
 
-const CommentsList: React.FC<Props> = ({ comments }) => {
+const CommentsList: React.FC<Props> = ({ postId, comments }) => {
   const [commentValue, setCommentValue] = useState('');
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const firstName = useSelector((state: RootState) => state.auth.firstName);
+  const lastName = useSelector((state: RootState) => state.auth.lastName);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const handleComment = (): void => {
+    if (commentValue.trim()) {
+      const commentData = {
+        firstName,
+        lastName,
+        userId,
+        id: uuid(),
+        likes: [],
+        textContent: commentValue,
+      };
+      dispatch(
+        comment({
+          postId,
+          comment: commentData,
+        }),
+      );
+      setCommentValue('');
+    }
+  };
 
   return (
     <div>
@@ -51,7 +80,7 @@ const CommentsList: React.FC<Props> = ({ comments }) => {
             multiline
             InputProps={{
               endAdornment: (
-                <Button size="small" color="secondary">
+                <Button size="small" color="secondary" onClick={handleComment}>
                   Send
                 </Button>
               ),

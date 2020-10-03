@@ -3,8 +3,8 @@ import PostData from '../../types/PostData';
 import {
   PostsActions,
   PostsState,
-  LikeDislikeData,
   LikeDislikeSuccessData,
+  CommentSuccessData,
 } from '../types/postsTypes';
 
 const initialState: PostsState = {
@@ -51,6 +51,18 @@ const postsReducer = (
         posts: state.posts.map((post) =>
           post.id === (payload as LikeDislikeSuccessData).id
             ? { ...post, likes: (payload as LikeDislikeSuccessData).likes }
+            : post,
+        ),
+      };
+    case POSTS.COMMENT:
+      return { ...state, loading: true };
+    case POSTS.COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as CommentSuccessData).postId
+            ? { ...post, comments: (payload as CommentSuccessData).comments }
             : post,
         ),
       };
