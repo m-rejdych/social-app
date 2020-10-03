@@ -20,11 +20,6 @@ const Home: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getProfileData(userId));
-    dispatch(getUsers());
-  }, []);
-
   return (
     <PageWrapper>
       <Grid container spacing={3} className={classes.gridContainer}>

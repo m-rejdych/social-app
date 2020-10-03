@@ -6,8 +6,12 @@ import {
   setProfileData,
   setProfileFieldUpdate,
   setAddFriend,
+  setDeleteFriend,
 } from './profileSaga';
-import { setGetVisitedProfileData } from './visitedProfileSaga';
+import {
+  setGetVisitedProfileData,
+  setDeleteVisitedFriend,
+} from './visitedProfileSaga';
 import { setSendPost, setGetPosts } from './postsSaga';
 import { setGetUsers } from './usersSaga';
 
@@ -19,7 +23,9 @@ function* rootSaga() {
     setProfileData(),
     setProfileFieldUpdate(),
     setAddFriend(),
+    setDeleteFriend(),
     setGetVisitedProfileData(),
+    setDeleteVisitedFriend(),
     setSendPost(),
     setGetPosts(),
     setGetUsers(),

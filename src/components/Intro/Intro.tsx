@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import {
   Card,
@@ -20,6 +20,8 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CheckIcon from '@material-ui/icons/Check';
 import UndoIcon from '@material-ui/icons/Undo';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 import { RootState } from '../../store/reducers';
 import EditIntroDialog from './EditIntroDialog';
@@ -29,6 +31,7 @@ import {
   sendNotification,
   unsendFriendRequest,
 } from '../../shared/interactions';
+import { deleteFriend } from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   introCard: {
@@ -85,6 +88,10 @@ const Intro: React.FC = () => {
   const notifications = useSelector(
     (state: RootState) => state.visitedProfile.notifications,
   );
+  const friends = useSelector(
+    (state: RootState) => state.visitedProfile.friends,
+  );
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   useEffect(() => {
@@ -99,6 +106,8 @@ const Intro: React.FC = () => {
   }, [loading]);
 
   const isMe = params.id === loggedUserId;
+
+  const isFriend = friends.includes(loggedUserId);
 
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,
@@ -159,11 +168,15 @@ const Intro: React.FC = () => {
   const handleClick = (): void => {
     if (isMe) openEditIntroDialog();
     else if (isInvited) undoAddFriend();
+    else if (isFriend)
+      dispatch(deleteFriend({ userId: loggedUserId, friendId: visitedUserId }));
     else addFriend();
   };
 
   const renderStartIcon = (): JSX.Element => {
     if (isMe) return <EditIcon />;
+    if (isFriend && isButtonHovered) return <DeleteIcon />;
+    if (isFriend) return <DoneAllIcon />;
     if (!isInvited) return <PersonAddIcon />;
     if (isInvited && !isButtonHovered) return <CheckIcon />;
     return <UndoIcon />;
@@ -171,6 +184,8 @@ const Intro: React.FC = () => {
 
   const renderButtonText = (): string => {
     if (isMe) return 'Edit intro';
+    if (isFriend && isButtonHovered) return 'Delete friend';
+    if (isFriend) return 'Friends';
     if (!isInvited) return 'Add friend';
     if (isInvited && !isButtonHovered) return 'Invited';
     return 'Cancel request';
@@ -202,7 +217,7 @@ const Intro: React.FC = () => {
                 variant="contained"
                 color="secondary"
                 size="large"
-                className={isInvited ? classes.invited : undefined}
+                className={isInvited || isFriend ? classes.invited : undefined}
                 startIcon={renderStartIcon()}
               >
                 {renderButtonText()}

@@ -7,8 +7,13 @@ import LandingPage from './pages/LandingPage';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import { RootState } from './store/reducers';
-import { loadUser } from './store/actions';
-import { auth } from './firebase';
+import {
+  loadUser,
+  getProfileData,
+  getUsers,
+  setNotifications,
+} from './store/actions';
+import { auth, db } from './firebase';
 
 const App: React.FC = () => {
   const [checkAuth, setCheckAuth] = useState(true);
@@ -25,7 +30,36 @@ const App: React.FC = () => {
       }
       setCheckAuth(false);
     });
+
+    return () => {
+      auth.onAuthStateChanged(() => {});
+    };
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getProfileData(userId));
+      dispatch(getUsers());
+
+      db.collection('users')
+        .doc(userId)
+        .onSnapshot(
+          (snapshot) => {
+            dispatch(setNotifications(snapshot.data()!.notifications));
+          },
+          (error) => console.log(error),
+        );
+
+      return () => {
+        db.collection('users')
+          .doc(userId)
+          .onSnapshot(
+            () => {},
+            () => {},
+          );
+      };
+    }
+  }, [userId]);
 
   const routes = userId ? (
     <Switch>

@@ -73,6 +73,16 @@ interface AddFriendSuccessAction {
   payload: string;
 }
 
+interface DeleteFriendAction {
+  type: typeof PROFILE.DELETE_FRIEND;
+  payload: { userId: string; friendId: string };
+}
+
+interface DeleteFriendSuccessAction {
+  type: typeof PROFILE.DELETE_FRIEND_SUCCESS;
+  payload: string;
+}
+
 interface SetProfileErrorAction {
   type: typeof PROFILE.PROFILE_FAIL;
   payload: string;
@@ -93,4 +103,6 @@ export type ProfileActions =
   | UpdateProfileFieldActionSuccess
   | SetNotificaitons
   | AddFriendAction
-  | AddFriendSuccessAction;
+  | AddFriendSuccessAction
+  | DeleteFriendAction
+  | DeleteFriendSuccessAction;

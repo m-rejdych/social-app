@@ -14,6 +14,19 @@ const getVisitedProfileDataSuccess = (
   payload: profileData,
 });
 
+const deleteVisitedFriend = (ids: {
+  userId: string;
+  friendId: string;
+}): VisitedProfileActions => ({
+  type: VISITED_PROFILE.DELETE_VISITED_FRIEND,
+  payload: ids,
+});
+
+const deleteVisitedFriendSuccess = (friendId: string): ProfileActions => ({
+  type: VISITED_PROFILE.DELETE_VISITED_FRIEND_SUCCESS,
+  payload: friendId,
+});
+
 const setVisitedProfileError = (error: string): ProfileActions => ({
   type: VISITED_PROFILE.VISITED_PROFILE_FAIL,
   payload: error,
@@ -22,5 +35,7 @@ const setVisitedProfileError = (error: string): ProfileActions => ({
 export {
   getVisitedProfileData,
   getVisitedProfileDataSuccess,
+  deleteVisitedFriend,
+  deleteVisitedFriendSuccess,
   setVisitedProfileError,
 };

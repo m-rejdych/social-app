@@ -96,7 +96,12 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
     name,
   });
   const userId = useSelector((state: RootState) => state.auth.userId);
-  const loading = useSelector((state: RootState) => state.profile.loading);
+  const profileLoading = useSelector(
+    (state: RootState) => state.profile.loading,
+  );
+  const visitedProfileLoading = useSelector(
+    (state: RootState) => state.visitedProfile.loading,
+  );
   const classes = useStyles();
   const params = useParams<{ id: string }>();
   const dispatch = useDispatch();
@@ -125,7 +130,8 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ name, label, value }) => {
   };
 
   const renderDetails = (): JSX.Element => {
-    if (loading) return <CircularProgress />;
+    if ((isMe && profileLoading) || (!isMe && visitedProfileLoading))
+      return <CircularProgress />;
     if (isEditing)
       return <EditElement field={field} handleSubmit={handleSubmit} />;
     return <Typography>{value}</Typography>;

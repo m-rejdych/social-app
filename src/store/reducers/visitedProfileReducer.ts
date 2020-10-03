@@ -33,6 +33,16 @@ const visitedProfileReducer = (
       return { ...state, loading: true };
     case VISITED_PROFILE.GET_VISITED_PROFILE_DATA_SUCCESS:
       return { ...state, loading: false, ...(payload as ProfileData) };
+    case VISITED_PROFILE.DELETE_VISITED_FRIEND:
+      return { ...state, loading: true };
+    case VISITED_PROFILE.DELETE_VISITED_FRIEND_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        friends: state.friends.filter(
+          (friendId) => friendId !== (payload as string),
+        ),
+      };
     case VISITED_PROFILE.VISITED_PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:

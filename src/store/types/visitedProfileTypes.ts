@@ -11,7 +11,17 @@ interface GetVisitedProfileDataSuccessAction {
   payload: ProfileData;
 }
 
-interface setVisitedProfileErrorAction {
+interface DeleteVisitedFriendAction {
+  type: typeof VISITED_PROFILE.DELETE_VISITED_FRIEND;
+  payload: { userId: string; friendId: string };
+}
+
+interface DeleteVisitedFriendSuccessAction {
+  type: typeof VISITED_PROFILE.DELETE_VISITED_FRIEND_SUCCESS;
+  payload: string;
+}
+
+interface SetVisitedProfileErrorAction {
   type: typeof VISITED_PROFILE.VISITED_PROFILE_FAIL;
   payload: string;
 }
@@ -24,4 +34,6 @@ export interface VisitedProfileState extends ProfileIntro, ProfileDetails {
 export type VisitedProfileActions =
   | GetVisitedProfileDataAction
   | GetVisitedProfileDataSuccessAction
-  | setVisitedProfileErrorAction;
+  | SetVisitedProfileErrorAction
+  | DeleteVisitedFriendAction
+  | DeleteVisitedFriendSuccessAction;

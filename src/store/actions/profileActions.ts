@@ -58,6 +58,19 @@ const addFriendSuccess = (friendId: string): ProfileActions => ({
   payload: friendId,
 });
 
+const deleteFriend = (ids: {
+  userId: string;
+  friendId: string;
+}): ProfileActions => ({
+  type: PROFILE.DELETE_FRIEND,
+  payload: ids,
+});
+
+const deleteFriendSuccess = (friendId: string): ProfileActions => ({
+  type: PROFILE.DELETE_FRIEND_SUCCESS,
+  payload: friendId,
+});
+
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -74,4 +87,6 @@ export {
   setNotifications,
   addFriend,
   addFriendSuccess,
+  deleteFriend,
+  deleteFriendSuccess,
 };

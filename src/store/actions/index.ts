@@ -19,11 +19,15 @@ export {
   setNotifications,
   addFriend,
   addFriendSuccess,
+  deleteFriend,
+  deleteFriendSuccess,
 } from './profileActions';
 
 export {
   getVisitedProfileData,
   getVisitedProfileDataSuccess,
+  deleteVisitedFriend,
+  deleteVisitedFriendSuccess,
   setVisitedProfileError,
 } from './visitedProfileActions';
 

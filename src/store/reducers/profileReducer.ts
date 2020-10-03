@@ -63,6 +63,16 @@ const profileReducer = (
         loading: false,
         friends: [...state.friends, payload as string],
       };
+    case PROFILE.DELETE_FRIEND:
+      return { ...state, loading: true };
+    case PROFILE.DELETE_FRIEND_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        friends: state.friends.filter(
+          (friendId) => friendId !== (payload as string),
+        ),
+      };
     case PROFILE.PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:

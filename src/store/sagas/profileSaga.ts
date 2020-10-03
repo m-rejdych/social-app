@@ -12,9 +12,10 @@ import {
   updateProfileFieldSuccess,
   getProfileDataSuccess,
   addFriendSuccess,
+  deleteFriendSuccess,
+  deleteVisitedFriend,
 } from '../actions';
 import { deleteNotification } from '../../shared/interactions';
-import { RootState } from '../reducers';
 import { PROFILE } from '../constants';
 import { db } from '../../firebase';
 
@@ -80,6 +81,26 @@ function* handleAddFriend({ payload }: ProfileActions) {
   }
 }
 
+function* handleDeleteFriend({ payload }: ProfileActions) {
+  try {
+    const { userId, friendId } = payload as {
+      userId: string;
+      friendId: string;
+    };
+    const response = yield db.collection('users').doc(userId).get();
+    const friends: string[] = response.data().friends;
+    const updatedFriends = friends.filter((friend) => friend !== friendId);
+    yield db
+      .collection('users')
+      .doc(userId)
+      .update({ friends: updatedFriends });
+    yield put(deleteFriendSuccess(friendId));
+    yield put(deleteVisitedFriend({ userId: friendId, friendId: userId }));
+  } catch (error) {
+    yield put(setProfileError(error.message));
+  }
+}
+
 function* setProfileIntro() {
   yield takeEvery(PROFILE.SET_PROFILE_INTRO, handleSetProfileIntro);
 }
@@ -96,4 +117,14 @@ function* setAddFriend() {
   yield takeEvery(PROFILE.ADD_FRIEND, handleAddFriend);
 }
 
-export { setProfileIntro, setProfileData, setProfileFieldUpdate, setAddFriend };
+function* setDeleteFriend() {
+  yield takeEvery(PROFILE.DELETE_FRIEND, handleDeleteFriend);
+}
+
+export {
+  setProfileIntro,
+  setProfileData,
+  setProfileFieldUpdate,
+  setAddFriend,
+  setDeleteFriend,
+};
