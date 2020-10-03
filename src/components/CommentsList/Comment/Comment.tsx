@@ -1,8 +1,19 @@
 import React from 'react';
-import { makeStyles, Paper, Avatar, Box, Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  makeStyles,
+  Paper,
+  Avatar,
+  Box,
+  Typography,
+  IconButton,
+} from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
+import CloseIcon from '@material-ui/icons/Close';
 
 import CommentType from '../../../types/Comment';
+import { deleteComment } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -18,13 +29,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Comment: React.FC<CommentType> = ({
+interface Props extends CommentType {
+  postId: string;
+}
+
+const Comment: React.FC<Props> = ({
   id,
+  postId,
+  userId,
   firstName,
   lastName,
   textContent,
 }) => {
+  const loggedUserId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const isMine = userId === loggedUserId;
+
+  const handleDelete = (): void => {
+    dispatch(deleteComment({ postId, commentId: id }));
+  };
 
   return (
     <Box key={id} display="flex" mb={2}>
@@ -32,10 +57,17 @@ const Comment: React.FC<CommentType> = ({
         <FaceIcon />
       </Avatar>
       <Paper elevation={2} className={classes.paper}>
-        <Typography
-          variant="subtitle1"
-          className={classes.fontBold}
-        >{`${firstName} ${lastName}`}</Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Typography
+            variant="subtitle1"
+            className={classes.fontBold}
+          >{`${firstName} ${lastName}`}</Typography>
+          {isMine && (
+            <IconButton size="small" onClick={handleDelete}>
+              <CloseIcon fontSize="small" color="action" />
+            </IconButton>
+          )}
+        </Box>
         <Typography variant="body2">{textContent}</Typography>
       </Paper>
     </Box>

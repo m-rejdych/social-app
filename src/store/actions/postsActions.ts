@@ -6,6 +6,8 @@ import {
   LikeDislikeSuccessData,
   CommentData,
   CommentSuccessData,
+  DeleteCommentData,
+  DeleteCommentSuccessData,
 } from '../types/postsTypes';
 
 const sendPost = (postData: PostData): PostsActions => ({
@@ -70,6 +72,18 @@ const commentSuccess = (commentData: CommentSuccessData): PostsActions => ({
   payload: commentData,
 });
 
+const deleteComment = (commentData: DeleteCommentData): PostsActions => ({
+  type: POSTS.DELETE_COMMENT,
+  payload: commentData,
+});
+
+const deleteCommentSuccess = (
+  commentsData: DeleteCommentSuccessData,
+): PostsActions => ({
+  type: POSTS.DELETE_COMMENT_SUCCESS,
+  payload: commentsData,
+});
+
 const setPostsError = (error: string): PostsActions => ({
   type: POSTS.POSTS_FAIL,
   payload: error,
@@ -88,5 +102,7 @@ export {
   dislikePostSuccess,
   comment,
   commentSuccess,
+  deleteComment,
+  deleteCommentSuccess,
   setPostsError,
 };

@@ -8,11 +8,13 @@ import {
   likePostSuccess,
   dislikePostSuccess,
   commentSuccess,
+  deleteCommentSuccess,
 } from '../actions/postsActions';
 import {
   PostsActions,
   LikeDislikeData,
   CommentData,
+  DeleteCommentData,
 } from '../types/postsTypes';
 import PostData from '../../types/PostData';
 import Comment from '../../types/Comment';
@@ -105,6 +107,22 @@ function* handleComment({ payload }: PostsActions) {
   }
 }
 
+function* handleDeleteComment({ payload }: PostsActions) {
+  try {
+    const { postId, commentId } = payload as DeleteCommentData;
+    const postResponse = yield db.collection('posts').doc(postId).get();
+    const comments: Comment[] = postResponse.data().comments;
+    const updatedComments = comments.filter(({ id }) => id !== commentId);
+    yield db
+      .collection('posts')
+      .doc(postId)
+      .update({ comments: updatedComments });
+    yield put(deleteCommentSuccess({ postId, comments: updatedComments }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
 function* setSendPost() {
   yield takeEvery(POSTS.SEND_POST, handleSendPost);
 }
@@ -129,6 +147,10 @@ function* setComment() {
   yield takeEvery(POSTS.COMMENT, handleComment);
 }
 
+function* setDeleteComment() {
+  yield takeEvery(POSTS.DELETE_COMMENT, handleDeleteComment);
+}
+
 export {
   setSendPost,
   setDeletePost,
@@ -136,4 +158,5 @@ export {
   setLikePost,
   setDislikePost,
   setComment,
+  setDeleteComment,
 };

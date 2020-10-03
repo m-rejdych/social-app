@@ -5,6 +5,7 @@ import {
   PostsState,
   LikeDislikeSuccessData,
   CommentSuccessData,
+  DeleteCommentSuccessData,
 } from '../types/postsTypes';
 
 const initialState: PostsState = {
@@ -71,6 +72,21 @@ const postsReducer = (
         posts: state.posts.map((post) =>
           post.id === (payload as CommentSuccessData).postId
             ? { ...post, comments: (payload as CommentSuccessData).comments }
+            : post,
+        ),
+      };
+    case POSTS.DELETE_COMMENT:
+      return { ...state, loading: true };
+    case POSTS.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as DeleteCommentSuccessData).postId
+            ? {
+                ...post,
+                comments: (payload as DeleteCommentSuccessData).comments,
+              }
             : post,
         ),
       };

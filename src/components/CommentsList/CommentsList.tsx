@@ -90,7 +90,7 @@ const CommentsList: React.FC<Props> = ({ postId, comments }) => {
         </Paper>
       </Box>
       {comments.map((comment) => (
-        <Comment {...comment} />
+        <Comment {...comment} key={comment.id} postId={postId} />
       ))}
     </div>
   );

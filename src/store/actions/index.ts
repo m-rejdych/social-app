@@ -44,6 +44,8 @@ export {
   dislikePostSuccess,
   comment,
   commentSuccess,
+  deleteComment,
+  deleteCommentSuccess,
   setPostsError,
 } from './postsActions';
 
