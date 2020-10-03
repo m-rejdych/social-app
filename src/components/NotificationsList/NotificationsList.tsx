@@ -14,7 +14,9 @@ const NotificationsList: React.FC = () => {
   return (
     <List>
       {notifications.length > 0 ? (
-        notifications.map((notification) => <Notification {...notification} />)
+        notifications.map((notification) => (
+          <Notification key={notification.id} {...notification} />
+        ))
       ) : (
         <ListItem>
           <ListItemIcon>

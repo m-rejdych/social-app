@@ -1,4 +1,5 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
+import { v4 as uuid } from 'uuid';
 
 import {
   ProfileActions,
@@ -15,9 +16,13 @@ import {
   deleteFriendSuccess,
   deleteVisitedFriend,
 } from '../actions';
-import { deleteNotification } from '../../shared/interactions';
+import {
+  sendNotification,
+  deleteNotification,
+} from '../../shared/interactions';
 import { PROFILE } from '../constants';
 import { db } from '../../firebase';
+import { NOTIFICATION_TYPES } from '../../shared/constants';
 
 function* handleSetProfileIntro({ payload }: ProfileActions) {
   try {
@@ -62,7 +67,11 @@ function* handleAddFriend({ payload }: ProfileActions) {
     const { notificationId, userId, friendId } = payload as AddFriendData;
 
     const userResponse = yield db.collection('users').doc(userId).get();
-    const userFriends = userResponse.data().friends;
+    const {
+      friends: userFriends,
+      firstName: userFirstName,
+      lastName: userLastName,
+    } = userResponse.data();
     yield db
       .collection('users')
       .doc(userId)
@@ -75,6 +84,14 @@ function* handleAddFriend({ payload }: ProfileActions) {
       .doc(friendId)
       .update({ friends: [...friendFriends, userId] });
     yield call(deleteNotification, userId, notificationId);
+    yield call(sendNotification, {
+      fromName: `${userFirstName} ${userLastName}`,
+      fromUserId: userId,
+      toUserId: friendId,
+      type: NOTIFICATION_TYPES.FRIEND_APPROVAL,
+      isSeen: false,
+      id: uuid(),
+    });
     yield put(addFriendSuccess(friendId));
   } catch (error) {
     yield put(setProfileError(error.message));

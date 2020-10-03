@@ -1,4 +1,4 @@
-type NotificationTypes = 'friendRequest';
+type NotificationTypes = 'friendRequest' | 'friendApproval';
 
 export default interface Notification {
   fromUserId: string;

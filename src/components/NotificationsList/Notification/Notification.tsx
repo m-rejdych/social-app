@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   ListItem,
   ListItemText,
@@ -8,7 +8,6 @@ import {
   Box,
   useTheme,
 } from '@material-ui/core';
-import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -16,7 +15,6 @@ import NotificationType from '../../../types/Notificaiton';
 import { deleteNotification } from '../../../shared/interactions';
 import { addFriend } from '../../../store/actions';
 import { NOTIFICATION_TYPES } from '../../../shared/constants';
-import { RootState } from '../../../store/reducers';
 
 const Notification: React.FC<NotificationType> = ({
   fromName,
@@ -25,12 +23,11 @@ const Notification: React.FC<NotificationType> = ({
   type,
   id,
 }) => {
-  const userId = useSelector((state: RootState) => state.auth.userId);
   const dispatch = useDispatch();
   const theme = useTheme();
 
   const handleDeleteNotification = (): void => {
-    deleteNotification(userId, id);
+    deleteNotification(toUserId, id);
   };
 
   const handleAddFriend = (): void => {
@@ -43,6 +40,8 @@ const Notification: React.FC<NotificationType> = ({
     switch (type) {
       case NOTIFICATION_TYPES.FRIEND_REQUEST:
         return `${fromName} wants to add you as a friend!`;
+      case NOTIFICATION_TYPES.FRIEND_APPROVAL:
+        return `${fromName} accepted your friend request!`;
       default:
         return 'Watch out!';
     }
@@ -64,7 +63,11 @@ const Notification: React.FC<NotificationType> = ({
           </>
         );
       default:
-        return <NewReleasesIcon color="secondary" />;
+        return (
+          <IconButton onClick={handleDeleteNotification} size="small">
+            <CloseIcon color="error" />
+          </IconButton>
+        );
     }
   };
 
