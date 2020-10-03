@@ -11,8 +11,6 @@ import {
   Button,
   Typography,
   Badge,
-  ExtendButtonBase,
-  IconButtonTypeMap,
 } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
@@ -75,7 +73,9 @@ const Header: React.FC = () => {
     left: 0,
     width: 0,
   });
-  const [popover, setPopover] = useState<NotificationsPopover>({
+  const [notificaitonsPopover, setNotificaitonsPopover] = useState<
+    NotificationsPopover
+  >({
     isOpen: false,
     anchorEl: null,
   });
@@ -139,8 +139,8 @@ const Header: React.FC = () => {
     filterUsers(e.target.value);
   };
 
-  const handleClosePopover = (): void => {
-    setPopover({ ...popover, isOpen: false });
+  const handleCloseNotificationsPopover = (): void => {
+    setNotificaitonsPopover({ ...notificaitonsPopover, isOpen: false });
   };
 
   const toggleNotifications = (
@@ -156,12 +156,20 @@ const Header: React.FC = () => {
         fieldData: { notifications: updatedNotifications },
       }),
     );
-    setPopover({ isOpen: true, anchorEl: e.currentTarget });
+    setNotificaitonsPopover({ isOpen: true, anchorEl: e.currentTarget });
+  };
+
+  const clearSearchField = (): void => {
+    setSearchValue('');
+    if (searchRef && searchRef.current) searchRef.current.blur();
   };
 
   return (
     <AppBar>
-      <NotificationsPopover {...popover} onClose={handleClosePopover} />
+      <NotificationsPopover
+        {...notificaitonsPopover}
+        onClose={handleCloseNotificationsPopover}
+      />
       <Box clone width="100%" position="relative">
         <Toolbar>
           <Button onClick={goToHome} className={classes.text}>
@@ -198,6 +206,7 @@ const Header: React.FC = () => {
               <FriendsList
                 friends={filteredUsers}
                 className={classes.list}
+                onClick={clearSearchField}
                 profileNavigation
               />
             </Box>
