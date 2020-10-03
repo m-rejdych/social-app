@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import {
   Card,
@@ -17,6 +18,8 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 
 import PostData from '../../../types/PostData';
 import CommentsList from '../../CommentsList';
+import { RootState } from '../../../store/reducers';
+import { likePost, dislikePost } from '../../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -41,11 +44,21 @@ const Component: React.FC<PostData> = ({
   textContent,
   firstName,
   lastName,
-  likeCount,
+  likes,
   comments,
 }) => {
   const [showComments, setShowComments] = useState(false);
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const isLiked = likes.includes(userId);
+
+  const handleLikeDislike = (): void => {
+    isLiked
+      ? dispatch(dislikePost({ id, userId }))
+      : dispatch(likePost({ id, userId }));
+  };
 
   return (
     <Card elevation={3} className={classes.card}>
@@ -59,24 +72,28 @@ const Component: React.FC<PostData> = ({
         <Typography gutterBottom variant="body1">
           {textContent}
         </Typography>
-        {likeCount ? (
+        {likes.length > 0 ? (
           <Box display="flex" alignItems="center">
             <FavoriteIcon
               fontSize="small"
-              color="disabled"
+              color={isLiked ? 'error' : 'disabled'}
               className={classNames(
                 classes.marginRightIcon,
                 classes.marginLeftIcon,
               )}
             />
-            <Typography variant="body2">{likeCount}</Typography>
+            <Typography variant="body2">{likes.length}</Typography>
           </Box>
         ) : null}
       </CardContent>
       <CardActions className={classes.borderTop}>
         <Box display="flex" width="100%">
-          <Button fullWidth>
-            <FavoriteBorderIcon className={classes.marginRightIcon} />
+          <Button onClick={handleLikeDislike} fullWidth>
+            {isLiked ? (
+              <FavoriteIcon className={classes.marginRightIcon} color="error" />
+            ) : (
+              <FavoriteBorderIcon className={classes.marginRightIcon} />
+            )}
             <Typography>Like</Typography>
           </Button>
           <Button

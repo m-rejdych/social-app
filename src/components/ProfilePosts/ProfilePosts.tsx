@@ -32,7 +32,7 @@ const ProfilePosts: React.FC = () => {
     const postData: PostData = {
       id: uuid(),
       textContent: value,
-      likeCount: 0,
+      likes: [],
       comments: [],
       userId,
       firstName,

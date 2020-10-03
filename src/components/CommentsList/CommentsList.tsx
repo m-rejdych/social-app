@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Avatar,
   Paper,
-  Typography,
   Box,
   makeStyles,
   TextField,
@@ -13,7 +11,6 @@ import FaceIcon from '@material-ui/icons/Face';
 
 import PostData from '../../types/PostData';
 import Comment from './Comment';
-import { RootState } from '../../store/reducers';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {

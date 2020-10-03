@@ -65,4 +65,34 @@ const unsendFriendRequest = async (
   }
 };
 
-export { sendNotification, deleteNotification, unsendFriendRequest };
+const likePost = async (postId: string, userId: string): Promise<void> => {
+  try {
+    const postResponse = await db.collection('posts').doc(postId).get();
+    const likes: string[] = postResponse.data()!.likes;
+    await db
+      .collection('posts')
+      .doc(postId)
+      .update({ likes: [...likes, userId] });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const dislikePost = async (postId: string, userId: string): Promise<void> => {
+  try {
+    const postResponse = await db.collection('posts').doc(postId).get();
+    const likes: string[] = postResponse.data()!.likes;
+    const updatedLikes = likes.filter((id) => id !== userId);
+    await db.collection('posts').doc(postId).update({ likes: updatedLikes });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export {
+  sendNotification,
+  deleteNotification,
+  unsendFriendRequest,
+  likePost,
+  dislikePost,
+};

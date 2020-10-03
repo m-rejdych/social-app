@@ -17,13 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props extends Omit<PostData, 'comments'> {}
 
-const Comment: React.FC<Props> = ({
-  id,
-  firstName,
-  lastName,
-  textContent,
-  likeCount,
-}) => {
+const Comment: React.FC<Props> = ({ id, firstName, lastName, textContent }) => {
   const classes = useStyles();
 
   return (

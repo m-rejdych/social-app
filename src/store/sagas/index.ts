@@ -12,7 +12,12 @@ import {
   setGetVisitedProfileData,
   setDeleteVisitedFriend,
 } from './visitedProfileSaga';
-import { setSendPost, setGetPosts } from './postsSaga';
+import {
+  setSendPost,
+  setGetPosts,
+  setLikePost,
+  setDislikePost,
+} from './postsSaga';
 import { setGetUsers } from './usersSaga';
 
 function* rootSaga() {
@@ -28,6 +33,8 @@ function* rootSaga() {
     setDeleteVisitedFriend(),
     setSendPost(),
     setGetPosts(),
+    setLikePost(),
+    setDislikePost(),
     setGetUsers(),
   ]);
 }

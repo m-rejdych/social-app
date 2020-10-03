@@ -34,9 +34,13 @@ export {
 export {
   sendPost,
   sendPostSuccess,
-  setPostsError,
   getPosts,
   getPostsSuccess,
+  likePost,
+  likePostSuccess,
+  dislikePost,
+  dislikePostSuccess,
+  setPostsError,
 } from './postsActions';
 
 export { getUsers, getUsersSuccess, setUsersError } from './usersActions';

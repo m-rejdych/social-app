@@ -4,8 +4,10 @@ import {
   sendPostSuccess,
   setPostsError,
   getPostsSuccess,
+  likePostSuccess,
+  dislikePostSuccess,
 } from '../actions/postsActions';
-import { PostsActions } from '../types/postsTypes';
+import { PostsActions, LikeDislikeData } from '../types/postsTypes';
 import PostData from '../../types/PostData';
 import { db } from '../../firebase';
 import { POSTS } from '../constants';
@@ -40,6 +42,34 @@ function* handleGetPosts({ payload }: PostsActions) {
   }
 }
 
+function* handleLikePost({ payload }: PostsActions) {
+  try {
+    const { id, userId } = payload as LikeDislikeData;
+    const postResponse = yield db.collection('posts').doc(id).get();
+    const likes: string[] = postResponse.data().likes;
+    const updatedLikes = [...likes, userId];
+    yield db.collection('posts').doc(id).update({ likes: updatedLikes });
+    yield put(likePostSuccess({ id, likes: updatedLikes }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
+function* handleDislikePost({ payload }: PostsActions) {
+  try {
+    const { id, userId } = payload as LikeDislikeData;
+    const postResponse = yield db.collection('posts').doc(id).get();
+    const likes: string[] = postResponse.data().likes;
+    const updatedLikes = likes.filter(
+      (likingUserId) => likingUserId !== userId,
+    );
+    yield db.collection('posts').doc(id).update({ likes: updatedLikes });
+    yield put(dislikePostSuccess({ id, likes: updatedLikes }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
 function* setSendPost() {
   yield takeEvery(POSTS.SEND_POST, handleSendPost);
 }
@@ -48,4 +78,12 @@ function* setGetPosts() {
   yield takeEvery(POSTS.GET_POSTS, handleGetPosts);
 }
 
-export { setSendPost, setGetPosts };
+function* setLikePost() {
+  yield takeEvery(POSTS.LIKE_POST, handleLikePost);
+}
+
+function* setDislikePost() {
+  yield takeEvery(POSTS.DISLIKE_POST, handleDislikePost);
+}
+
+export { setSendPost, setGetPosts, setLikePost, setDislikePost };

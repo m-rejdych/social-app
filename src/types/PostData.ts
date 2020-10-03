@@ -4,6 +4,6 @@ export default interface PostData {
   firstName: string;
   lastName: string;
   textContent: string;
-  likeCount: number;
+  likes: string[];
   comments: Omit<PostData, 'comments'>[];
 }

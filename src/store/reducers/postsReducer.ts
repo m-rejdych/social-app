@@ -1,6 +1,11 @@
 import { POSTS } from '../constants';
 import PostData from '../../types/PostData';
-import { PostsActions, PostsState } from '../types/postsTypes';
+import {
+  PostsActions,
+  PostsState,
+  LikeDislikeData,
+  LikeDislikeSuccessData,
+} from '../types/postsTypes';
 
 const initialState: PostsState = {
   posts: [],
@@ -21,12 +26,36 @@ const postsReducer = (
         loading: false,
         posts: [...state.posts, payload as PostData],
       };
-    case POSTS.POSTS_FAIL:
-      return { ...state, loading: false, error: payload as string };
     case POSTS.GET_POSTS:
       return { ...state, loading: true };
     case POSTS.GET_POSTS_SUCCESS:
       return { ...state, loading: false, posts: payload as PostData[] };
+    case POSTS.LIKE_POST:
+      return { ...state, loading: true };
+    case POSTS.LIKE_POST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as LikeDislikeSuccessData).id
+            ? { ...post, likes: (payload as LikeDislikeSuccessData).likes }
+            : post,
+        ),
+      };
+    case POSTS.DISLIKE_POST:
+      return { ...state, loading: true };
+    case POSTS.DISLIKE_POST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as LikeDislikeSuccessData).id
+            ? { ...post, likes: (payload as LikeDislikeSuccessData).likes }
+            : post,
+        ),
+      };
+    case POSTS.POSTS_FAIL:
+      return { ...state, loading: false, error: payload as string };
     default:
       return state;
   }
