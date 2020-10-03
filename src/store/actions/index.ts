@@ -34,6 +34,8 @@ export {
 export {
   sendPost,
   sendPostSuccess,
+  deletePost,
+  deletePostSuccess,
   getPosts,
   getPostsSuccess,
   likePost,

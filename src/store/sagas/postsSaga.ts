@@ -2,6 +2,7 @@ import { put, takeEvery } from 'redux-saga/effects';
 
 import {
   sendPostSuccess,
+  deletePostSuccess,
   setPostsError,
   getPostsSuccess,
   likePostSuccess,
@@ -28,6 +29,18 @@ function* handleSendPost({ payload }: PostsActions) {
     yield put(sendPostSuccess(payload as PostData));
   } catch (error) {
     yield put(setPostsError(payload as string));
+  }
+}
+
+function* handleDeletePost({ payload }: PostsActions) {
+  try {
+    yield db
+      .collection('posts')
+      .doc(payload as string)
+      .delete();
+    yield put(deletePostSuccess(payload as string));
+  } catch (error) {
+    yield put(setPostsError(error.message));
   }
 }
 
@@ -96,6 +109,10 @@ function* setSendPost() {
   yield takeEvery(POSTS.SEND_POST, handleSendPost);
 }
 
+function* setDeletePost() {
+  yield takeEvery(POSTS.DELETE_POST, handleDeletePost);
+}
+
 function* setGetPosts() {
   yield takeEvery(POSTS.GET_POSTS, handleGetPosts);
 }
@@ -112,4 +129,11 @@ function* setComment() {
   yield takeEvery(POSTS.COMMENT, handleComment);
 }
 
-export { setSendPost, setGetPosts, setLikePost, setDislikePost, setComment };
+export {
+  setSendPost,
+  setDeletePost,
+  setGetPosts,
+  setLikePost,
+  setDislikePost,
+  setComment,
+};

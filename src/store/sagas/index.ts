@@ -14,6 +14,7 @@ import {
 } from './visitedProfileSaga';
 import {
   setSendPost,
+  setDeletePost,
   setGetPosts,
   setLikePost,
   setDislikePost,
@@ -33,6 +34,7 @@ function* rootSaga() {
     setGetVisitedProfileData(),
     setDeleteVisitedFriend(),
     setSendPost(),
+    setDeletePost(),
     setGetPosts(),
     setLikePost(),
     setDislikePost(),

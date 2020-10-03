@@ -26,6 +26,14 @@ const postsReducer = (
         loading: false,
         posts: [...state.posts, payload as PostData],
       };
+    case POSTS.DELETE_POST:
+      return { ...state, loading: true };
+    case POSTS.DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.filter((post) => post.id !== (payload as string)),
+      };
     case POSTS.GET_POSTS:
       return { ...state, loading: true };
     case POSTS.GET_POSTS_SUCCESS:

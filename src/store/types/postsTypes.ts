@@ -27,6 +27,16 @@ interface SendPostAction {
   payload: PostData;
 }
 
+interface DeletePostAction {
+  type: typeof POSTS.DELETE_POST;
+  payload: string;
+}
+
+interface DeletePostSuccessAction {
+  type: typeof POSTS.DELETE_POST_SUCCESS;
+  payload: string;
+}
+
 interface SendPostSuccessAction {
   type: typeof POSTS.SEND_POST_SUCCESS;
   payload: PostData;
@@ -86,6 +96,8 @@ export interface PostsState {
 export type PostsActions =
   | SendPostAction
   | SendPostSuccessAction
+  | DeletePostAction
+  | DeletePostSuccessAction
   | SetPostsErrorAction
   | GetPostsAction
   | GetPostsSuccessAction

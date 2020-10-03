@@ -1,5 +1,4 @@
 import PostData from '../../types/PostData';
-import Comment from '../../types/Comment';
 import { POSTS } from '../constants';
 import {
   PostsActions,
@@ -17,6 +16,16 @@ const sendPost = (postData: PostData): PostsActions => ({
 const sendPostSuccess = (postData: PostData): PostsActions => ({
   type: POSTS.SEND_POST_SUCCESS,
   payload: postData,
+});
+
+const deletePost = (postId: string): PostsActions => ({
+  type: POSTS.DELETE_POST,
+  payload: postId,
+});
+
+const deletePostSuccess = (postId: string): PostsActions => ({
+  type: POSTS.DELETE_POST_SUCCESS,
+  payload: postId,
 });
 
 const getPosts = (userId: string): PostsActions => ({
@@ -69,7 +78,8 @@ const setPostsError = (error: string): PostsActions => ({
 export {
   sendPost,
   sendPostSuccess,
-  setPostsError,
+  deletePost,
+  deletePostSuccess,
   getPosts,
   getPostsSuccess,
   likePost,
@@ -78,4 +88,5 @@ export {
   dislikePostSuccess,
   comment,
   commentSuccess,
+  setPostsError,
 };

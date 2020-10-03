@@ -20,7 +20,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PostData from '../../../types/PostData';
 import CommentsList from '../../CommentsList';
 import { RootState } from '../../../store/reducers';
-import { likePost, dislikePost } from '../../../store/actions';
+import { likePost, dislikePost, deletePost } from '../../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -54,13 +54,17 @@ const Post: React.FC<PostData> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const isLiked = likes.includes(userId);
+  const isLiked = likes.includes(loggedUserId);
   const isMine = loggedUserId === userId;
 
   const handleLikeDislike = (): void => {
     isLiked
       ? dispatch(dislikePost({ id, userId: loggedUserId }))
       : dispatch(likePost({ id, userId: loggedUserId }));
+  };
+
+  const handleDelete = (): void => {
+    dispatch(deletePost(id));
   };
 
   return (
@@ -70,7 +74,7 @@ const Post: React.FC<PostData> = ({
         avatar={<FaceIcon />}
         action={
           isMine && (
-            <IconButton>
+            <IconButton onClick={handleDelete}>
               <CloseIcon color="action" />
             </IconButton>
           )
