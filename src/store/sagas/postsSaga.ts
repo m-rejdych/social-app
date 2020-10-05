@@ -9,12 +9,15 @@ import {
   dislikePostSuccess,
   commentSuccess,
   deleteCommentSuccess,
+  likeCommentSuccess,
+  dislikeCommentSuccess,
 } from '../actions/postsActions';
 import {
   PostsActions,
   LikeDislikeData,
   CommentData,
   DeleteCommentData,
+  LikeDislikeCommentData,
 } from '../types/postsTypes';
 import PostData from '../../types/PostData';
 import Comment from '../../types/Comment';
@@ -123,6 +126,46 @@ function* handleDeleteComment({ payload }: PostsActions) {
   }
 }
 
+function* handleLikeComment({ payload }: PostsActions) {
+  try {
+    const { postId, commentId, userId } = payload as LikeDislikeCommentData;
+    const postResponse = yield db.collection('posts').doc(postId).get();
+    const comments: Comment[] = postResponse.data().comments;
+    const updatedComments = comments.map((comment) =>
+      comment.id === commentId
+        ? { ...comment, likes: [...comment.likes, userId] }
+        : comment,
+    );
+    yield db
+      .collection('posts')
+      .doc(postId)
+      .update({ comments: updatedComments });
+    yield put(likeCommentSuccess({ postId, comments: updatedComments }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
+function* handleDislikeComment({ payload }: PostsActions) {
+  try {
+    const { postId, commentId, userId } = payload as LikeDislikeCommentData;
+    const postResponse = yield db.collection('posts').doc(postId).get();
+    const comments: Comment[] = postResponse.data().comments;
+    const updatedComments = comments.map((comment) =>
+      comment.id === commentId
+        ? { ...comment, likes: comment.likes.filter((id) => id !== userId) }
+        : comment,
+    );
+    yield db
+      .collection('posts')
+      .doc(postId)
+      .update({ comments: updatedComments });
+    yield put(dislikeCommentSuccess({ postId, comments: updatedComments }));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
 function* setSendPost() {
   yield takeEvery(POSTS.SEND_POST, handleSendPost);
 }
@@ -151,6 +194,14 @@ function* setDeleteComment() {
   yield takeEvery(POSTS.DELETE_COMMENT, handleDeleteComment);
 }
 
+function* setLikeComment() {
+  yield takeEvery(POSTS.LIKE_COMMENT, handleLikeComment);
+}
+
+function* setDislikeComment() {
+  yield takeEvery(POSTS.DISLIKE_COMMENT, handleDislikeComment);
+}
+
 export {
   setSendPost,
   setDeletePost,
@@ -159,4 +210,6 @@ export {
   setDislikePost,
   setComment,
   setDeleteComment,
+  setLikeComment,
+  setDislikeComment,
 };

@@ -20,6 +20,8 @@ import {
   setDislikePost,
   setComment,
   setDeleteComment,
+  setLikeComment,
+  setDislikeComment,
 } from './postsSaga';
 import { setGetUsers } from './usersSaga';
 
@@ -41,6 +43,8 @@ function* rootSaga() {
     setDislikePost(),
     setComment(),
     setDeleteComment(),
+    setLikeComment(),
+    setDislikeComment(),
     setGetUsers(),
   ]);
 }

@@ -32,6 +32,12 @@ export interface DeleteCommentSuccessData {
   comments: Comment[];
 }
 
+export interface LikeDislikeCommentData {
+  postId: string;
+  commentId: string;
+  userId: string;
+}
+
 interface SendPostAction {
   type: typeof POSTS.SEND_POST;
   payload: PostData;
@@ -107,6 +113,26 @@ interface DeleteCommentSuccessAction {
   payload: DeleteCommentSuccessData;
 }
 
+interface LikeCommentAction {
+  type: typeof POSTS.LIKE_COMMENT;
+  payload: LikeDislikeCommentData;
+}
+
+interface LikeCommentSuccessAction {
+  type: typeof POSTS.LIKE_COMMENT_SUCCESS;
+  payload: CommentSuccessData;
+}
+
+interface DislikeCommentAction {
+  type: typeof POSTS.DISLIKE_COMMENT;
+  payload: LikeDislikeCommentData;
+}
+
+interface DislikeCommentSuccessAction {
+  type: typeof POSTS.DISLIKE_COMMENT_SUCCESS;
+  payload: CommentSuccessData;
+}
+
 export interface PostsState {
   posts: PostData[];
   loading: boolean;
@@ -128,4 +154,8 @@ export type PostsActions =
   | CommentAction
   | CommentSuccessAction
   | DeleteCommentAction
-  | DeleteCommentSuccessAction;
+  | DeleteCommentSuccessAction
+  | LikeCommentAction
+  | LikeCommentSuccessAction
+  | DislikeCommentAction
+  | DislikeCommentSuccessAction;

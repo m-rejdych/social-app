@@ -46,6 +46,10 @@ export {
   commentSuccess,
   deleteComment,
   deleteCommentSuccess,
+  likeComment,
+  likeCommentSuccess,
+  dislikeComment,
+  dislikeCommentSuccess,
   setPostsError,
 } from './postsActions';
 

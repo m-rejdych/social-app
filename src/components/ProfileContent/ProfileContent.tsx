@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  fontBold: {
+    fontWeight: 600,
+  },
 }));
 
 const ProfileContent: React.FC = () => {
@@ -42,9 +45,9 @@ const ProfileContent: React.FC = () => {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs variant="fullWidth" value={value} onChange={handleChange}>
-          <Tab label="About" />
-          <Tab label="Posts" />
-          <Tab label="Friends" />
+          <Tab label="About" classes={{ root: classes.fontBold }} />
+          <Tab label="Posts" classes={{ root: classes.fontBold }} />
+          <Tab label="Friends" classes={{ root: classes.fontBold }} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

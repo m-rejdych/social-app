@@ -90,6 +90,30 @@ const postsReducer = (
             : post,
         ),
       };
+    case POSTS.LIKE_COMMENT:
+      return { ...state, loading: true };
+    case POSTS.LIKE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as CommentSuccessData).postId
+            ? { ...post, comments: (payload as CommentSuccessData).comments }
+            : post,
+        ),
+      };
+    case POSTS.DISLIKE_COMMENT:
+      return { ...state, loading: true };
+    case POSTS.DISLIKE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post.id === (payload as CommentSuccessData).postId
+            ? { ...post, comments: (payload as CommentSuccessData).comments }
+            : post,
+        ),
+      };
     case POSTS.POSTS_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:
