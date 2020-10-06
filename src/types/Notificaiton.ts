@@ -1,4 +1,9 @@
-type NotificationTypes = 'friendRequest' | 'friendApproval';
+type NotificationTypes =
+  | 'friendRequest'
+  | 'friendApproval'
+  | 'postLike'
+  | 'comment'
+  | 'commentLike';
 
 export default interface Notification {
   fromUserId: string;

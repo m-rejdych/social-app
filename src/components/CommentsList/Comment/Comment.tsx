@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import classNames from 'classnames';
 import {
   makeStyles,
@@ -20,6 +21,8 @@ import {
   likeComment,
   dislikeComment,
 } from '../../../store/actions';
+import { sendNotification } from '../../../shared/interactions';
+import { NOTIFICATION_TYPES } from '../../../shared/constants';
 import { RootState } from '../../../store/reducers';
 
 const useStyles = makeStyles((theme) => ({
@@ -67,6 +70,10 @@ const Comment: React.FC<Props> = ({
   likes,
 }) => {
   const loggedUserId = useSelector((state: RootState) => state.auth.userId);
+  const loggedFirstName = useSelector(
+    (state: RootState) => state.auth.firstName,
+  );
+  const loggedLastName = useSelector((state: RootState) => state.auth.lastName);
   const theme = useTheme();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -79,11 +86,19 @@ const Comment: React.FC<Props> = ({
   };
 
   const handleLikeDislike = (): void => {
-    isLiked
-      ? dispatch(
-          dislikeComment({ postId, commentId: id, userId: loggedUserId }),
-        )
-      : dispatch(likeComment({ postId, commentId: id, userId: loggedUserId }));
+    if (isLiked)
+      dispatch(dislikeComment({ postId, commentId: id, userId: loggedUserId }));
+    else {
+      dispatch(likeComment({ postId, commentId: id, userId: loggedUserId }));
+      sendNotification({
+        fromUserId: loggedUserId,
+        fromName: `${loggedFirstName} ${loggedLastName}`,
+        toUserId: userId,
+        id: uuid(),
+        isSeen: false,
+        type: NOTIFICATION_TYPES.COMMENT_LIKE,
+      });
+    }
   };
 
   return (

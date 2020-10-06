@@ -13,8 +13,10 @@ import FaceIcon from '@material-ui/icons/Face';
 
 import Comment from './Comment';
 import CommentType from '../../types/Comment';
+import { NOTIFICATION_TYPES } from '../../shared/constants';
 import { comment } from '../../store/actions';
 import { RootState } from '../../store/reducers';
+import { sendNotification } from '../../shared/interactions';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -34,11 +36,12 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   comments: CommentType[];
   postId: string;
+  userId: string;
 }
 
-const CommentsList: React.FC<Props> = ({ postId, comments }) => {
+const CommentsList: React.FC<Props> = ({ postId, userId, comments }) => {
   const [commentValue, setCommentValue] = useState('');
-  const userId = useSelector((state: RootState) => state.auth.userId);
+  const loggedUserId = useSelector((state: RootState) => state.auth.userId);
   const firstName = useSelector((state: RootState) => state.auth.firstName);
   const lastName = useSelector((state: RootState) => state.auth.lastName);
   const classes = useStyles();
@@ -49,7 +52,7 @@ const CommentsList: React.FC<Props> = ({ postId, comments }) => {
       const commentData = {
         firstName,
         lastName,
-        userId,
+        userId: loggedUserId,
         id: uuid(),
         likes: [],
         textContent: commentValue,
@@ -61,6 +64,14 @@ const CommentsList: React.FC<Props> = ({ postId, comments }) => {
         }),
       );
       setCommentValue('');
+      sendNotification({
+        fromUserId: loggedUserId,
+        fromName: `${firstName} ${lastName}`,
+        toUserId: userId,
+        id: uuid(),
+        isSeen: false,
+        type: NOTIFICATION_TYPES.COMMENT,
+      });
     }
   };
 

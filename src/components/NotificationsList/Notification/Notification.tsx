@@ -42,6 +42,12 @@ const Notification: React.FC<NotificationType> = ({
         return `${fromName} wants to add you as a friend!`;
       case NOTIFICATION_TYPES.FRIEND_APPROVAL:
         return `${fromName} accepted your friend request!`;
+      case NOTIFICATION_TYPES.POST_LIKE:
+        return `${fromName} liked your post!`;
+      case NOTIFICATION_TYPES.COMMENT:
+        return `${fromName} commented on your post!`;
+      case NOTIFICATION_TYPES.COMMENT_LIKE:
+        return `${fromName} liked your comment!`;
       default:
         return 'Watch out!';
     }

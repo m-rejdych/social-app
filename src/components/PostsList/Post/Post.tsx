@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import {
   Card,
   CardHeader,
@@ -21,6 +22,8 @@ import PostData from '../../../types/PostData';
 import CommentsList from '../../CommentsList';
 import { RootState } from '../../../store/reducers';
 import { likePost, dislikePost, deletePost } from '../../../store/actions';
+import { sendNotification } from '../../../shared/interactions';
+import { NOTIFICATION_TYPES } from '../../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,6 +54,10 @@ const Post: React.FC<PostData> = ({
 }) => {
   const [showComments, setShowComments] = useState(false);
   const loggedUserId = useSelector((state: RootState) => state.auth.userId);
+  const loggedFirstName = useSelector(
+    (state: RootState) => state.auth.firstName,
+  );
+  const loggedLastName = useSelector((state: RootState) => state.auth.lastName);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -58,9 +65,18 @@ const Post: React.FC<PostData> = ({
   const isMine = loggedUserId === userId;
 
   const handleLikeDislike = (): void => {
-    isLiked
-      ? dispatch(dislikePost({ id, userId: loggedUserId }))
-      : dispatch(likePost({ id, userId: loggedUserId }));
+    if (isLiked) dispatch(dislikePost({ id, userId: loggedUserId }));
+    else {
+      dispatch(likePost({ id, userId: loggedUserId }));
+      sendNotification({
+        fromUserId: loggedUserId,
+        fromName: `${loggedFirstName} ${loggedLastName}`,
+        toUserId: userId,
+        id: uuid(),
+        isSeen: false,
+        type: NOTIFICATION_TYPES.POST_LIKE,
+      });
+    }
   };
 
   const handleDelete = (): void => {
@@ -129,7 +145,7 @@ const Post: React.FC<PostData> = ({
       </CardActions>
       {showComments && (
         <CardContent>
-          <CommentsList postId={id} comments={comments} />
+          <CommentsList postId={id} userId={userId} comments={comments} />
         </CardContent>
       )}
     </Card>

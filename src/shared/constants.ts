@@ -12,6 +12,9 @@ const RELATIONSHIP_OPTIONS = [
 const NOTIFICATION_TYPES = {
   FRIEND_REQUEST: 'friendRequest',
   FRIEND_APPROVAL: 'friendApproval',
+  POST_LIKE: 'postLike',
+  COMMENT: 'comment',
+  COMMENT_LIKE: 'commentLike',
 } as const;
 
 export { KEYS, RELATIONSHIP_OPTIONS, NOTIFICATION_TYPES };
