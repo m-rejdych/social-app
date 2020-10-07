@@ -36,9 +36,19 @@ const getPosts = (userId: string): PostsActions => ({
   payload: userId,
 });
 
-const getPostsSuccess = (fetchedPosts: PostData[]): PostsActions => ({
+const getPostsSuccess = (posts: PostData[]): PostsActions => ({
   type: POSTS.GET_POSTS_SUCCESS,
-  payload: fetchedPosts,
+  payload: posts,
+});
+
+const getPost = (postId: string): PostsActions => ({
+  type: POSTS.GET_POST,
+  payload: postId,
+});
+
+const getPostSuccess = (postData: PostData): PostsActions => ({
+  type: POSTS.GET_POST_SUCCESS,
+  payload: postData,
 });
 
 const likePost = (likeData: LikeDislikeData): PostsActions => ({
@@ -121,6 +131,8 @@ export {
   deletePostSuccess,
   getPosts,
   getPostsSuccess,
+  getPost,
+  getPostSuccess,
   likePost,
   likePostSuccess,
   dislikePost,

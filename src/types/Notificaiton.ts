@@ -12,4 +12,6 @@ export default interface Notification {
   type: NotificationTypes;
   isSeen: boolean;
   id: string;
+  goToPost?: boolean;
+  postId?: string;
 }

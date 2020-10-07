@@ -10,7 +10,6 @@ const Component: React.FC = ({ children }) => {
     <>
       <Header />
       <Box
-        clone
         position="relative"
         top={theme.spacing(8)}
         minHeight={`calc(100vh - ${theme.spacing(8)}px)`}

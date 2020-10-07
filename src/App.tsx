@@ -6,6 +6,7 @@ import { Box, CircularProgress } from '@material-ui/core';
 import LandingPage from './pages/LandingPage';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import PostPage from './pages/PostPage';
 import { RootState } from './store/reducers';
 import {
   loadUser,
@@ -71,6 +72,7 @@ const App: React.FC = () => {
     <Switch>
       <Route path="/home" component={Home} />
       <Route path="/profile/:id" component={Profile} />
+      <Route path="/post/:id" component={PostPage} />
       <Redirect to="/home" />
     </Switch>
   ) : (

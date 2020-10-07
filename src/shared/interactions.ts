@@ -1,20 +1,15 @@
 import { db } from '../firebase';
 import Notification from '../types/Notificaiton';
 import { NOTIFICATION_TYPES } from './constants';
+import PostData from '../types/PostData';
 
-const sendNotification = async ({
-  fromName,
-  fromUserId,
-  toUserId,
-  type,
-  isSeen,
-  id,
-}: Notification): Promise<void> => {
+const sendNotification = async (notification: Notification): Promise<void> => {
   try {
+    const { toUserId } = notification;
     const response = await db.collection('users').doc(toUserId).get();
     const notifications: Notification[] = [
       ...response.data()!.notifications,
-      { fromUserId, toUserId, fromName, type, isSeen, id },
+      notification,
     ];
     await db.collection('users').doc(toUserId).update({ notifications });
   } catch (error) {
@@ -89,10 +84,17 @@ const dislikePost = async (postId: string, userId: string): Promise<void> => {
   }
 };
 
+const getPostData = async (postId: string): Promise<PostData> => {
+  const response = await db.collection('posts').doc(postId).get();
+  console.log(response.data());
+  return response.data() as PostData;
+};
+
 export {
   sendNotification,
   deleteNotification,
   unsendFriendRequest,
   likePost,
   dislikePost,
+  getPostData,
 };

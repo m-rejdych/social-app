@@ -10,6 +10,7 @@ import {
 
 const initialState: PostsState = {
   posts: [],
+  currentPost: {},
   loading: false,
   error: null,
 };
@@ -39,6 +40,10 @@ const postsReducer = (
       return { ...state, loading: true };
     case POSTS.GET_POSTS_SUCCESS:
       return { ...state, loading: false, posts: payload as PostData[] };
+    case POSTS.GET_POST:
+      return { ...state, loading: true };
+    case POSTS.GET_POST_SUCCESS:
+      return { ...state, loading: false, currentPost: payload as PostData };
     case POSTS.LIKE_POST:
       return { ...state, loading: true };
     case POSTS.LIKE_POST_SUCCESS:

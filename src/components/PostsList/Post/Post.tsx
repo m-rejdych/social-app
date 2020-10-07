@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import {
@@ -61,6 +61,10 @@ const Post: React.FC<PostData> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // window.location.reload();
+  }, [likes, comments]);
+
   const isLiked = likes.includes(loggedUserId);
   const isMine = loggedUserId === userId;
 
@@ -75,6 +79,8 @@ const Post: React.FC<PostData> = ({
         id: uuid(),
         isSeen: false,
         type: NOTIFICATION_TYPES.POST_LIKE,
+        goToPost: true,
+        postId: id,
       });
     }
   };

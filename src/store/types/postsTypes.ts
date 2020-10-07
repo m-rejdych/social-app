@@ -68,6 +68,16 @@ interface GetPostsSuccessAction {
   payload: PostData[];
 }
 
+interface GetPostAction {
+  type: typeof POSTS.GET_POST;
+  payload: string;
+}
+
+interface GetPostSuccessAction {
+  type: typeof POSTS.GET_POST_SUCCESS;
+  payload: PostData;
+}
+
 interface SetPostsErrorAction {
   type: typeof POSTS.POSTS_FAIL;
   payload: string;
@@ -135,6 +145,7 @@ interface DislikeCommentSuccessAction {
 
 export interface PostsState {
   posts: PostData[];
+  currentPost: PostData | {};
   loading: boolean;
   error: null | string;
 }
@@ -147,6 +158,8 @@ export type PostsActions =
   | SetPostsErrorAction
   | GetPostsAction
   | GetPostsSuccessAction
+  | GetPostAction
+  | GetPostSuccessAction
   | LikePostAction
   | LikePostSuccessAction
   | DislikePostAction

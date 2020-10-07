@@ -1,17 +1,18 @@
-import { put, takeEvery } from 'redux-saga/effects';
+import { put, takeEvery, select } from 'redux-saga/effects';
 
 import {
   sendPostSuccess,
   deletePostSuccess,
   setPostsError,
   getPostsSuccess,
+  getPostSuccess,
   likePostSuccess,
   dislikePostSuccess,
   commentSuccess,
   deleteCommentSuccess,
   likeCommentSuccess,
   dislikeCommentSuccess,
-} from '../actions/postsActions';
+} from '../actions';
 import {
   PostsActions,
   LikeDislikeData,
@@ -19,10 +20,11 @@ import {
   DeleteCommentData,
   LikeDislikeCommentData,
 } from '../types/postsTypes';
-import PostData from '../../types/PostData';
-import Comment from '../../types/Comment';
 import { db } from '../../firebase';
 import { POSTS } from '../constants';
+import { RootState } from '../reducers';
+import PostData from '../../types/PostData';
+import Comment from '../../types/Comment';
 
 function* handleSendPost({ payload }: PostsActions) {
   try {
@@ -66,14 +68,34 @@ function* handleGetPosts({ payload }: PostsActions) {
   }
 }
 
+function* handleGetPost({ payload }: PostsActions) {
+  try {
+    const response = yield db
+      .collection('posts')
+      .doc(payload as string)
+      .get();
+    const postData = response.data();
+    yield put(getPostSuccess(postData));
+  } catch (error) {
+    yield put(setPostsError(error.message));
+  }
+}
+
 function* handleLikePost({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { id, userId } = payload as LikeDislikeData;
     const postResponse = yield db.collection('posts').doc(id).get();
     const likes: string[] = postResponse.data().likes;
     const updatedLikes = [...likes, userId];
     yield db.collection('posts').doc(id).update({ likes: updatedLikes });
     yield put(likePostSuccess({ id, likes: updatedLikes }));
+    if (currentPost.id === id)
+      yield put(
+        getPostSuccess({ ...postResponse.data(), likes: updatedLikes }),
+      );
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -81,6 +103,9 @@ function* handleLikePost({ payload }: PostsActions) {
 
 function* handleDislikePost({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { id, userId } = payload as LikeDislikeData;
     const postResponse = yield db.collection('posts').doc(id).get();
     const likes: string[] = postResponse.data().likes;
@@ -89,6 +114,10 @@ function* handleDislikePost({ payload }: PostsActions) {
     );
     yield db.collection('posts').doc(id).update({ likes: updatedLikes });
     yield put(dislikePostSuccess({ id, likes: updatedLikes }));
+    if (currentPost.id === id)
+      yield put(
+        getPostSuccess({ ...postResponse.data(), likes: updatedLikes }),
+      );
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -96,6 +125,9 @@ function* handleDislikePost({ payload }: PostsActions) {
 
 function* handleComment({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { postId, comment } = payload as CommentData;
     const postResponse = yield db.collection('posts').doc(postId).get();
     const comments: Comment[] = postResponse.data().comments;
@@ -105,6 +137,10 @@ function* handleComment({ payload }: PostsActions) {
       .doc(postId)
       .update({ comments: updatedComments });
     yield put(commentSuccess({ postId, comments: updatedComments }));
+    if (currentPost.id === postId)
+      yield put(
+        getPostSuccess({ ...postResponse.data(), comments: updatedComments }),
+      );
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -112,6 +148,9 @@ function* handleComment({ payload }: PostsActions) {
 
 function* handleDeleteComment({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { postId, commentId } = payload as DeleteCommentData;
     const postResponse = yield db.collection('posts').doc(postId).get();
     const comments: Comment[] = postResponse.data().comments;
@@ -121,6 +160,8 @@ function* handleDeleteComment({ payload }: PostsActions) {
       .doc(postId)
       .update({ comments: updatedComments });
     yield put(deleteCommentSuccess({ postId, comments: updatedComments }));
+    if (currentPost.id === postId)
+      yield put(getPostSuccess({ ...postResponse, comments: updatedComments }));
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -128,6 +169,9 @@ function* handleDeleteComment({ payload }: PostsActions) {
 
 function* handleLikeComment({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { postId, commentId, userId } = payload as LikeDislikeCommentData;
     const postResponse = yield db.collection('posts').doc(postId).get();
     const comments: Comment[] = postResponse.data().comments;
@@ -141,6 +185,10 @@ function* handleLikeComment({ payload }: PostsActions) {
       .doc(postId)
       .update({ comments: updatedComments });
     yield put(likeCommentSuccess({ postId, comments: updatedComments }));
+    if (currentPost.id === postId)
+      yield put(
+        getPostSuccess({ ...postResponse.data(), comments: updatedComments }),
+      );
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -148,6 +196,9 @@ function* handleLikeComment({ payload }: PostsActions) {
 
 function* handleDislikeComment({ payload }: PostsActions) {
   try {
+    const currentPost: PostData = yield select(
+      (state: RootState) => state.posts.currentPost,
+    );
     const { postId, commentId, userId } = payload as LikeDislikeCommentData;
     const postResponse = yield db.collection('posts').doc(postId).get();
     const comments: Comment[] = postResponse.data().comments;
@@ -161,6 +212,10 @@ function* handleDislikeComment({ payload }: PostsActions) {
       .doc(postId)
       .update({ comments: updatedComments });
     yield put(dislikeCommentSuccess({ postId, comments: updatedComments }));
+    if (currentPost.id === postId)
+      yield put(
+        getPostSuccess({ ...postResponse.data(), comments: updatedComments }),
+      );
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -176,6 +231,10 @@ function* setDeletePost() {
 
 function* setGetPosts() {
   yield takeEvery(POSTS.GET_POSTS, handleGetPosts);
+}
+
+function* setGetPost() {
+  yield takeEvery(POSTS.GET_POST, handleGetPost);
 }
 
 function* setLikePost() {
@@ -206,6 +265,7 @@ export {
   setSendPost,
   setDeletePost,
   setGetPosts,
+  setGetPost,
   setLikePost,
   setDislikePost,
   setComment,

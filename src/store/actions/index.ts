@@ -38,6 +38,8 @@ export {
   deletePostSuccess,
   getPosts,
   getPostsSuccess,
+  getPost,
+  getPostSuccess,
   likePost,
   likePostSuccess,
   dislikePost,

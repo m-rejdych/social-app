@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   ListItem,
   ListItemText,
@@ -22,11 +23,17 @@ const Notification: React.FC<NotificationType> = ({
   toUserId,
   type,
   id,
+  goToPost,
+  postId,
 }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const theme = useTheme();
 
-  const handleDeleteNotification = (): void => {
+  const handleDeleteNotification = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ): void => {
+    e.stopPropagation();
     deleteNotification(toUserId, id);
   };
 
@@ -34,6 +41,10 @@ const Notification: React.FC<NotificationType> = ({
     dispatch(
       addFriend({ notificationId: id, userId: toUserId, friendId: fromUserId }),
     );
+  };
+
+  const handleClick = (): void => {
+    if (goToPost) history.push(`/post/${postId}`);
   };
 
   const renderMessage = (): string => {
@@ -62,7 +73,10 @@ const Notification: React.FC<NotificationType> = ({
               <CheckIcon htmlColor={theme.palette.success.main} />
             </IconButton>
             <Box clone mr={2}>
-              <IconButton onClick={handleDeleteNotification} size="small">
+              <IconButton
+                onClick={(e) => handleDeleteNotification(e)}
+                size="small"
+              >
                 <CloseIcon color="error" />
               </IconButton>
             </Box>
@@ -78,7 +92,7 @@ const Notification: React.FC<NotificationType> = ({
   };
 
   return (
-    <ListItem button>
+    <ListItem button onClick={handleClick}>
       <ListItemIcon>{renderIcon()}</ListItemIcon>
       <ListItemText>{renderMessage()}</ListItemText>
     </ListItem>
