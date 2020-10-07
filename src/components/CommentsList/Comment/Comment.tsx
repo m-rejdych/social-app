@@ -90,14 +90,17 @@ const Comment: React.FC<Props> = ({
       dispatch(dislikeComment({ postId, commentId: id, userId: loggedUserId }));
     else {
       dispatch(likeComment({ postId, commentId: id, userId: loggedUserId }));
-      sendNotification({
-        fromUserId: loggedUserId,
-        fromName: `${loggedFirstName} ${loggedLastName}`,
-        toUserId: userId,
-        id: uuid(),
-        isSeen: false,
-        type: NOTIFICATION_TYPES.COMMENT_LIKE,
-      });
+      if (loggedUserId !== userId)
+        sendNotification({
+          fromUserId: loggedUserId,
+          fromName: `${loggedFirstName} ${loggedLastName}`,
+          toUserId: userId,
+          id: uuid(),
+          isSeen: false,
+          type: NOTIFICATION_TYPES.COMMENT_LIKE,
+          goToPost: true,
+          postId,
+        });
     }
   };
 

@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container, CircularProgress, makeStyles } from '@material-ui/core';
+import {
+  Container,
+  CircularProgress,
+  makeStyles,
+  Box,
+} from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 
 import PageWrapper from '../../components/PageWrapper';
@@ -38,7 +43,14 @@ const PostPage: React.FC = () => {
           <Post {...(currentPost as PostData)} />
         </Container>
       ) : (
-        <CircularProgress />
+        <Box
+          height="100vh"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CircularProgress size={300} />
+        </Box>
       )}
     </PageWrapper>
   );

@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import NotificationType from '../../../types/Notificaiton';
 import { deleteNotification } from '../../../shared/interactions';
@@ -85,7 +86,7 @@ const Notification: React.FC<NotificationType> = ({
       default:
         return (
           <IconButton onClick={handleDeleteNotification} size="small">
-            <CloseIcon color="error" />
+            <DeleteIcon color="error" />
           </IconButton>
         );
     }

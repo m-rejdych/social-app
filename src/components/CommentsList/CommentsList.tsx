@@ -64,14 +64,17 @@ const CommentsList: React.FC<Props> = ({ postId, userId, comments }) => {
         }),
       );
       setCommentValue('');
-      sendNotification({
-        fromUserId: loggedUserId,
-        fromName: `${firstName} ${lastName}`,
-        toUserId: userId,
-        id: uuid(),
-        isSeen: false,
-        type: NOTIFICATION_TYPES.COMMENT,
-      });
+      if (loggedUserId !== userId)
+        sendNotification({
+          fromUserId: loggedUserId,
+          fromName: `${firstName} ${lastName}`,
+          toUserId: userId,
+          id: uuid(),
+          isSeen: false,
+          type: NOTIFICATION_TYPES.COMMENT,
+          goToPost: true,
+          postId: postId,
+        });
     }
   };
 

@@ -72,16 +72,17 @@ const Post: React.FC<PostData> = ({
     if (isLiked) dispatch(dislikePost({ id, userId: loggedUserId }));
     else {
       dispatch(likePost({ id, userId: loggedUserId }));
-      sendNotification({
-        fromUserId: loggedUserId,
-        fromName: `${loggedFirstName} ${loggedLastName}`,
-        toUserId: userId,
-        id: uuid(),
-        isSeen: false,
-        type: NOTIFICATION_TYPES.POST_LIKE,
-        goToPost: true,
-        postId: id,
-      });
+      if (loggedUserId !== userId)
+        sendNotification({
+          fromUserId: loggedUserId,
+          fromName: `${loggedFirstName} ${loggedLastName}`,
+          toUserId: userId,
+          id: uuid(),
+          isSeen: false,
+          type: NOTIFICATION_TYPES.POST_LIKE,
+          goToPost: true,
+          postId: id,
+        });
     }
   };
 
