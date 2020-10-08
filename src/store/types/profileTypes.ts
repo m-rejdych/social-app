@@ -9,6 +9,12 @@ export interface ProfileIntro {
   hobbies: string;
 }
 
+export interface Friend {
+  firstName: string;
+  lastName: string;
+  userId: string;
+}
+
 export interface ProfileDetails {
   dateOfBirth: string;
   proffesion: string;
@@ -17,16 +23,11 @@ export interface ProfileDetails {
   firstName: string;
   lastName: string;
   email: string;
-  friends: string[];
+  friends: Friend[];
   notifications: Notification[];
 }
 
 export type ProfileData = ProfileIntro & ProfileDetails;
-
-export type AddFriendData = Record<
-  'notificationId' | 'userId' | 'friendId',
-  string
->;
 
 interface SetProfileIntroAction {
   type: typeof PROFILE.SET_PROFILE_INTRO;
@@ -36,6 +37,11 @@ interface SetProfileIntroAction {
 interface SetProfileIntroSuccessAction {
   type: typeof PROFILE.SET_PROFILE_INTRO_SUCCESS;
   payload: ProfileIntro;
+}
+
+interface SetFriendsAction {
+  type: typeof PROFILE.SET_FRIENDS;
+  payload: Friend[];
 }
 
 interface GetProfileDataAction {
@@ -63,26 +69,6 @@ interface SetNotificaitons {
   payload: Notification[];
 }
 
-interface AddFriendAction {
-  type: typeof PROFILE.ADD_FRIEND;
-  payload: AddFriendData;
-}
-
-interface AddFriendSuccessAction {
-  type: typeof PROFILE.ADD_FRIEND_SUCCESS;
-  payload: string;
-}
-
-interface DeleteFriendAction {
-  type: typeof PROFILE.DELETE_FRIEND;
-  payload: { userId: string; friendId: string };
-}
-
-interface DeleteFriendSuccessAction {
-  type: typeof PROFILE.DELETE_FRIEND_SUCCESS;
-  payload: string;
-}
-
 interface SetProfileErrorAction {
   type: typeof PROFILE.PROFILE_FAIL;
   payload: string;
@@ -97,12 +83,9 @@ export type ProfileActions =
   | SetProfileIntroAction
   | SetProfileIntroSuccessAction
   | SetProfileErrorAction
+  | SetFriendsAction
   | GetProfileDataAction
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
   | UpdateProfileFieldActionSuccess
-  | SetNotificaitons
-  | AddFriendAction
-  | AddFriendSuccessAction
-  | DeleteFriendAction
-  | DeleteFriendSuccessAction;
+  | SetNotificaitons;

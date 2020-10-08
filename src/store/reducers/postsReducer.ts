@@ -39,7 +39,11 @@ const postsReducer = (
     case POSTS.GET_POSTS:
       return { ...state, loading: true };
     case POSTS.GET_POSTS_SUCCESS:
-      return { ...state, loading: false, posts: payload as PostData[] };
+      return {
+        ...state,
+        loading: false,
+        posts: payload as PostData[],
+      };
     case POSTS.GET_POST:
       return { ...state, loading: true };
     case POSTS.GET_POST_SUCCESS:

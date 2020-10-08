@@ -5,8 +5,6 @@ import {
   setProfileIntro,
   setProfileData,
   setProfileFieldUpdate,
-  setAddFriend,
-  setDeleteFriend,
 } from './profileSaga';
 import {
   setGetVisitedProfileData,
@@ -33,8 +31,6 @@ function* rootSaga() {
     setProfileIntro(),
     setProfileData(),
     setProfileFieldUpdate(),
-    setAddFriend(),
-    setDeleteFriend(),
     setGetVisitedProfileData(),
     setDeleteVisitedFriend(),
     setSendPost(),

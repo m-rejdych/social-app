@@ -1,6 +1,7 @@
 import { db } from '../firebase';
-import Notification from '../types/Notificaiton';
 import { NOTIFICATION_TYPES } from './constants';
+import { ProfileData } from '../store/types/profileTypes';
+import Notification from '../types/Notificaiton';
 import PostData from '../types/PostData';
 
 const sendNotification = async (notification: Notification): Promise<void> => {
@@ -31,6 +32,75 @@ const deleteNotification = async (
       .collection('users')
       .doc(userId)
       .update({ notifications: updatedNotifications });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addFriend = async (userId: string, friendId: string): Promise<void> => {
+  try {
+    const userResponse = await db.collection('users').doc(userId).get();
+    const friendResponse = await db.collection('users').doc(friendId).get();
+    const {
+      firstName: userFirstName,
+      lastName: userLastName,
+      friends: userFriends,
+    } = userResponse.data() as ProfileData;
+    const {
+      firstName: friendFirstName,
+      lastName: friendLastName,
+      friends: friendFriends,
+    } = friendResponse.data() as ProfileData;
+    await db
+      .collection('users')
+      .doc(userId)
+      .update({
+        friends: [
+          ...userFriends,
+          {
+            userId: friendId,
+            firstName: friendFirstName,
+            lastName: friendLastName,
+          },
+        ],
+      });
+    await db
+      .collection('users')
+      .doc(friendId)
+      .update({
+        friends: [
+          ...friendFriends,
+          { userId: userId, firstName: userFirstName, lastName: userLastName },
+        ],
+      });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const deleteFriend = async (
+  userId: string,
+  friendId: string,
+): Promise<void> => {
+  try {
+    const userResponse = await db.collection('users').doc(userId).get();
+    const friendResponse = await db.collection('users').doc(friendId).get();
+    const { friends: userFriends } = userResponse.data() as ProfileData;
+    const { friends: friendFriends } = friendResponse.data() as ProfileData;
+    await db
+      .collection('users')
+      .doc(userId)
+      .update({
+        friends: userFriends.filter(({ userId }) => userId !== friendId),
+      });
+    await db
+      .collection('users')
+      .doc(friendId)
+      .update({
+        friends: friendFriends.filter(
+          ({ userId: storedId }) => storedId !== userId,
+        ),
+      });
   } catch (error) {
     console.log(error.message);
   }
@@ -92,6 +162,8 @@ const getPostData = async (postId: string): Promise<PostData> => {
 
 export {
   sendNotification,
+  addFriend,
+  deleteFriend,
   deleteNotification,
   unsendFriendRequest,
   likePost,

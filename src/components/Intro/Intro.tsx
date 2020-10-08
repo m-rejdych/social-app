@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import {
   Card,
@@ -30,8 +30,8 @@ import countries from '../../shared/countries';
 import {
   sendNotification,
   unsendFriendRequest,
+  deleteFriend,
 } from '../../shared/interactions';
-import { deleteFriend } from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
   introCard: {
@@ -60,6 +60,7 @@ const Intro: React.FC = () => {
     (state: RootState) => state.auth.firstName,
   );
   const loggedLastName = useSelector((state: RootState) => state.auth.lastName);
+  const friends = useSelector((state: RootState) => state.profile.friends);
   const visitedUserId = useSelector(
     (state: RootState) => state.visitedProfile.userId,
   );
@@ -88,10 +89,6 @@ const Intro: React.FC = () => {
   const notifications = useSelector(
     (state: RootState) => state.visitedProfile.notifications,
   );
-  const friends = useSelector(
-    (state: RootState) => state.visitedProfile.friends,
-  );
-  const dispatch = useDispatch();
   const classes = useStyles();
 
   useEffect(() => {
@@ -108,7 +105,7 @@ const Intro: React.FC = () => {
 
   const isMe = params.id === loggedUserId;
 
-  const isFriend = friends.includes(loggedUserId);
+  const isFriend = friends.some(({ userId }) => userId === params.id);
 
   const selectedCountry: Country | undefined = countries.find(
     ({ value }: Country): boolean => value === country,
@@ -149,7 +146,7 @@ const Intro: React.FC = () => {
     setIsButtonHovered((isHovered) => !isHovered);
   };
 
-  const addFriend = async (): Promise<void> => {
+  const sendFriendRequest = async (): Promise<void> => {
     await sendNotification({
       fromName: `${loggedFirstName} ${loggedLastName}`,
       fromUserId: loggedUserId,
@@ -169,9 +166,8 @@ const Intro: React.FC = () => {
   const handleClick = (): void => {
     if (isMe) openEditIntroDialog();
     else if (isInvited) undoAddFriend();
-    else if (isFriend)
-      dispatch(deleteFriend({ userId: loggedUserId, friendId: visitedUserId }));
-    else addFriend();
+    else if (isFriend) deleteFriend(loggedUserId, visitedUserId);
+    else sendFriendRequest();
   };
 
   const renderStartIcon = (): JSX.Element => {

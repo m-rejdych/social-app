@@ -5,6 +5,7 @@ import {
   ProfileActions,
   ProfileData,
   ProfileDetails,
+  Friend,
 } from '../types/profileTypes';
 import Notification from '../../types/Notificaiton';
 
@@ -45,6 +46,8 @@ const profileReducer = (
       return { ...state, loading: true };
     case PROFILE.GET_PROFILE_DATA_SUCCESS:
       return { ...state, loading: false, ...(payload as ProfileData) };
+    case PROFILE.SET_FRIENDS:
+      return { ...state, friends: payload as Friend[] };
     case PROFILE.UPDATE_PROFILE_FIELD:
       return { ...state, loading: true };
     case PROFILE.UPDATE_PROFILE_FIELD_SUCCESS:
@@ -55,24 +58,6 @@ const profileReducer = (
       };
     case PROFILE.SET_NOTIFICATIONS:
       return { ...state, notifications: payload as Notification[] };
-    case PROFILE.ADD_FRIEND:
-      return { ...state, loading: true };
-    case PROFILE.ADD_FRIEND_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        friends: [...state.friends, payload as string],
-      };
-    case PROFILE.DELETE_FRIEND:
-      return { ...state, loading: true };
-    case PROFILE.DELETE_FRIEND_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        friends: state.friends.filter(
-          (friendId) => friendId !== (payload as string),
-        ),
-      };
     case PROFILE.PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:

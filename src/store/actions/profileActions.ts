@@ -4,7 +4,7 @@ import {
   ProfileIntro,
   ProfileData,
   ProfileDetails,
-  AddFriendData,
+  Friend,
 } from '../types/profileTypes';
 import Notification from '../../types/Notificaiton';
 
@@ -16,6 +16,11 @@ const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
 const setProfileIntroSuccess = (introData: ProfileIntro): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO_SUCCESS,
   payload: introData,
+});
+
+const setFriends = (friends: Friend[]): ProfileActions => ({
+  type: PROFILE.SET_FRIENDS,
+  payload: friends,
 });
 
 const getProfileData = (userId: string): ProfileActions => ({
@@ -48,29 +53,6 @@ const setNotifications = (notifications: Notification[]): ProfileActions => ({
   payload: notifications,
 });
 
-const addFriend = (ids: AddFriendData): ProfileActions => ({
-  type: PROFILE.ADD_FRIEND,
-  payload: ids,
-});
-
-const addFriendSuccess = (friendId: string): ProfileActions => ({
-  type: PROFILE.ADD_FRIEND_SUCCESS,
-  payload: friendId,
-});
-
-const deleteFriend = (ids: {
-  userId: string;
-  friendId: string;
-}): ProfileActions => ({
-  type: PROFILE.DELETE_FRIEND,
-  payload: ids,
-});
-
-const deleteFriendSuccess = (friendId: string): ProfileActions => ({
-  type: PROFILE.DELETE_FRIEND_SUCCESS,
-  payload: friendId,
-});
-
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -80,13 +62,10 @@ export {
   setProfileIntro,
   setProfileIntroSuccess,
   setProfileError,
+  setFriends,
   getProfileData,
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
   setNotifications,
-  addFriend,
-  addFriendSuccess,
-  deleteFriend,
-  deleteFriendSuccess,
 };

@@ -13,6 +13,7 @@ import {
   getProfileData,
   getUsers,
   setNotifications,
+  setFriends,
 } from './store/actions';
 import { auth, db } from './firebase';
 
@@ -53,6 +54,7 @@ const App: React.FC = () => {
         .onSnapshot(
           (snapshot) => {
             dispatch(setNotifications(snapshot.data()!.notifications));
+            dispatch(setFriends(snapshot.data()!.friends));
           },
           (error) => console.log(error.message),
         );

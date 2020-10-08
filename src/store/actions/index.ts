@@ -12,15 +12,12 @@ export {
   setProfileIntro,
   setProfileIntroSuccess,
   setProfileError,
+  setFriends,
   getProfileData,
   getProfileDataSuccess,
   updateProfileField,
   updateProfileFieldSuccess,
   setNotifications,
-  addFriend,
-  addFriendSuccess,
-  deleteFriend,
-  deleteFriendSuccess,
 } from './profileActions';
 
 export {

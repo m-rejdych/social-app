@@ -39,9 +39,7 @@ const visitedProfileReducer = (
       return {
         ...state,
         loading: false,
-        friends: state.friends.filter(
-          (friendId) => friendId !== (payload as string),
-        ),
+        friends: state.friends.filter((friendId) => friendId !== payload),
       };
     case VISITED_PROFILE.VISITED_PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };

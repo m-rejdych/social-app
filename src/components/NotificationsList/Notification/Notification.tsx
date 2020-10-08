@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   ListItem,
@@ -14,9 +15,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import NotificationType from '../../../types/Notificaiton';
-import { deleteNotification } from '../../../shared/interactions';
-import { addFriend } from '../../../store/actions';
+import {
+  deleteNotification,
+  addFriend,
+  sendNotification,
+} from '../../../shared/interactions';
 import { NOTIFICATION_TYPES } from '../../../shared/constants';
+import { RootState } from '../../../store/reducers';
 
 const Notification: React.FC<NotificationType> = ({
   fromName,
@@ -27,7 +32,8 @@ const Notification: React.FC<NotificationType> = ({
   goToPost,
   postId,
 }) => {
-  const dispatch = useDispatch();
+  const firstName = useSelector((state: RootState) => state.auth.firstName);
+  const lastName = useSelector((state: RootState) => state.auth.lastName);
   const history = useHistory();
   const theme = useTheme();
 
@@ -39,9 +45,16 @@ const Notification: React.FC<NotificationType> = ({
   };
 
   const handleAddFriend = (): void => {
-    dispatch(
-      addFriend({ notificationId: id, userId: toUserId, friendId: fromUserId }),
-    );
+    addFriend(toUserId, fromUserId);
+    sendNotification({
+      fromUserId: toUserId,
+      fromName: `${firstName} ${lastName}`,
+      toUserId: fromUserId,
+      id: uuid(),
+      isSeen: false,
+      type: NOTIFICATION_TYPES.FRIEND_APPROVAL,
+    });
+    deleteNotification(toUserId, id);
   };
 
   const handleClick = (): void => {
