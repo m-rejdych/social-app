@@ -31,9 +31,9 @@ const deletePostSuccess = (postId: string): PostsActions => ({
   payload: postId,
 });
 
-const getPosts = (userId: string): PostsActions => ({
+const getPosts = (ids: string[]): PostsActions => ({
   type: POSTS.GET_POSTS,
-  payload: userId,
+  payload: ids,
 });
 
 const getPostsSuccess = (posts: PostData[]): PostsActions => ({

@@ -22,16 +22,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Component: React.FC = () => {
-  const userId = useSelector((state: RootState) => state.auth.userId);
+const Profile: React.FC = () => {
+  const friends = useSelector((state: RootState) => state.profile.friends);
   const classes = useStyles();
   const params = useParams<{ id: string }>();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getVisitedProfileData(params.id));
-    dispatch(getPosts(params.id));
-  }, [userId, params, dispatch]);
+  }, [params.id, friends]);
+
+  useEffect(() => {
+    dispatch(getPosts([params.id]));
+  }, [params.id]);
 
   return (
     <PageWrapper>
@@ -60,4 +63,4 @@ const Component: React.FC = () => {
   );
 };
 
-export default Component;
+export default Profile;

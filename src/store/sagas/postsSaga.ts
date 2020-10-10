@@ -56,13 +56,13 @@ function* handleGetPosts({ payload }: PostsActions) {
     const posts: PostData[] = [];
     const response = yield db
       .collection('posts')
-      .where('userId', '==', payload)
       .get();
     yield response.forEach((doc: { data: () => PostData }) => {
       posts.push(doc.data());
     });
+    const filteredPosts = posts.filter(({ userId }) => (payload as string[]).includes(userId));
 
-    yield put(getPostsSuccess(posts));
+    yield put(getPostsSuccess(filteredPosts));
   } catch (error) {
     yield put(setPostsError(error.message));
   }

@@ -60,7 +60,7 @@ interface SendPostSuccessAction {
 
 interface GetPostsAction {
   type: typeof POSTS.GET_POSTS;
-  payload: string;
+  payload: string[];
 }
 
 interface GetPostsSuccessAction {

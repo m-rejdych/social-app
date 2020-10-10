@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 
 import PageWrapper from '../../components/PageWrapper';
 import PostsList from '../../components/PostsList';
@@ -20,17 +20,17 @@ const Home: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   [...friends, userId].forEach((friendId) => {
-  //     dispatch(getPosts({ userId: friendId, merge: true }));
-  //   });
-  // }, [friends, userId]);
+  useEffect(() => {
+    const friendsIds = friends.map(({ userId }) => userId);
+    dispatch(getPosts([...friendsIds, userId]));
+  }, [friends, userId]);
 
   return (
     <PageWrapper>
       <Grid container spacing={3} className={classes.gridContainer}>
         <Grid item xs={3} />
         <Grid item xs={6}>
+          <Typography variant="h4" gutterBottom>Feed</Typography>
           <PostsList posts={posts} />
         </Grid>
         <Grid item xs={3}>
