@@ -26,7 +26,7 @@ const postsReducer = (
       return {
         ...state,
         loading: false,
-        posts: [...state.posts, payload as PostData],
+        posts: [payload as PostData, ...state.posts],
       };
     case POSTS.DELETE_POST:
       return { ...state, loading: true };

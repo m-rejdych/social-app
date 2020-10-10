@@ -8,6 +8,7 @@ import PostData from '../../types/PostData';
 import PostsList from '../PostsList';
 import { sendPost } from '../../store/actions';
 import { RootState } from '../../store/reducers';
+import { Timestamp } from '../../firebase';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -38,6 +39,7 @@ const ProfilePosts: React.FC = () => {
         userId,
         firstName,
         lastName,
+        timestamp: Timestamp.now(),
       };
 
       dispatch(sendPost(postData));

@@ -35,7 +35,7 @@ function* handleSendPost({ payload }: PostsActions) {
       .set(payload as PostData);
     yield put(sendPostSuccess(payload as PostData));
   } catch (error) {
-    yield put(setPostsError(payload as string));
+    yield put(setPostsError(error.message));
   }
 }
 
@@ -54,15 +54,18 @@ function* handleDeletePost({ payload }: PostsActions) {
 function* handleGetPosts({ payload }: PostsActions) {
   try {
     const posts: PostData[] = [];
-    const response = yield db
-      .collection('posts')
-      .get();
+    const response = yield db.collection('posts').get();
     yield response.forEach((doc: { data: () => PostData }) => {
-      posts.push(doc.data());
+      const comments: Comment[] = doc
+        .data()
+        .comments.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
+      posts.push({ ...doc.data(), comments });
     });
-    const filteredPosts = posts.filter(({ userId }) => (payload as string[]).includes(userId));
+    const result = posts
+      .filter(({ userId }) => (payload as string[]).includes(userId))
+      .sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
 
-    yield put(getPostsSuccess(filteredPosts));
+    yield put(getPostsSuccess(result));
   } catch (error) {
     yield put(setPostsError(error.message));
   }
@@ -131,7 +134,7 @@ function* handleComment({ payload }: PostsActions) {
     const { postId, comment } = payload as CommentData;
     const postResponse = yield db.collection('posts').doc(postId).get();
     const comments: Comment[] = postResponse.data().comments;
-    const updatedComments = [...comments, comment];
+    const updatedComments = [comment, ...comments];
     yield db
       .collection('posts')
       .doc(postId)

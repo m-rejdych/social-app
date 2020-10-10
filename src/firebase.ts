@@ -16,5 +16,6 @@ const db = firebase.firestore();
 
 const auth = firebase.auth();
 const Persistence = firebase.auth.Auth.Persistence;
+const Timestamp = firebase.firestore.Timestamp;
 
-export { db, auth, Persistence };
+export { db, auth, Persistence, Timestamp };

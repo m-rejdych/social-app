@@ -13,10 +13,12 @@ import FaceIcon from '@material-ui/icons/Face';
 
 import Comment from './Comment';
 import CommentType from '../../types/Comment';
+import PostData from '../../types/PostData';
 import { NOTIFICATION_TYPES } from '../../shared/constants';
 import { comment } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { sendNotification } from '../../shared/interactions';
+import { Timestamp } from '../../firebase';
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -49,13 +51,14 @@ const CommentsList: React.FC<Props> = ({ postId, userId, comments }) => {
 
   const handleComment = (): void => {
     if (commentValue.trim()) {
-      const commentData = {
+      const commentData: Omit<PostData, 'comments'> = {
         firstName,
         lastName,
         userId: loggedUserId,
         id: uuid(),
         likes: [],
         textContent: commentValue,
+        timestamp: Timestamp.now(),
       };
       dispatch(
         comment({

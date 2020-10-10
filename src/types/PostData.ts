@@ -1,4 +1,5 @@
 import Comment from './Comment';
+import firebase from 'firebase';
 
 export default interface PostData {
   userId: string;
@@ -8,4 +9,5 @@ export default interface PostData {
   textContent: string;
   likes: string[];
   comments: Comment[];
+  timestamp: firebase.firestore.Timestamp;
 }
