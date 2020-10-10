@@ -4,6 +4,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 
 import PageWrapper from '../../components/PageWrapper';
 import PostsList from '../../components/PostsList';
+import FriendsList from '../../components/FriendsList';
 import { getPosts } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 
@@ -30,11 +31,16 @@ const Home: React.FC = () => {
       <Grid container spacing={3} className={classes.gridContainer}>
         <Grid item xs={3} />
         <Grid item xs={6}>
-          <Typography variant="h4" gutterBottom>Feed</Typography>
+          <Typography variant="h4" gutterBottom>
+            Feed
+          </Typography>
           <PostsList posts={posts} />
         </Grid>
         <Grid item xs={3}>
-          {/* <FriendsList /> */}
+          <Typography variant="h4" gutterBottom>
+            Friends
+          </Typography>
+          <FriendsList friends={friends} />
         </Grid>
       </Grid>
     </PageWrapper>

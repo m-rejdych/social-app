@@ -1,11 +1,19 @@
 import React from 'react';
-import { List, ListProps } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import {
+  List,
+  ListProps,
+  Box,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
 
 import Friend from './Friend';
-import { User } from '../../store/types/usersTypes';
+import { Friend as FriendType } from '../../store/types/profileTypes';
+import { RootState } from '../../store/reducers';
 
 interface Props extends ListProps {
-  friends: User[];
+  friends: FriendType[];
   profileNavigation?: boolean;
 }
 
@@ -14,7 +22,9 @@ const FriendsList: React.FC<Props> = ({
   profileNavigation = false,
   ...rest
 }) => {
-  return (
+  const loading = useSelector((state: RootState) => state.profile.loading);
+
+  return friends.length > 0 ? (
     <List {...rest}>
       {friends.map((friend) => (
         <Friend
@@ -24,6 +34,21 @@ const FriendsList: React.FC<Props> = ({
         />
       ))}
     </List>
+  ) : (
+    <Box
+      height="50vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      {loading ? (
+        <CircularProgress size={150} />
+      ) : (
+        <Typography variant="h5" color="textSecondary">
+          You have no friends
+        </Typography>
+      )}
+    </Box>
   );
 };
 
