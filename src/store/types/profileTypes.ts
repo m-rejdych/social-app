@@ -1,5 +1,6 @@
 import { PROFILE } from '../constants';
 import Notification from '../../types/Notificaiton';
+import Message from '../../types/Message';
 
 export interface ProfileIntro {
   userId: string;
@@ -15,6 +16,10 @@ export interface Friend {
   userId: string;
 }
 
+export interface Messages {
+  [userId: string]: Message[];
+}
+
 export interface ProfileDetails {
   dateOfBirth: string;
   proffesion: string;
@@ -25,6 +30,7 @@ export interface ProfileDetails {
   email: string;
   friends: Friend[];
   notifications: Notification[];
+  messages: Messages;
 }
 
 export type ProfileData = ProfileIntro & ProfileDetails;

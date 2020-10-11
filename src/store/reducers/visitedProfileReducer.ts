@@ -20,6 +20,7 @@ const initialState: VisitedProfileState = {
   phoneNumber: '',
   friends: [],
   notifications: [],
+  messages: {},
   loading: true,
   error: null,
 };

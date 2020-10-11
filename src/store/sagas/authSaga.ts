@@ -33,6 +33,7 @@ function* handleSignUp({
       phoneNumber: 'No phone number information',
       friends: [],
       notifications: [],
+      messages: {},
     });
   } catch (error) {
     yield put(setProfileError(error.message));

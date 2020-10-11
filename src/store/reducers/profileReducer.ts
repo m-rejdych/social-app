@@ -24,6 +24,7 @@ const initialState: ProfileState = {
   phoneNumber: '',
   friends: [],
   notifications: [],
+  messages: {},
   loading: true,
   error: null,
 };
