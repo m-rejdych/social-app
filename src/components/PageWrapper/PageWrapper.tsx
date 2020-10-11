@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, useTheme } from '@material-ui/core';
 
 import Header from '../Header';
+import Chat from '../Chat';
 
 const Component: React.FC = ({ children }) => {
   const theme = useTheme();
@@ -15,6 +16,7 @@ const Component: React.FC = ({ children }) => {
         minHeight={`calc(100vh - ${theme.spacing(8)}px)`}
       >
         {children}
+        <Chat />
       </Box>
     </>
   );
