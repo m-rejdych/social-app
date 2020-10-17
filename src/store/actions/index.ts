@@ -52,4 +52,6 @@ export {
   setPostsError,
 } from './postsActions';
 
+export { setOpen, setTarget } from './chatActions';
+
 export { getUsers, getUsersSuccess, setUsersError } from './usersActions';
