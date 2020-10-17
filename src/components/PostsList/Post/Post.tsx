@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import {
@@ -28,6 +28,7 @@ import { NOTIFICATION_TYPES } from '../../../shared/constants';
 const useStyles = makeStyles((theme) => ({
   card: {
     marginBottom: theme.spacing(3),
+    borderRadius: 15,
   },
   marginRightIcon: {
     marginRight: theme.spacing(1),
@@ -60,10 +61,6 @@ const Post: React.FC<PostData> = ({
   const loggedLastName = useSelector((state: RootState) => state.auth.lastName);
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    // window.location.reload();
-  }, [likes, comments]);
 
   const isLiked = likes.includes(loggedUserId);
   const isMine = loggedUserId === userId;

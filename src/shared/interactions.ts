@@ -1,8 +1,9 @@
 import { db } from '../firebase';
 import { NOTIFICATION_TYPES } from './constants';
-import { ProfileData } from '../store/types/profileTypes';
+import { ProfileData, Messages } from '../store/types/profileTypes';
 import Notification from '../types/Notificaiton';
 import PostData from '../types/PostData';
+import Message from '../types/Message';
 
 const sendNotification = async (notification: Notification): Promise<void> => {
   try {
@@ -160,6 +161,34 @@ const getPostData = async (postId: string): Promise<PostData> => {
   return response.data() as PostData;
 };
 
+const sendMessage = async (message: Message) => {
+  try {
+    const { fromUserId, toUserId } = message;
+    const friendResponse = await db.collection('users').doc(toUserId).get();
+    const userResponse = await db.collection('users').doc(fromUserId).get();
+    const { messages: friendMessages } = friendResponse.data()!;
+    const { messages: userMessages } = userResponse.data()!;
+    const updatedFriendMessages: Messages = {
+      ...friendMessages,
+      [fromUserId]: [...friendMessages[fromUserId], message],
+    };
+    const updatedUserMessages: Messages = {
+      ...userMessages,
+      [toUserId]: [...userMessages[toUserId], { ...message, isSeen: true }],
+    };
+    await db
+      .collection('users')
+      .doc(toUserId)
+      .update({ messages: updatedFriendMessages });
+    await db
+      .collection('users')
+      .doc(fromUserId)
+      .update({ messages: updatedUserMessages });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 export {
   sendNotification,
   addFriend,
@@ -169,4 +198,5 @@ export {
   likePost,
   dislikePost,
   getPostData,
+  sendMessage,
 };

@@ -5,8 +5,10 @@ import {
   ProfileData,
   ProfileDetails,
   Friend,
+  Messages,
 } from '../types/profileTypes';
 import Notification from '../../types/Notificaiton';
+import Message from '../../types/Message';
 
 const setProfileIntro = (introData: ProfileIntro): ProfileActions => ({
   type: PROFILE.SET_PROFILE_INTRO,

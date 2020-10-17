@@ -6,6 +6,7 @@ import {
   ProfileData,
   ProfileDetails,
   Friend,
+  Messages,
 } from '../types/profileTypes';
 import Notification from '../../types/Notificaiton';
 
