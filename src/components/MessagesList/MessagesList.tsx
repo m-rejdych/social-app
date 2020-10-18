@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, useTheme } from '@material-ui/core';
 
 import MessageType from '../../types/Message';
 import Message from './Message';
@@ -9,8 +9,15 @@ interface Props {
 }
 
 const MessagesList: React.FC<Props> = ({ messages }) => {
+  const theme = useTheme();
+
   return (
-    <Box display="flex" flexDirection="column" alignItems="flex-start">
+    <Box
+      display="flex"
+      marginTop={`${theme.spacing(2)}px`}
+      flexDirection="column"
+      alignItems="flex-start"
+    >
       {messages &&
         messages.map((message) => <Message {...message} key={message.id} />)}
     </Box>

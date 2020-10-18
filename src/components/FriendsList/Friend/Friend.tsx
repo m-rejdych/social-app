@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 
-import { setTarget as setChatTarget } from '../../../store/actions';
+import { setOpen, setTarget as setChatTarget } from '../../../store/actions';
 
 interface Props {
   firstName: string;
@@ -26,7 +26,10 @@ const Component: React.FC<Props> = ({
 
   const handleClick = (): void => {
     if (profileNavigation) history.push(`/profile/${userId}`);
-    else if (setTarget) dispatch(setChatTarget(userId));
+    else if (setTarget) {
+      dispatch(setChatTarget(userId));
+      dispatch(setOpen(true));
+    }
   };
 
   return (
