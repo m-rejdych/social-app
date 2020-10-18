@@ -13,6 +13,7 @@ export {
   setProfileIntroSuccess,
   setProfileError,
   setFriends,
+  setMessages,
   getProfileData,
   getProfileDataSuccess,
   updateProfileField,

@@ -75,6 +75,11 @@ interface SetNotificaitons {
   payload: Notification[];
 }
 
+interface SetMessages {
+  type: typeof PROFILE.SET_MESSAGES;
+  payload: Messages;
+}
+
 interface SetProfileErrorAction {
   type: typeof PROFILE.PROFILE_FAIL;
   payload: string;
@@ -94,4 +99,5 @@ export type ProfileActions =
   | GetProfileDataSuccessAction
   | UpdateProfileFieldAction
   | UpdateProfileFieldActionSuccess
+  | SetMessages
   | SetNotificaitons;

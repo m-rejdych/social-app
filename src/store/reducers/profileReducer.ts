@@ -60,6 +60,8 @@ const profileReducer = (
       };
     case PROFILE.SET_NOTIFICATIONS:
       return { ...state, notifications: payload as Notification[] };
+    case PROFILE.SET_MESSAGES:
+      return { ...state, messages: payload as Messages };
     case PROFILE.PROFILE_FAIL:
       return { ...state, loading: false, error: payload as string };
     default:

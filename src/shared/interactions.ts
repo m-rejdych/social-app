@@ -170,11 +170,15 @@ const sendMessage = async (message: Message) => {
     const { messages: userMessages } = userResponse.data()!;
     const updatedFriendMessages: Messages = {
       ...friendMessages,
-      [fromUserId]: [...friendMessages[fromUserId], message],
+      [fromUserId]: friendMessages[fromUserId]
+        ? [...friendMessages[fromUserId], message]
+        : [message],
     };
     const updatedUserMessages: Messages = {
       ...userMessages,
-      [toUserId]: [...userMessages[toUserId], { ...message, isSeen: true }],
+      [toUserId]: userMessages[toUserId]
+        ? [...userMessages[toUserId], { ...message, isSeen: true }]
+        : [{ ...message, isSeen: true }],
     };
     await db
       .collection('users')

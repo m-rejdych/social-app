@@ -1,13 +1,17 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
+
+import { setTarget as setChatTarget } from '../../../store/actions';
 
 interface Props {
   firstName: string;
   lastName: string;
   userId: string;
   profileNavigation: boolean;
+  setTarget: boolean;
 }
 
 const Component: React.FC<Props> = ({
@@ -15,11 +19,14 @@ const Component: React.FC<Props> = ({
   lastName,
   userId,
   profileNavigation,
+  setTarget,
 }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleClick = (): void => {
     if (profileNavigation) history.push(`/profile/${userId}`);
+    else if (setTarget) dispatch(setChatTarget(userId));
   };
 
   return (

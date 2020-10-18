@@ -55,6 +55,11 @@ const setNotifications = (notifications: Notification[]): ProfileActions => ({
   payload: notifications,
 });
 
+const setMessages = (messages: Messages) => ({
+  type: PROFILE.SET_MESSAGES,
+  payload: messages,
+});
+
 const setProfileError = (error: string): ProfileActions => ({
   type: PROFILE.PROFILE_FAIL,
   payload: error,
@@ -65,6 +70,7 @@ export {
   setProfileIntroSuccess,
   setProfileError,
   setFriends,
+  setMessages,
   getProfileData,
   getProfileDataSuccess,
   updateProfileField,

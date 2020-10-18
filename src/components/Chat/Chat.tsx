@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import {
   Fab,
   makeStyles,
@@ -19,8 +20,11 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import MessagesList from '../MessagesList';
 import FriendsList from '../FriendsList';
+import Message from '../../types/Message';
+import { Timestamp } from '../../firebase';
 import { RootState } from '../../store/reducers';
 import { User } from '../../store/types/usersTypes';
+import { sendMessage } from '../../shared/interactions';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -29,12 +33,18 @@ const useStyles = makeStyles((theme) => ({
     right: '110%',
     width: 300,
     height: 450,
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   cardHeader: {
     boxShadow: theme.shadows[3],
+  },
+  cardContent: {
+    flexGrow: 1,
+    overflow: 'auto',
+  },
+  alignSelfCenter: {
+    alignSelf: 'center',
   },
   borderRadius: {
     borderRadius: 20,
@@ -54,8 +64,19 @@ const Chat: React.FC = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const target = useSelector((state: RootState) => state.chat.target);
   const friends = useSelector((state: RootState) => state.profile.friends);
+  const messages = useSelector((state: RootState) => state.profile.messages);
+  const firstName = useSelector((state: RootState) => state.auth.firstName);
+  const lastName = useSelector((state: RootState) => state.auth.lastName);
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const cardContentRef = useRef<HTMLDivElement | null>(null);
   const classes = useStyles();
   const theme = useTheme();
+
+  useEffect(() => {
+    if (cardContentRef?.current) {
+      cardContentRef.current.scrollTop = cardContentRef.current.scrollHeight;
+    }
+  }, [cardContentRef, messages]);
 
   const findUserName = (): string => {
     const { firstName, lastName }: User = friends.find(
@@ -74,7 +95,9 @@ const Chat: React.FC = () => {
     if (value) {
       const filteredUsers = friends.filter(
         ({ firstName, lastName }) =>
-          `${firstName} ${lastName}`.indexOf(value) !== -1,
+          `${firstName} ${lastName}`
+            .toLowerCase()
+            .indexOf(value.toLowerCase()) !== -1,
       );
       setFilteredFriends(filteredUsers);
     }
@@ -89,6 +112,20 @@ const Chat: React.FC = () => {
 
   const toggleIsFocused = (): void => {
     setIsSearchFocused((prev) => !prev);
+  };
+
+  const handleSendMessage = (): void => {
+    const message: Message = {
+      id: uuid(),
+      messageText: value,
+      from: `${firstName} ${lastName}`,
+      fromUserId: userId,
+      toUserId: target,
+      isSeen: false,
+      timestamp: Timestamp.now(),
+    };
+    sendMessage(message);
+    setValue('');
   };
 
   return (
@@ -128,7 +165,7 @@ const Chat: React.FC = () => {
                       left={0}
                       className={classes.friendsList}
                     >
-                      <FriendsList friends={filteredFriends} />
+                      <FriendsList friends={filteredFriends} setTarget />
                     </Box>
                   )}
               </Box>
@@ -142,24 +179,32 @@ const Chat: React.FC = () => {
             </IconButton>
           }
         />
-        <CardContent>
-          <MessagesList />
-        </CardContent>
-        <CardActions>
-          <TextField
-            multiline
-            fullWidth
-            rows={2}
-            rowsMax={2}
-            value={value}
-            variant="outlined"
-            onChange={handleChange}
-            InputProps={{
-              className: classes.borderRadius,
-              endAdornment: <Button color="secondary">SEND</Button>,
-            }}
-          ></TextField>
-        </CardActions>
+        {target && (
+          <>
+            <CardContent ref={cardContentRef} className={classes.cardContent}>
+              <MessagesList messages={messages[target]} />
+            </CardContent>
+            <CardActions>
+              <TextField
+                multiline
+                fullWidth
+                rows={2}
+                rowsMax={2}
+                value={value}
+                variant="outlined"
+                onChange={handleChange}
+                InputProps={{
+                  className: classes.borderRadius,
+                  endAdornment: (
+                    <Button onClick={handleSendMessage} color="secondary">
+                      SEND
+                    </Button>
+                  ),
+                }}
+              ></TextField>
+            </CardActions>
+          </>
+        )}
       </Card>
     </Box>
   );

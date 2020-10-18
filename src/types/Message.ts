@@ -6,7 +6,7 @@ interface Message {
   toUserId: string;
   messageText: string;
   id: string;
-  isSeen: string;
+  isSeen: boolean;
   timestamp: firebase.firestore.Timestamp;
 }
 

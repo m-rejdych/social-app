@@ -15,11 +15,13 @@ import { RootState } from '../../store/reducers';
 interface Props extends ListProps {
   friends: FriendType[];
   profileNavigation?: boolean;
+  setTarget?: boolean;
 }
 
 const FriendsList: React.FC<Props> = ({
   friends,
   profileNavigation = false,
+  setTarget = false,
   ...rest
 }) => {
   const loading = useSelector((state: RootState) => state.profile.loading);
@@ -30,6 +32,7 @@ const FriendsList: React.FC<Props> = ({
         <Friend
           key={friend.userId}
           profileNavigation={profileNavigation}
+          setTarget={setTarget}
           {...friend}
         />
       ))}
