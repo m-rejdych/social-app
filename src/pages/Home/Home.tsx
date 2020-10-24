@@ -40,7 +40,7 @@ const Home: React.FC = () => {
           <Typography variant="h4" gutterBottom>
             Friends
           </Typography>
-          <FriendsList friends={friends} setTarget />
+          <FriendsList friends={friends} setTarget showBadges />
         </Grid>
       </Grid>
     </PageWrapper>

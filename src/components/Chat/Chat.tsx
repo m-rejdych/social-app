@@ -24,7 +24,7 @@ import Message from '../../types/Message';
 import { Timestamp } from '../../firebase';
 import { RootState } from '../../store/reducers';
 import { User } from '../../store/types/usersTypes';
-import { sendMessage } from '../../shared/interactions';
+import { sendMessage, markAsRead } from '../../shared/interactions';
 import { setOpen, setTarget } from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +74,12 @@ const Chat: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const theme = useTheme();
+
+  useEffect(() => {
+    if (target && messages[target]) {
+      markAsRead(userId, target);
+    }
+  }, [userId, target]);
 
   useEffect(
     () => () => {

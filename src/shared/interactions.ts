@@ -193,6 +193,26 @@ const sendMessage = async (message: Message) => {
   }
 };
 
+const markAsRead = async (userId: string, target: string) => {
+  try {
+    const response = await db.collection('users').doc(userId).get();
+    const messages: Messages = response.data()!.messages;
+    const updatedMessages = {
+      ...messages,
+      [target]: messages[target].map((message) => ({
+        ...message,
+        isSeen: true,
+      })),
+    };
+    await db
+      .collection('users')
+      .doc(userId)
+      .update({ messages: updatedMessages });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   sendNotification,
   addFriend,
@@ -203,4 +223,5 @@ export {
   dislikePost,
   getPostData,
   sendMessage,
+  markAsRead,
 };

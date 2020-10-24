@@ -16,12 +16,14 @@ interface Props extends ListProps {
   friends: FriendType[];
   profileNavigation?: boolean;
   setTarget?: boolean;
+  showBadges?: boolean;
 }
 
 const FriendsList: React.FC<Props> = ({
   friends,
   profileNavigation = false,
   setTarget = false,
+  showBadges = false,
   ...rest
 }) => {
   const loading = useSelector((state: RootState) => state.profile.loading);
@@ -33,6 +35,7 @@ const FriendsList: React.FC<Props> = ({
           key={friend.userId}
           profileNavigation={profileNavigation}
           setTarget={setTarget}
+          showBadges={showBadges}
           {...friend}
         />
       ))}

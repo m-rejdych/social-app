@@ -1,10 +1,16 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Badge,
+} from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 
 import { setOpen, setTarget as setChatTarget } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
 
 interface Props {
   firstName: string;
@@ -12,6 +18,7 @@ interface Props {
   userId: string;
   profileNavigation: boolean;
   setTarget: boolean;
+  showBadges: boolean;
 }
 
 const Component: React.FC<Props> = ({
@@ -20,9 +27,16 @@ const Component: React.FC<Props> = ({
   userId,
   profileNavigation,
   setTarget,
+  showBadges,
 }) => {
   const history = useHistory();
+  const messages = useSelector((state: RootState) => state.profile.messages);
   const dispatch = useDispatch();
+
+  const badgeContent = messages[userId]
+    ? messages[userId].filter(({ isSeen }) => !isSeen).length
+    : 0;
+  console.log(badgeContent);
 
   const handleClick = (): void => {
     if (profileNavigation) history.push(`/profile/${userId}`);
@@ -40,7 +54,13 @@ const Component: React.FC<Props> = ({
       onClick={handleClick}
     >
       <ListItemAvatar>
-        <FaceIcon />
+        {showBadges ? (
+          <Badge color="secondary" badgeContent={badgeContent}>
+            <FaceIcon />
+          </Badge>
+        ) : (
+          <FaceIcon />
+        )}
       </ListItemAvatar>
       <ListItemText
         primaryTypographyProps={{ color: 'textSecondary' }}
